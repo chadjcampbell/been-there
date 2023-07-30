@@ -6,6 +6,7 @@ import Friends from "./routes/Friends";
 import Profile from "./routes/Profile";
 import Login from "./routes/Login";
 import Register from "./routes/Register";
+import Error from "./routes/Error";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
         />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="*" element={<Error />} />
       </Routes>
     </BrowserRouter>
   );

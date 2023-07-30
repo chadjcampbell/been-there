@@ -1,6 +1,9 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
-
+import { AiTwotoneHome } from "react-icons/ai";
+import { BsGlobeAmericas } from "react-icons/bs";
+import { FaUserFriends } from "react-icons/fa";
+import { CgProfile } from "react-icons/cg";
 type NavWrapperProps = {
   children: ReactNode;
 };
@@ -19,7 +22,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
     <>
       <header>
         <nav>
-          <div className="navbar bg-base-100">
+          <div className="navbar bg-gray-100">
             <div className="navbar-start">
               <div className="dropdown">
                 <label tabIndex={0} className="btn btn-ghost lg:hidden">
@@ -42,31 +45,63 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
                   tabIndex={0}
                   className="menu menu-lg dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
                 >
-                  <li onClick={handleClick}>
-                    <Link to="/map">Map</Link>
+                  <li
+                    onClick={handleClick}
+                    className="px-1 text-lg text-secondary"
+                  >
+                    <Link to="/map">
+                      <BsGlobeAmericas />
+                      Map
+                    </Link>
                   </li>
-                  <li onClick={handleClick}>
-                    <Link to="/friends">Friends</Link>
+                  <li
+                    onClick={handleClick}
+                    className="px-1 text-lg text-secondary"
+                  >
+                    <Link to="/friends">
+                      <FaUserFriends />
+                      Friends
+                    </Link>
                   </li>
-                  <li onClick={handleClick}>
-                    <Link to="/profile">Profile</Link>
+                  <li
+                    onClick={handleClick}
+                    className="px-1 text-lg text-secondary"
+                  >
+                    <Link to="/profile">
+                      <CgProfile />
+                      Profile
+                    </Link>
                   </li>
                 </ul>
               </div>
-              <Link to="/" className="btn btn-ghost normal-case text-xl">
+
+              <Link
+                to="/"
+                className="btn btn-ghost normal-case text-xl text-secondary"
+              >
+                <AiTwotoneHome />
                 Been There
               </Link>
             </div>
             <div className="navbar-center hidden lg:flex">
               <ul className="menu menu-horizontal px-1">
-                <li>
-                  <Link to="/map">Map</Link>
+                <li className="px-10 text-lg text-secondary">
+                  <Link to="/map">
+                    <BsGlobeAmericas />
+                    Map
+                  </Link>
                 </li>
-                <li>
-                  <Link to="/friends">Friends</Link>
+                <li className="px-10 text-lg text-secondary">
+                  <Link to="/friends">
+                    <FaUserFriends />
+                    Friends
+                  </Link>
                 </li>
-                <li>
-                  <Link to="/profile">Profile</Link>
+                <li className="px-10 text-lg text-secondary">
+                  <Link to="/profile">
+                    <CgProfile />
+                    Profile
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -87,10 +122,11 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
                       d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
                     />
                   </svg>
-                  <span className="badge badge-xs badge-primary indicator-item"></span>
+                  {/* this span badge color will be for notifications */}
+                  <span className="badge badge-xs badge-gray indicator-item"></span>
                 </div>
               </button>
-              <button className="btn">Logout</button>
+              <button className="btn text-white bg-primary">Logout</button>
             </div>
           </div>
         </nav>

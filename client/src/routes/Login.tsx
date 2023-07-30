@@ -1,4 +1,5 @@
 import { FormEvent } from "react";
+import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -6,6 +7,7 @@ const Login = () => {
 
   const handleLogin = (e: FormEvent) => {
     e.preventDefault();
+    toast.success("Successfully logged in");
     navigate("/");
   };
 

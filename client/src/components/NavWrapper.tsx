@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AiTwotoneHome } from "react-icons/ai";
 import { BsGlobeAmericas } from "react-icons/bs";
 import { FaUserFriends } from "react-icons/fa";
@@ -9,13 +9,19 @@ type NavWrapperProps = {
 };
 
 const NavWrapper = ({ children }: NavWrapperProps) => {
-  const handleClick = () => {
+  const navigate = useNavigate();
+
+  const handleNavClick = () => {
     const elem = document.activeElement as HTMLElement;
     if (elem) {
       setTimeout(() => {
         elem?.blur();
       }, 250);
     }
+  };
+
+  const handleLogout = () => {
+    navigate("/login");
   };
 
   return (
@@ -46,7 +52,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
                   className="menu menu-lg dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
                 >
                   <li
-                    onClick={handleClick}
+                    onClick={handleNavClick}
                     className="px-1 text-lg text-secondary"
                   >
                     <Link to="/map">
@@ -55,7 +61,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
                     </Link>
                   </li>
                   <li
-                    onClick={handleClick}
+                    onClick={handleNavClick}
                     className="px-1 text-lg text-secondary"
                   >
                     <Link to="/friends">
@@ -64,7 +70,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
                     </Link>
                   </li>
                   <li
-                    onClick={handleClick}
+                    onClick={handleNavClick}
                     className="px-1 text-lg text-secondary"
                   >
                     <Link to="/profile">
@@ -126,7 +132,12 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
                   <span className="badge badge-xs badge-gray indicator-item"></span>
                 </div>
               </button>
-              <button className="btn text-white bg-primary">Logout</button>
+              <button
+                onClick={handleLogout}
+                className="btn text-white bg-primary"
+              >
+                Logout
+              </button>
             </div>
           </div>
         </nav>

@@ -21,21 +21,23 @@ const Login = () => {
         </h2>
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="label">
+            <label htmlFor="email" className="label">
               <span className="text-base label-text">Email</span>
             </label>
             <input
               type="text"
+              name="email"
               placeholder="Email Address"
               className="w-full input input-bordered input-primary"
             />
           </div>
           <div>
-            <label className="label">
+            <label htmlFor="password" className="label">
               <span className="text-base label-text">Password</span>
             </label>
             <input
               type="password"
+              name="password"
               placeholder="Enter Password"
               className="w-full input input-bordered input-primary"
             />

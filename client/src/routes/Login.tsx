@@ -1,6 +1,11 @@
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+
+interface IFormInputs {
+  email: string;
+  password: string;
+}
 
 const Login = () => {
   const navigate = useNavigate();
@@ -8,14 +13,9 @@ const Login = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<IFormInputs>();
 
-  if (errors.email) {
-    toast.error(errors.email.message);
-  }
-
-  //TODO - error user feedback need fixed
-  const handleLogin: SubmitHandler<FieldValues> = (formData) => {
+  const handleLogin: SubmitHandler<IFormInputs> = (formData) => {
     console.log(formData);
     toast.success("Successfully logged in");
     navigate("/");
@@ -46,8 +46,15 @@ const Login = () => {
                 },
               })}
               placeholder="Email Address"
-              className="w-full input input-bordered input-primary"
+              className=" w-full input input-bordered input-primary"
+              aria-invalid={errors.email ? "true" : "false"}
             />
+            {errors.email?.message && (
+              <p className="m-2 p-1 w-fit rounded bg-red-700 text-xs text-white">
+                {" "}
+                {errors.email.message}
+              </p>
+            )}
           </div>
           <div>
             <label htmlFor="password" className="label">
@@ -55,13 +62,19 @@ const Login = () => {
             </label>
             <input
               type="password"
-              {...(register("password"),
-              {
+              {...register("password", {
                 required: true,
               })}
               placeholder="Enter Password"
               className="w-full input input-bordered input-primary"
+              aria-invalid={errors.password ? "true" : "false"}
             />
+            {errors.password?.message && (
+              <p className="m-2 p-1 w-fit rounded bg-red-700 text-xs text-white">
+                {" "}
+                {errors.password.message}
+              </p>
+            )}
           </div>
           <a
             href="#"

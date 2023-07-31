@@ -2,7 +2,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-interface IFormInputs {
+interface IFormLoginInputs {
   email: string;
   password: string;
 }
@@ -13,9 +13,9 @@ const Login = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormInputs>();
+  } = useForm<IFormLoginInputs>();
 
-  const handleLogin: SubmitHandler<IFormInputs> = (formData) => {
+  const handleLogin: SubmitHandler<IFormLoginInputs> = (formData) => {
     console.log(formData);
     toast.success("Successfully logged in");
     navigate("/");

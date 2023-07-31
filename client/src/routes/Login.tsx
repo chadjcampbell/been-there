@@ -10,7 +10,11 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  //TODO - error user feedback
+  if (errors.email) {
+    toast.error(errors.email.message);
+  }
+
+  //TODO - error user feedback need fixed
   const handleLogin: SubmitHandler<FieldValues> = (formData) => {
     console.log(formData);
     toast.success("Successfully logged in");

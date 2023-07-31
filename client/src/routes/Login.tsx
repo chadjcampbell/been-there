@@ -1,12 +1,18 @@
-import { FormEvent } from "react";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const handleLogin = (e: FormEvent) => {
-    e.preventDefault();
+  //TODO - error user feedback
+  const handleLogin: SubmitHandler<FieldValues> = (formData) => {
+    console.log(formData);
     toast.success("Successfully logged in");
     navigate("/");
   };
@@ -21,14 +27,20 @@ const Login = () => {
         <h2 className="py-3 text-3xl font-semibold text-center text-secondary">
           Where have you been?
         </h2>
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
           <div>
             <label htmlFor="email" className="label">
               <span className="text-base label-text">Email</span>
             </label>
             <input
               type="text"
-              name="email"
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                  message: "Please enter a valid email",
+                },
+              })}
               placeholder="Email Address"
               className="w-full input input-bordered input-primary"
             />
@@ -39,7 +51,10 @@ const Login = () => {
             </label>
             <input
               type="password"
-              name="password"
+              {...(register("password"),
+              {
+                required: true,
+              })}
               placeholder="Enter Password"
               className="w-full input input-bordered input-primary"
             />

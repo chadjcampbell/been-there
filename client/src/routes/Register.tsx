@@ -113,6 +113,14 @@ const Register = () => {
               type="password"
               {...register("password", {
                 required: true,
+                min: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+                max: {
+                  value: 30,
+                  message: "Password must be less than 30 characters",
+                },
               })}
               placeholder="Enter Password"
               className="w-full input input-bordered input-primary"
@@ -133,6 +141,14 @@ const Register = () => {
               type="password"
               {...register("password2", {
                 required: true,
+                min: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+                max: {
+                  value: 30,
+                  message: "Password must be less than 30 characters",
+                },
                 validate: (val: string) => {
                   if (watch("password") != val) {
                     return "Your passwords do no match";

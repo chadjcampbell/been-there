@@ -21,8 +21,7 @@ const Login = () => {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/auth/login`,
         {
-          email: formData.email,
-          password: formData.password,
+          body: { ...formData },
         }
       );
       console.log(response);

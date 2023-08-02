@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useForm, SubmitHandler } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -18,10 +19,23 @@ const Register = () => {
     formState: { errors },
   } = useForm<IFormRegisterInputs>();
 
-  const handleRegister: SubmitHandler<IFormRegisterInputs> = (formData) => {
-    console.log(formData);
-    toast.success("Successfully logged in");
-    navigate("/");
+  const handleRegister: SubmitHandler<IFormRegisterInputs> = async (
+    formData
+  ) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/auth/register`,
+        {
+          body: { ...formData },
+        }
+      );
+      console.log(response);
+      toast.success("Successfully registered");
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong");
+    }
   };
   return (
     <div className="p-4 bg-secondary-content relative flex flex-col justify-center min-h-screen">

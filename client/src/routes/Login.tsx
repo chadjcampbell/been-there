@@ -1,3 +1,4 @@
+import axios from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -15,10 +16,22 @@ const Login = () => {
     formState: { errors },
   } = useForm<IFormLoginInputs>();
 
-  const handleLogin: SubmitHandler<IFormLoginInputs> = (formData) => {
-    console.log(formData);
-    toast.success("Successfully logged in");
-    navigate("/");
+  const handleLogin: SubmitHandler<IFormLoginInputs> = async (formData) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/auth/login`,
+        {
+          email: formData.email,
+          password: formData.password,
+        }
+      );
+      console.log(response);
+      toast.success("Successfully logged in");
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong");
+    }
   };
 
   return (

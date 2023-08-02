@@ -7,6 +7,9 @@ import Profile from "./routes/Profile";
 import Login from "./routes/Login";
 import Register from "./routes/Register";
 import Error from "./routes/Error";
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
 
 function App() {
   return (

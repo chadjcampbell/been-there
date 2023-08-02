@@ -10,7 +10,7 @@ const server = require("http").createServer(app);
 const io = new Server(server, {
   cors: {
     // TODO - add front end origin after deployment
-    origin: "http://localhost:5173",
+    origin: "http://localhost:5173/",
     credentials: "true",
   },
 });

@@ -1,5 +1,7 @@
 const Yup = require("yup");
 
+// first check schemas for validity
+
 const loginSchema = Yup.object({
   email: Yup.string()
     .required("Email required")
@@ -15,7 +17,7 @@ const registerSchema = Yup.object({
   password: Yup.string().required().min(6).max(30),
 });
 
-const loginController = (req, res) => {
+const checkLoginSchema = (req, res, next) => {
   const formData = req.body;
   loginSchema
     .validate(formData)
@@ -25,12 +27,12 @@ const loginController = (req, res) => {
     })
     .then((valid) => {
       if (valid) {
-        res.status(200).send({ message: "Successfully registered" });
+        next();
       }
     });
 };
 
-const registerController = (req, res) => {
+const checkRegisterSchema = (req, res, next) => {
   const formData = req.body;
   registerSchema
     .validate(formData)
@@ -40,9 +42,11 @@ const registerController = (req, res) => {
     })
     .then((valid) => {
       if (valid) {
-        res.status(200).send({ message: "Successfully logged in" });
+        next();
       }
     });
 };
 
-module.exports = { loginController, registerController };
+// next check the db to finalize login or registration
+
+module.exports = { checkLoginSchema, checkRegisterSchema };

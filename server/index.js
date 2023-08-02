@@ -3,6 +3,7 @@ const { Server } = require("socket.io");
 require("dotenv").config();
 const helmet = require("helmet");
 const cors = require("cors");
+const authRouter = require("./routes/authRouter");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,9 +27,7 @@ app.use(
 );
 
 // routes
-app.get("/", (req, res) => {
-  res.json("Hello  world");
-});
+app.use("/auth", authRouter);
 
 io.on("connect", (socket) => {});
 

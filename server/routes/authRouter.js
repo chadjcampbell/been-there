@@ -9,9 +9,19 @@ const formSchema = Yup.object({
   password: Yup.string().required().min(6).max(30),
 });
 
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
   const formData = req.body;
-  formSchema.validate(formData).catch((err) => console.error(err.errors));
+  formSchema
+    .validate(formData)
+    .catch((err) => {
+      res.status(422).send({ error: "Invalid username or password" });
+      console.log(err.errors);
+    })
+    .then((valid) => {
+      if (valid) {
+        res.status(200).send({ message: "Logged in" });
+      }
+    });
 });
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const Yup = require("yup");
+const pool = require("../db");
 
 // first check schemas for validity
 
@@ -49,4 +50,18 @@ const checkRegisterSchema = (req, res, next) => {
 
 // next check the db to finalize login or registration
 
-module.exports = { checkLoginSchema, checkRegisterSchema };
+const loginWithDB = (req, res) => {};
+
+const registerWithDB = async (req, res) => {
+  const existingUser = await pool.query(
+    "SELECT username from users WHERE username=$1",
+    [req.body.username]
+  );
+};
+
+module.exports = {
+  checkLoginSchema,
+  checkRegisterSchema,
+  loginWithDB,
+  registerWithDB,
+};

@@ -1,5 +1,6 @@
 const Yup = require("yup");
 const pool = require("../db");
+const bcrypt = require("bcrypt");
 
 // first check schemas for validity
 
@@ -57,6 +58,16 @@ const registerWithDB = async (req, res) => {
     "SELECT username from users WHERE username=$1",
     [req.body.username]
   );
+  if (existingUser.rowsCount === 0) {
+    // register
+    const hashedPass = await bcrypt.hash(req.body.password, 10);
+    const newUserQuery = await pool.query(
+      "INSERT INTO users(email, passhash) values($1,$2) RETURNING id, email, name",
+      [req.body.username, hashedPass]
+    );
+  } else {
+    res.json({ loggedIn: false, status: "Email already has an account" });
+  }
 };
 
 module.exports = {

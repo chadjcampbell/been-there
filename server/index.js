@@ -2,6 +2,7 @@ const express = require("express");
 const { Server } = require("socket.io");
 require("dotenv").config();
 const helmet = require("helmet");
+const cors = require("cors");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -9,8 +10,7 @@ const server = require("http").createServer(app);
 
 const io = new Server(server, {
   cors: {
-    // TODO - add front end origin after deployment
-    origin: "http://localhost:5173/",
+    origin: process.env.FRONTEND_URL,
     credentials: "true",
   },
 });
@@ -18,6 +18,12 @@ const io = new Server(server, {
 // middlewares
 app.use(helmet());
 app.use(express.json());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: "true",
+  })
+);
 
 // routes
 app.get("/", (req, res) => {

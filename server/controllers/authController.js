@@ -54,7 +54,7 @@ const checkRegisterSchema = (req, res, next) => {
 
 const loginWithDB = async (req, res) => {
   const potentialLogin = await pool.query(
-    "SELECT id, email, passhash FROM users WHERE users.username=$1",
+    "SELECT id, email, name, passhash FROM users WHERE users.email=$1",
     [req.body.email]
   );
   if (potentialLogin.rowCount > 0) {
@@ -64,13 +64,13 @@ const loginWithDB = async (req, res) => {
     );
     if (isSamePass) {
       req.session.user = {
-        id: newUserQuery.rows[0].id,
-        name: newUserQuery.rows[0].name,
-        email: newUserQuery.rows[0].email,
+        id: potentialLogin.rows[0].id,
+        name: potentialLogin.rows[0].name,
+        email: potentialLogin.rows[0].email,
       };
       res.json({
         loggedIn: true,
-        user: newUserQuery.rows[0],
+        user: req.session.user,
       });
     } else {
       res.json({ loggedIn: false, status: "Invalid username or password" });

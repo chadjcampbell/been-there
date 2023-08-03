@@ -25,9 +25,7 @@ const Register = () => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/auth/register`,
-        {
-          body: { ...formData },
-        }
+        formData
       );
       console.log(response);
       toast.success("Successfully registered");

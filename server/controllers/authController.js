@@ -36,6 +36,7 @@ const checkLoginSchema = (req, res, next) => {
 
 const checkRegisterSchema = (req, res, next) => {
   const formData = req.body;
+  console.log(formData);
   registerSchema
     .validate(formData)
     .catch((err) => {
@@ -56,28 +57,40 @@ const loginWithDB = async (req, res) => {
     "SELECT id, email, passhash FROM users WHERE users.username=$1",
     [req.body.email]
   );
-  const isSamePass = await bcrypt.compare(
-    req.body.password,
-    potentialLogin.rows[0].passhash
-  );
-  if (isSamePass) {
-    // login
+  if (potentialLogin.rowCount > 0) {
+    const isSamePass = await bcrypt.compare(
+      req.body.password,
+      potentialLogin.rows[0].passhash
+    );
+    if (isSamePass) {
+      req.session.user = {
+        id: newUserQuery.rows[0].id,
+        name: newUserQuery.rows[0].name,
+        email: newUserQuery.rows[0].email,
+      };
+      res.json({
+        loggedIn: true,
+        user: newUserQuery.rows[0],
+      });
+    } else {
+      res.json({ loggedIn: false, status: "Invalid username or password" });
+    }
   } else {
-    // deny login
+    res.json({ loggedIn: false, status: "Invalid username or password" });
   }
 };
 
 const registerWithDB = async (req, res) => {
   const existingUser = await pool.query(
-    "SELECT username from users WHERE username=$1",
-    [req.body.username]
+    "SELECT email from users WHERE email=$1",
+    [req.body.email]
   );
-  if (existingUser.rowsCount === 0) {
+  if (existingUser.rowCount === 0) {
     // register
     const hashedPass = await bcrypt.hash(req.body.password, 10);
     const newUserQuery = await pool.query(
-      "INSERT INTO users(email, passhash) values($1,$2) RETURNING id, name, email",
-      [req.body.username, hashedPass]
+      "INSERT INTO users(name, email, passhash) values($1,$2,$3) RETURNING id, name, email",
+      [req.body.name, req.body.email, hashedPass]
     );
     req.session.user = {
       id: newUserQuery.rows[0].id,

@@ -20,9 +20,7 @@ const Login = () => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/auth/login`,
-        {
-          body: { ...formData },
-        }
+        formData
       );
       console.log(response);
       toast.success("Successfully logged in");

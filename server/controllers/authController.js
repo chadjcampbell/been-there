@@ -51,7 +51,21 @@ const checkRegisterSchema = (req, res, next) => {
 
 // next check the db to finalize login or registration
 
-const loginWithDB = (req, res) => {};
+const loginWithDB = async (req, res) => {
+  const potentialLogin = await pool.query(
+    "SELECT id, email, passhash FROM users WHERE users.username=$1",
+    [req.body.email]
+  );
+  const isSamePass = await bcrypt.compare(
+    req.body.password,
+    potentialLogin.rows[0].passhash
+  );
+  if (isSamePass) {
+    // login
+  } else {
+    // deny login
+  }
+};
 
 const registerWithDB = async (req, res) => {
   const existingUser = await pool.query(
@@ -62,9 +76,18 @@ const registerWithDB = async (req, res) => {
     // register
     const hashedPass = await bcrypt.hash(req.body.password, 10);
     const newUserQuery = await pool.query(
-      "INSERT INTO users(email, passhash) values($1,$2) RETURNING id, email, name",
+      "INSERT INTO users(email, passhash) values($1,$2) RETURNING id, name, email",
       [req.body.username, hashedPass]
     );
+    req.session.user = {
+      id: newUserQuery.rows[0].id,
+      name: newUserQuery.rows[0].name,
+      email: newUserQuery.rows[0].email,
+    };
+    res.json({
+      loggedIn: true,
+      user: newUserQuery.rows[0],
+    });
   } else {
     res.json({ loggedIn: false, status: "Email already has an account" });
   }

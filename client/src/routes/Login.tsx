@@ -1,7 +1,9 @@
 import axios from "axios";
+import { useContext } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/UserContext";
 
 interface IFormLoginInputs {
   email: string;
@@ -9,6 +11,7 @@ interface IFormLoginInputs {
 }
 
 const Login = () => {
+  const { setUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const {
     register,
@@ -24,6 +27,7 @@ const Login = () => {
       );
       console.log(response.data);
       if (response.data.loggedIn) {
+        setUser({ ...response.data });
         toast.success("Successfully logged in");
         navigate("/");
       } else {

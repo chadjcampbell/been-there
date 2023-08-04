@@ -1,7 +1,9 @@
 import axios from "axios";
+import { useContext } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/UserContext";
 
 interface IFormRegisterInputs {
   name: string;
@@ -11,6 +13,7 @@ interface IFormRegisterInputs {
 }
 
 const Register = () => {
+  const { setUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const {
     watch,
@@ -29,6 +32,7 @@ const Register = () => {
       );
       console.log(response);
       toast.success("Successfully registered");
+      setUser({ ...response.data });
       navigate("/");
     } catch (error) {
       console.error(error);

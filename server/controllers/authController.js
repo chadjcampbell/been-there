@@ -106,9 +106,24 @@ const registerWithDB = async (req, res) => {
   }
 };
 
+const getLoginStatus = (req, res) => {
+  if (req.session.user) {
+    res.json({
+      loggedIn: true,
+      user: req.session.user,
+    });
+  } else {
+    res.json({
+      loggedIn: false,
+      user: null,
+    });
+  }
+};
+
 module.exports = {
   checkLoginSchema,
   checkRegisterSchema,
   loginWithDB,
   registerWithDB,
+  getLoginStatus,
 };

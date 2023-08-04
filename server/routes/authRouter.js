@@ -5,8 +5,10 @@ const {
   checkRegisterSchema,
   loginWithDB,
   registerWithDB,
+  getLoginStatus,
 } = require("../controllers/authController");
 
+router.get("/loginStatus", getLoginStatus);
 router.post("/login", checkLoginSchema, loginWithDB);
 router.post("/register", checkRegisterSchema, registerWithDB);
 

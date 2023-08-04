@@ -1,7 +1,9 @@
+import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import { AuthContext } from "../context/UserContext";
 
 const useAuth = () => {
-  const user = { loggedIn: false };
+  const { user } = useContext(AuthContext);
   return user && user.loggedIn;
 };
 

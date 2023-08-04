@@ -1,4 +1,3 @@
-import { toast } from "react-hot-toast";
 import { Navigate, Outlet } from "react-router-dom";
 
 const useAuth = () => {
@@ -8,12 +7,7 @@ const useAuth = () => {
 
 const AuthWrapper = () => {
   const isAuth = useAuth();
-  if (isAuth) {
-    return <Outlet />;
-  } else {
-    toast.error("Please log in");
-    return <Navigate to="/login" />;
-  }
+  return isAuth ? <Outlet /> : <Navigate to="/login" />;
 };
 
 export default AuthWrapper;

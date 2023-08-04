@@ -11,6 +11,7 @@ type NavWrapperProps = {
 const NavWrapper = ({ children }: NavWrapperProps) => {
   const navigate = useNavigate();
 
+  // close the nav menu after a small animation
   const handleNavClick = () => {
     const elem = document.activeElement as HTMLElement;
     if (elem) {

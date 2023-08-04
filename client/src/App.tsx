@@ -8,6 +8,7 @@ import Login from "./routes/Login";
 import Register from "./routes/Register";
 import Error from "./routes/Error";
 import axios from "axios";
+import AuthWrapper from "./components/AuthWrapper";
 
 axios.defaults.withCredentials = true;
 
@@ -15,38 +16,40 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <NavWrapper>
-              <Home />
-            </NavWrapper>
-          }
-        />
-        <Route
-          path="/map"
-          element={
-            <NavWrapper>
-              <Map />
-            </NavWrapper>
-          }
-        />
-        <Route
-          path="/friends"
-          element={
-            <NavWrapper>
-              <Friends />
-            </NavWrapper>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <NavWrapper>
-              <Profile />
-            </NavWrapper>
-          }
-        />
+        <Route element={<AuthWrapper />}>
+          <Route
+            path="/"
+            element={
+              <NavWrapper>
+                <Home />
+              </NavWrapper>
+            }
+          />
+          <Route
+            path="/map"
+            element={
+              <NavWrapper>
+                <Map />
+              </NavWrapper>
+            }
+          />
+          <Route
+            path="/friends"
+            element={
+              <NavWrapper>
+                <Friends />
+              </NavWrapper>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <NavWrapper>
+                <Profile />
+              </NavWrapper>
+            }
+          />
+        </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="*" element={<Error />} />

@@ -22,9 +22,12 @@ const Login = () => {
         `${import.meta.env.VITE_BACKEND_URL}/auth/login`,
         formData
       );
-      console.log(response);
-      toast.success("Successfully logged in");
-      navigate("/");
+      if (response.data.loggedIn) {
+        toast.success("Successfully logged in");
+        navigate("/");
+      } else {
+        toast.error(response.data.status);
+      }
     } catch (error) {
       console.error(error);
       toast.error("Something went wrong");

@@ -44,8 +44,10 @@ export const UserContext = ({ children }: UserContextProps) => {
         const response = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/auth/loginStatus`
         );
-        if (response.data.loggedIn === true) {
+        if (response.data) {
           setUser({ ...response.data });
+        }
+        if (response.data.loggedIn === true) {
           navigate("/");
         }
       } catch (error) {
@@ -54,7 +56,7 @@ export const UserContext = ({ children }: UserContextProps) => {
       }
     };
     user.loggedIn === null && getLoginStatus();
-  }, []);
+  }, [user]);
   return (
     <AuthContext.Provider value={{ user, setUser }}>
       {children}

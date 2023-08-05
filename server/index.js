@@ -4,11 +4,11 @@ require("dotenv").config();
 const helmet = require("helmet");
 const cors = require("cors");
 const authRouter = require("./routes/authRouter");
+const app = express();
 const session = require("express-session");
 const Redis = require("ioredis");
-const RedisStore = require("connect-redis")(session);
+const RedisStore = require("connect-redis").default;
 
-const app = express();
 const port = process.env.PORT || 3000;
 const server = require("http").createServer(app);
 

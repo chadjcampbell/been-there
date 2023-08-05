@@ -4,6 +4,7 @@ import { AiTwotoneHome } from "react-icons/ai";
 import { BsGlobeAmericas } from "react-icons/bs";
 import { FaUserFriends } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
+import { BsChatDots } from "react-icons/bs";
 type NavWrapperProps = {
   children: ReactNode;
 };
@@ -74,6 +75,15 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
                     onClick={handleNavClick}
                     className="px-1 text-lg text-secondary"
                   >
+                    <Link to="/chats">
+                      <BsChatDots />
+                      Chats
+                    </Link>
+                  </li>
+                  <li
+                    onClick={handleNavClick}
+                    className="px-1 text-lg text-secondary"
+                  >
                     <Link to="/profile">
                       <CgProfile />
                       Profile
@@ -102,6 +112,12 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
                   <Link to="/friends">
                     <FaUserFriends />
                     Friends
+                  </Link>
+                </li>
+                <li className="px-10 text-lg text-secondary">
+                  <Link to="/chats">
+                    <BsChatDots />
+                    Chats
                   </Link>
                 </li>
                 <li className="px-10 text-lg text-secondary">

@@ -10,6 +10,7 @@ import Error from "./routes/Error";
 import axios from "axios";
 import AuthWrapper from "./components/AuthWrapper";
 import { UserContext } from "./context/UserContext";
+import Chats from "./routes/Chats";
 
 axios.defaults.withCredentials = true;
 
@@ -40,6 +41,14 @@ function App() {
               element={
                 <NavWrapper>
                   <Friends />
+                </NavWrapper>
+              }
+            />
+            <Route
+              path="/chats"
+              element={
+                <NavWrapper>
+                  <Chats />
                 </NavWrapper>
               }
             />

@@ -30,7 +30,6 @@ const Register = () => {
         `${import.meta.env.VITE_BACKEND_URL}/auth/register`,
         formData
       );
-      console.log(response);
       toast.success("Successfully registered");
       setUser({ ...response.data });
       navigate("/");

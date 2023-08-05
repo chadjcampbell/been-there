@@ -25,7 +25,6 @@ const Login = () => {
         `${import.meta.env.VITE_BACKEND_URL}/auth/login`,
         formData
       );
-      console.log(response.data);
       if (response.data.loggedIn) {
         setUser({ ...response.data });
         toast.success("Successfully logged in");

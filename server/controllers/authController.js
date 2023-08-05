@@ -31,26 +31,23 @@ const checkLoginSchema = async (req, res, next) => {
       }
     })
     .catch((err) => {
-      console.log("here we are");
       return res.status(400).send({ error: "Invalid username or password" });
     });
 };
 
 const checkRegisterSchema = (req, res, next) => {
   const formData = req.body;
-  console.log(formData);
   registerSchema
     .validate(formData)
-    .catch((err) => {
-      console.log(err.errors);
-      return res.status(400).send({ error: "Registration failed" });
-    })
     .then((valid) => {
       if (valid) {
         next();
       } else {
         return res.status(400).send({ error: "Invalid username or password" });
       }
+    })
+    .catch((err) => {
+      return res.status(400).send({ error: "Registration failed" });
     });
 };
 

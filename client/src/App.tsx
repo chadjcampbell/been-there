@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import NavWrapper from "./components/NavWrapper";
+import NavWrapper from "./components/global/NavWrapper";
 import Home from "./routes/Home";
 import Map from "./routes/Map";
 import Friends from "./routes/Friends";
@@ -8,7 +8,7 @@ import Login from "./routes/Login";
 import Register from "./routes/Register";
 import Error from "./routes/Error";
 import axios from "axios";
-import AuthWrapper from "./components/AuthWrapper";
+import AuthWrapper from "./components/global/AuthWrapper";
 import { UserContext } from "./context/UserContext";
 import Chats from "./routes/Chats";
 

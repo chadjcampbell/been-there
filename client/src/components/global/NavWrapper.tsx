@@ -159,7 +159,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
           </div>
         </nav>
       </header>
-      <main>{children}</main>
+      <main className="h-[calc(100vh-4rem)]">{children}</main>
     </>
   );
 };

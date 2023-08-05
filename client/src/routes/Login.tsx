@@ -33,9 +33,9 @@ const Login = () => {
       } else {
         toast.error(response.data.status);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast.error("Something went wrong");
+      toast.error("Invalid username or password");
     }
   };
 

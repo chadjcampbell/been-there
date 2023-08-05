@@ -6,8 +6,8 @@ const cors = require("cors");
 const authRouter = require("./routes/authRouter");
 const app = express();
 const session = require("express-session");
-const Redis = require("ioredis");
 const RedisStore = require("connect-redis").default;
+const redisClient = require("./redis");
 
 const port = process.env.PORT || 3000;
 const server = require("http").createServer(app);
@@ -18,8 +18,6 @@ const io = new Server(server, {
     credentials: true,
   },
 });
-
-const redisClient = new Redis();
 
 // middlewares
 app.use(helmet());

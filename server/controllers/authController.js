@@ -19,20 +19,20 @@ const registerSchema = Yup.object({
   password: Yup.string().required().min(6).max(30),
 });
 
-const checkLoginSchema = (req, res, next) => {
+const checkLoginSchema = async (req, res, next) => {
   const formData = req.body;
   loginSchema
     .validate(formData)
-    .catch((err) => {
-      res.status(422).send({ error: "Invalid username or password" });
-      console.log(err.errors);
-    })
     .then((valid) => {
       if (valid) {
         next();
       } else {
-        res.status(422).send({ error: "Invalid username or password" });
+        return res.status(400).send({ error: "Invalid username or password" });
       }
+    })
+    .catch((err) => {
+      console.log("here we are");
+      return res.status(400).send({ error: "Invalid username or password" });
     });
 };
 
@@ -42,14 +42,14 @@ const checkRegisterSchema = (req, res, next) => {
   registerSchema
     .validate(formData)
     .catch((err) => {
-      res.status(422).send({ error: "Registration failed" });
       console.log(err.errors);
+      return res.status(400).send({ error: "Registration failed" });
     })
     .then((valid) => {
       if (valid) {
         next();
       } else {
-        res.status(422).send({ error: "Invalid username or password" });
+        return res.status(400).send({ error: "Invalid username or password" });
       }
     });
 };
@@ -72,15 +72,21 @@ const loginWithDB = async (req, res) => {
         name: potentialLogin.rows[0].name,
         email: potentialLogin.rows[0].email,
       };
-      res.json({
+      return res.json({
         loggedIn: true,
         user: req.session.user,
       });
     } else {
-      res.json({ loggedIn: false, status: "Invalid username or password" });
+      return res.json({
+        loggedIn: false,
+        status: "Invalid username or password",
+      });
     }
   } else {
-    res.json({ loggedIn: false, status: "Invalid username or password" });
+    return res.json({
+      loggedIn: false,
+      status: "Invalid username or password",
+    });
   }
 };
 
@@ -101,23 +107,26 @@ const registerWithDB = async (req, res) => {
       name: newUserQuery.rows[0].name,
       email: newUserQuery.rows[0].email,
     };
-    res.json({
+    return res.json({
       loggedIn: true,
       user: newUserQuery.rows[0],
     });
   } else {
-    res.json({ loggedIn: false, status: "Email already has an account" });
+    return res.json({
+      loggedIn: false,
+      status: "Email already has an account",
+    });
   }
 };
 
 const getLoginStatus = (req, res) => {
   if (req.session.user) {
-    res.json({
+    return res.json({
       loggedIn: true,
       user: req.session.user,
     });
   } else {
-    res.json({
+    return res.json({
       loggedIn: false,
       user: null,
     });

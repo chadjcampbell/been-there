@@ -30,6 +30,8 @@ const checkLoginSchema = (req, res, next) => {
     .then((valid) => {
       if (valid) {
         next();
+      } else {
+        res.status(422).send({ error: "Invalid username or password" });
       }
     });
 };
@@ -46,6 +48,8 @@ const checkRegisterSchema = (req, res, next) => {
     .then((valid) => {
       if (valid) {
         next();
+      } else {
+        res.status(422).send({ error: "Invalid username or password" });
       }
     });
 };

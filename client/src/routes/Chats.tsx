@@ -1,6 +1,6 @@
 import ChatListCard from "../components/chats/ChatListCard";
 
-const dummyChatArray = [
+const dummyFriendChatList = [
   {
     name: "Luis1990",
     photoURL: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
@@ -33,7 +33,7 @@ const Chats = () => {
     <div className=" mx-auto shadow-lg rounded-lg">
       <div className="flex flex-row justify-between bg-white">
         <div className="flex flex-col w-2/5 border-r-2 overflow-y-auto h-[calc(100vh-4rem)]">
-          {dummyChatArray.map((chat) => (
+          {dummyFriendChatList.map((chat) => (
             <ChatListCard
               key={chat.name}
               name={chat.name}

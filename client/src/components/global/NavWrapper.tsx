@@ -51,7 +51,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
                 </label>
                 <ul
                   tabIndex={0}
-                  className="menu menu-lg dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+                  className="menu menu-lg dropdown-content mt-3 z-50 p-2 shadow bg-base-100 rounded-box w-52"
                 >
                   <li
                     onClick={handleNavClick}
@@ -100,7 +100,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
                 Been There
               </Link>
             </div>
-            <div className="navbar-center hidden lg:flex">
+            <div className="navbar-center hidden lg:flex ">
               <ul className="menu menu-horizontal px-1">
                 <li className="px-10 text-lg text-secondary">
                   <Link to="/map">

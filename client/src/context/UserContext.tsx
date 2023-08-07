@@ -14,6 +14,7 @@ export type UserType = {
   id: number;
   name: string;
   email: string;
+  photoURL: string;
 };
 
 export type AuthStateType = {

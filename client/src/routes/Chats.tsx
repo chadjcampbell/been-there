@@ -1,38 +1,14 @@
+import { useContext } from "react";
 import ChatListCard from "../components/chats/ChatListCard";
 import {
   FriendChatMessage,
   MyChatMessage,
 } from "../components/chats/ChatMessage";
-
-const dummyFriendChatList = [
-  {
-    name: "Luis1990",
-    photoURL: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
-    recentMessage: "Pick me at 9:00 Am",
-  },
-  {
-    name: "Luis1991",
-    photoURL: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
-    recentMessage: "Pick me at 9:00 Am",
-  },
-  {
-    name: "Luis1992",
-    photoURL: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
-    recentMessage: "Pick me at 9:00 Am",
-  },
-  {
-    name: "Luis1993",
-    photoURL: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
-    recentMessage: "Pick me at 9:00 Am",
-  },
-  {
-    name: "Luis1994",
-    photoURL: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
-    recentMessage: "Pick me at 9:00 Am",
-  },
-];
+import { FriendContext } from "../context/FriendContext";
 
 const Chats = () => {
+  const { friendList } = useContext(FriendContext);
+
   return (
     <div className=" mx-auto ">
       <div className="z-10 drawer lg:drawer-open ">
@@ -71,14 +47,22 @@ const Chats = () => {
           <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
           <section className="menu p-4 w-80 h-full bg-base-200 text-base-content">
             {/* Sidebar content here */}
-            {dummyFriendChatList.map((chat) => (
-              <ChatListCard
-                key={chat.name}
-                name={chat.name}
-                photoURL={chat.photoURL}
-                recentMessage={chat.recentMessage}
-              />
-            ))}
+            {friendList ? (
+              friendList.map((chat) => (
+                <ChatListCard
+                  key={chat.name}
+                  name={chat.name}
+                  photoURL={
+                    chat.photoURL
+                      ? chat.photoURL
+                      : "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg"
+                  }
+                  recentMessage={chat.recentMessage ? chat.recentMessage : ""}
+                />
+              ))
+            ) : (
+              <p className="text-xl">No chats yet</p>
+            )}
           </section>
         </div>
       </div>

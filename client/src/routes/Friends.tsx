@@ -14,6 +14,7 @@ const Friends = () => {
           <div className="w-full flex flex-row flex-wrap items-center justify-center">
             {friendList?.map((friend) => (
               <FriendListCard
+                key={friend.name}
                 name={friend.name}
                 photoURL={
                   friend.photoURL

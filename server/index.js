@@ -33,7 +33,9 @@ app.use("/auth", authRouter);
 
 // socket.io middleware
 io.use(wrap(sessionMiddleware));
-io.on("connect", (socket) => {});
+io.on("connect", (socket) => {
+  console.log(socket.request.session.user.email);
+});
 
 server.listen(port, () => {
   console.log(`Server running on port ${port}`);

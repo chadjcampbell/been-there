@@ -5,9 +5,11 @@ import {
   MyChatMessage,
 } from "../components/chats/ChatMessage";
 import { FriendContext } from "../context/FriendContext";
+import useSocketSetup from "../hooks/useSocketSetup";
 
 const Chats = () => {
   const { friendList } = useContext(FriendContext);
+  useSocketSetup();
 
   return (
     <div className=" mx-auto ">

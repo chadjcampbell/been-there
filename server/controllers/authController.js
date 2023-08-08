@@ -130,10 +130,19 @@ const getLoginStatus = (req, res) => {
   }
 };
 
+const logout = (req, res) => {
+  req.session.destroy();
+  return res.json({
+    loggedIn: false,
+    user: null,
+  });
+};
+
 module.exports = {
   checkLoginSchema,
   checkRegisterSchema,
   loginWithDB,
   registerWithDB,
   getLoginStatus,
+  logout,
 };

@@ -54,6 +54,7 @@ export const UserContext = ({ children }: UserContextProps) => {
       } catch (error) {
         console.error(error);
         toast.error("Something went wrong");
+        navigate("/login");
       }
     };
     user.loggedIn === null && getLoginStatus();

@@ -1,3 +1,6 @@
+import { BsChatDots } from "react-icons/bs";
+import { CgProfile } from "react-icons/cg";
+
 type FriendListCardProps = {
   name: string;
   photoURL: string;
@@ -15,8 +18,14 @@ const FriendListCard = ({ name, photoURL }: FriendListCardProps) => {
       </div>
       <div className="w-full">
         <div className="text-lg font-semibold">{name}</div>
-        <button>Chat</button>
-        <button>Profile</button>
+        <button className="btn btn-sm">
+          <BsChatDots />
+          Chat
+        </button>
+        <button className="btn btn-sm ml-2">
+          <CgProfile />
+          Profile
+        </button>
       </div>
     </div>
   );

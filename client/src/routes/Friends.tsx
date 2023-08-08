@@ -11,7 +11,7 @@ const Friends = () => {
         <FindFriendModal />
         <>
           <h1 className="text-3xl font-bold">Friends</h1>
-          <div className="w-full flex flex-row flex-wrap items-center justify-center">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {friendList?.map((friend) => (
               <FriendListCard
                 key={friend.name}

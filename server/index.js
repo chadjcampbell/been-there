@@ -5,9 +5,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 const authRouter = require("./routes/authRouter");
 const app = express();
-const session = require("express-session");
-const RedisStore = require("connect-redis").default;
-const redisClient = require("./redis");
+const { sessionMiddleware, wrap } = require("./controllers/serverController");
 
 const port = process.env.PORT || 3000;
 const server = require("http").createServer(app);
@@ -28,26 +26,13 @@ app.use(
     credentials: true,
   })
 );
-app.use(
-  session({
-    secret: process.env.COOKIE_SECRET,
-    credentials: true,
-    name: "sid",
-    store: new RedisStore({ client: redisClient }),
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: process.env.ENVIRONMENT === "production",
-      httpOnly: true,
-      expires: 1000 * 60 * 60 * 24 * 7,
-      sameSite: process.env.ENVIRONMENT === "production" ? "none" : "lax",
-    },
-  })
-);
+app.use(sessionMiddleware);
 
 // routes
 app.use("/auth", authRouter);
 
+// socket.io middleware
+io.use(wrap(sessionMiddleware));
 io.on("connect", (socket) => {});
 
 server.listen(port, () => {

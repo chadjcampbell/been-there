@@ -30,7 +30,9 @@ const Chats = () => {
                     type="text"
                     placeholder="type your message here..."
                   />
-                  <button className="btn btn-secondary">Send</button>
+                  <button type="submit" className="btn btn-secondary">
+                    Send
+                  </button>
                 </form>
               </div>
             </div>

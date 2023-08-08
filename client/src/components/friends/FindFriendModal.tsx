@@ -1,10 +1,16 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-
+import { socket } from "../../socket";
+import { toast } from "react-hot-toast";
 declare global {
   interface Window {
     find_friend_modal: HTMLDialogElement;
   }
 }
+
+type SocketEmitReturnTypes = {
+  errorMessage: string;
+  done: boolean;
+};
 
 const FindFriendModal = () => {
   const [friendName, setFriendName] = useState("");
@@ -16,6 +22,18 @@ const FindFriendModal = () => {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
+    socket.emit(
+      "add_friend",
+      friendName,
+      ({ errorMessage, done }: SocketEmitReturnTypes) => {
+        if (done) {
+          toast.success("Friend added");
+          window.find_friend_modal.close();
+          return;
+        }
+        toast.error(errorMessage);
+      }
+    );
     // logic to find friends here
     setFriendName("");
   };

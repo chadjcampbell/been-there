@@ -1,6 +1,7 @@
 const Yup = require("yup");
 const pool = require("../db");
 const bcrypt = require("bcrypt");
+const { v4: uuid } = require("uuid");
 
 // first check schemas for validity
 
@@ -55,7 +56,7 @@ const checkRegisterSchema = (req, res, next) => {
 
 const loginWithDB = async (req, res) => {
   const potentialLogin = await pool.query(
-    "SELECT id, email, name, passhash FROM users WHERE users.email=$1",
+    "SELECT id, email, name, passhash, userid FROM users WHERE users.email=$1",
     [req.body.email]
   );
   if (potentialLogin.rowCount > 0) {
@@ -68,6 +69,7 @@ const loginWithDB = async (req, res) => {
         id: potentialLogin.rows[0].id,
         name: potentialLogin.rows[0].name,
         email: potentialLogin.rows[0].email,
+        userid: potentialLogin.rows[0].userid,
       };
       return res.json({
         loggedIn: true,
@@ -96,13 +98,14 @@ const registerWithDB = async (req, res) => {
     // register
     const hashedPass = await bcrypt.hash(req.body.password, 10);
     const newUserQuery = await pool.query(
-      "INSERT INTO users(name, email, passhash) values($1,$2,$3) RETURNING id, name, email",
-      [req.body.name, req.body.email, hashedPass]
+      "INSERT INTO users(name, email, passhash, userid) values($1,$2,$3,$4) RETURNING id, name, email, userid",
+      [req.body.name, req.body.email, hashedPass, uuid()]
     );
     req.session.user = {
       id: newUserQuery.rows[0].id,
       name: newUserQuery.rows[0].name,
       email: newUserQuery.rows[0].email,
+      userid: newUserQuery.rows[0].userid,
     };
     return res.json({
       loggedIn: true,

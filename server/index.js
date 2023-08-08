@@ -6,7 +6,7 @@ const cors = require("cors");
 const authRouter = require("./routes/authRouter");
 const app = express();
 const { sessionMiddleware, wrap } = require("./controllers/serverController");
-const { authorizeUser } = require("./controllers/socketController");
+const authorizeUser = require("./controllers/socketController");
 
 const port = process.env.PORT || 3000;
 const server = require("http").createServer(app);
@@ -36,7 +36,7 @@ app.use("/auth", authRouter);
 io.use(wrap(sessionMiddleware));
 io.use(authorizeUser);
 io.on("connect", (socket) => {
-  console.log(socket.request.session.user.email);
+  console.log(socket.user);
 });
 
 server.listen(port, () => {

@@ -8,11 +8,12 @@ declare global {
 }
 
 type SocketEmitReturnTypes = {
-  errorMessage: string;
+  errorMsg: string;
   done: boolean;
 };
 
 const FindFriendModal = () => {
+  const [error, setError] = useState("");
   const [friendName, setFriendName] = useState("");
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -25,13 +26,18 @@ const FindFriendModal = () => {
     socket.emit(
       "add_friend",
       friendName,
-      ({ errorMessage, done }: SocketEmitReturnTypes) => {
+      ({ errorMsg, done }: SocketEmitReturnTypes) => {
         if (done) {
           toast.success("Friend added");
           window.find_friend_modal.close();
           return;
         }
-        toast.error(errorMessage);
+        if (errorMsg) {
+          setError(errorMsg);
+          setTimeout(() => {
+            setError("");
+          }, 2000);
+        }
       }
     );
     // logic to find friends here
@@ -48,7 +54,26 @@ const FindFriendModal = () => {
       </button>
       <dialog id="find_friend_modal" className="modal">
         {" "}
-        <div className="modal-box">
+        <div className="modal-box flex flex-col-reverse">
+          {error && (
+            <h3 className="mt-4 font-bold text-lg text-red-500">
+              No users found
+            </h3>
+          )}
+          <form
+            onSubmit={handleSubmit}
+            className="flex items-center justify-center"
+          >
+            <input
+              required
+              onChange={handleInputChange}
+              value={friendName}
+              type="text"
+              placeholder="Name..."
+              className="input input-bordered input-primary w-full max-w-xs"
+            />
+            <button className="ml-2 btn btn-secondary">Search</button>
+          </form>
           <form method="dialog">
             <button className="btn btn-circle btn-outline absolute right-2 top-2">
               <svg
@@ -67,20 +92,6 @@ const FindFriendModal = () => {
               </svg>
             </button>
             <h3 className="mb-4 font-bold text-lg">Find a new friend</h3>
-          </form>
-          <form
-            onSubmit={handleSubmit}
-            className="flex items-center justify-center"
-          >
-            <input
-              required
-              onChange={handleInputChange}
-              value={friendName}
-              type="text"
-              placeholder="Name..."
-              className="input input-bordered input-primary w-full max-w-xs"
-            />
-            <button className="ml-2 btn btn-secondary">Search</button>
           </form>
         </div>
       </dialog>{" "}

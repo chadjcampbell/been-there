@@ -9,4 +9,9 @@ const authorizeUser = (socket, next) => {
   next();
 };
 
-module.exports = authorizeUser;
+const addFriend = (friendName, cb) => {
+  console.log(friendName);
+  cb({ done: false, errorMsg: "No users found" });
+};
+
+module.exports = { authorizeUser, addFriend };

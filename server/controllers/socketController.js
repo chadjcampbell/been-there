@@ -5,13 +5,14 @@ const authorizeUser = (socket, next) => {
     next(new Error("Not authorized"));
   }
   socket.user = { ...socket.request.session.user };
-  redisClient.hset(`userid:${socket.user.email}`, "userid", socket.user.userid);
+  redisClient.hset(`userid:${socket.user.name}`, "userid", socket.user.userid);
   next();
 };
 
-const addFriend = (friendName, cb) => {
-  console.log(friendName);
+const addFriend = async (friendName, cb) => {
+  const friendUserID = await redisClient.hget(`userid:${friendName}`, "userid");
   cb({ done: false, errorMsg: "No users found" });
+  console.log(friendUserID);
 };
 
 module.exports = { authorizeUser, addFriend };

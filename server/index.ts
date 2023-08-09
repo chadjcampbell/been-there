@@ -1,12 +1,13 @@
-const express = require("express");
-const { Server } = require("socket.io");
+import express from "express";
+import { Server } from "socket.io";
 require("dotenv").config();
-const helmet = require("helmet");
-const cors = require("cors");
-const authRouter = require("./routes/authRouter");
+import helmet from "helmet";
+import cors from "cors";
+import { userRoute } from "./routes/userRoute";
 const app = express();
-const { sessionMiddleware, wrap } = require("./controllers/serverController");
-const { authorizeUser, addFriend } = require("./controllers/socketController");
+import cookieParser from "cookie-parser";
+import { sessionMiddleware, wrap } from "./controllers/serverController";
+import { authorizeUser } from "./controllers/socketController";
 
 const port = process.env.PORT || 3000;
 const server = require("http").createServer(app);
@@ -27,18 +28,21 @@ app.use(
     credentials: true,
   })
 );
-app.use(sessionMiddleware);
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
 
 // routes
-app.use("/auth", authRouter);
+app.use("/auth", userRoute);
 
 // socket.io middleware
 io.use(wrap(sessionMiddleware));
 io.use(authorizeUser);
 io.on("connect", (socket) => {
   console.log(socket.user);
-  socket.on("add_friend", addFriend);
 });
+
+// error middleware
+app.use(errorHandler);
 
 server.listen(port, () => {
   console.log(`Server running on port ${port}`);

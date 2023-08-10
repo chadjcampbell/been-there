@@ -1,9 +1,7 @@
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
-import { User, users } from "../models/User";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { Token, tokens } from "../models/Token";
 import crypto from "crypto";
 import { sendEmail } from "../utils/sendEmail";
 import express, {
@@ -13,12 +11,13 @@ import express, {
   NextFunction,
   Application,
 } from "express";
+import db from "../db";
 
 const generateToken = (id: string) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+  return jwt.sign({ id }, String(process.env.JWT_SECRET), { expiresIn: "1d" });
 };
 
-const registerUser = [
+export const registerUser = [
   // validate and sanitize fields
   body("name")
     .trim()
@@ -41,7 +40,7 @@ const registerUser = [
       // data from form is valid
       // check if user already exists
       const { name, email, password } = req.body;
-      const userExists = await User.findOne({ email });
+      const userExists = await db.query.users.findFirst();
       if (userExists) {
         res.status(400);
         throw new Error("User already exists with that email");
@@ -82,7 +81,7 @@ const registerUser = [
   }),
 ];
 
-const loginUser = [
+export const loginUser = [
   // validate and sanitize fields
   body("email").trim().isEmail().withMessage("Email must be valid."),
   body("password")
@@ -137,7 +136,7 @@ const loginUser = [
   }),
 ];
 
-const logoutUser = asyncHandler(async (req, res) => {
+export const logoutUser = asyncHandler(async (req, res) => {
   res.cookie("token", "", {
     path: "/",
     httpOnly: true,
@@ -148,7 +147,7 @@ const logoutUser = asyncHandler(async (req, res) => {
   return res.status(200).json({ message: "Logged out" });
 });
 
-const getUser = asyncHandler(async (req, res) => {
+export const getUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
   if (user) {
     const { _id, name, email, photo, phone, bio } = user;
@@ -166,7 +165,7 @@ const getUser = asyncHandler(async (req, res) => {
   }
 });
 
-const loginStatus = asyncHandler(async (req, res) => {
+export const loginStatus = asyncHandler(async (req, res) => {
   const token = req.cookies.token;
   if (!token) {
     return res.json(false);
@@ -180,7 +179,7 @@ const loginStatus = asyncHandler(async (req, res) => {
   }
 });
 
-const updateUser = asyncHandler(async (req, res) => {
+export const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
   if (user) {
     const { name, email, photo, phone, bio } = user;
@@ -204,7 +203,7 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 });
 
-const changePassword = [
+export const changePassword = [
   body("password")
     .trim()
     .isLength({ min: 6, max: 24 })
@@ -236,7 +235,7 @@ const changePassword = [
   }),
 ];
 
-const forgotPassword = asyncHandler(async (req, res) => {
+export const forgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
@@ -290,7 +289,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
   }
 });
 
-const resetPassword = asyncHandler(async (req, res) => {
+export const resetPassword = asyncHandler(async (req, res) => {
   const { password } = req.body;
   const { resetToken } = req.params;
   // hash token to compare to db
@@ -314,15 +313,3 @@ const resetPassword = asyncHandler(async (req, res) => {
   await user.save();
   res.status(200).json({ message: "Password successfully reset" });
 });
-
-module.exports = {
-  registerUser,
-  loginUser,
-  logoutUser,
-  getUser,
-  loginStatus,
-  updateUser,
-  changePassword,
-  forgotPassword,
-  resetPassword,
-};

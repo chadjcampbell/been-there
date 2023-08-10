@@ -5,9 +5,11 @@ import express, {
   NextFunction,
   Application,
 } from "express";
-const asyncHandler = require("express-async-handler");
-const User = require("../models/userModel");
-const jwt = require("jsonwebtoken");
+import asyncHandler from "express-async-handler";
+import jwt from "jsonwebtoken";
+import db from "../db";
+import { eq } from "drizzle-orm";
+import { User, users } from "../schema";
 
 export const protect = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -18,9 +20,12 @@ export const protect = asyncHandler(
         throw new Error("Not authorized, please login");
       }
       // verify token
-      const verified = jwt.verify(token, process.env.JWT_SECRET);
+      const verified: User = jwt.verify(token, String(process.env.JWT_SECRET));
       // get userID from token
-      const user = await User.findById(verified.id).select("-password");
+      const user = await db.query.users.findFirst({
+        where: eq(users.id, verified.id),
+        columns: { passhash: false },
+      });
       if (!user) {
         res.status(401);
         throw new Error("User not found");

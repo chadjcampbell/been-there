@@ -1,9 +1,9 @@
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
-import User from "../models/userModel";
+import { User, users } from "../models/User";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import Token from "../models/tokenModel";
+import { Token, tokens } from "../models/Token";
 import crypto from "crypto";
 import { sendEmail } from "../utils/sendEmail";
 import express, {

@@ -287,8 +287,8 @@ export const forgotPassword = asyncHandler(async (req, res) => {
   await db.insert(tokens).values({
     userId: user.id,
     token: hashedToken,
-    createdAt: Date.now() as PgTimestampString,
-    expiresAt: (Date.now() + 30 * (60 * 1000)) as PgTimestampString, // 30 minute expiration
+    createdAt: Date.now(),
+    expiresAt: Date.now() + 30 * (60 * 1000), // 30 minute expiration
   });
 
   // construct reset url
@@ -305,10 +305,10 @@ export const forgotPassword = asyncHandler(async (req, res) => {
   `;
   const subject = "Password Reset Request";
   const send_to = user.email;
-  const sent_from = process.env.EMAIL_USER;
+  const sent_from = String(process.env.EMAIL_USER);
 
   try {
-    await sendEmail(subject, message, send_to, sent_from);
+    await sendEmail(subject, message, send_to, sent_from, "");
     res.status(200).json({ success: true, message: "Reset email sent" });
   } catch (error) {
     res.status(500);

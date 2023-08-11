@@ -38,7 +38,7 @@ export const registerUser = [
       // check if user already exists
       const { name, email, password } = req.body;
       const userExists = await db.query.users.findFirst({
-        where: eq(email, users.email),
+        where: eq(users.email, email),
       });
       if (userExists) {
         res.status(400);
@@ -99,7 +99,7 @@ export const loginUser = [
       // check if user exists
       const { email, password } = req.body;
       const user = await db.query.users.findFirst({
-        where: eq(email, users.email),
+        where: eq(users.email, email),
       });
       if (!user) {
         res.status(400);
@@ -154,7 +154,7 @@ export const getUser = asyncHandler(async (req: RequestUserAttached, res) => {
     throw new Error("User not found");
   }
   const user = await db.query.users.findFirst({
-    where: eq(req.user.id, users.id),
+    where: eq(users.id, req.user.id),
   });
   if (user) {
     const { id, name, email, photo, bio } = user;
@@ -188,36 +188,45 @@ export const loginStatus = asyncHandler(async (req, res) => {
   }
 });
 
-export const updateUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
-  if (user) {
-    const { name, email, photo, phone, bio } = user;
-    user.email = email;
-    user.name = req.body.name || name;
-    user.phone = req.body.phone || phone;
-    user.photo = req.body.photo || photo;
-    user.bio = req.body.bio || bio;
-    const updatedUser = await user.save();
-    res.status(200).json({
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      photo: updatedUser.photo,
-      phone: updatedUser.phone,
-      bio: updatedUser.bio,
-    });
-  } else {
-    res.status(404);
-    throw new Error("User not found");
+export const updateUser = asyncHandler(
+  async (req: RequestUserAttached, res) => {
+    if (!req.user) {
+      res.status(404);
+      throw new Error("User not found");
+    } else {
+      const user = await db.query.users.findFirst({
+        where: eq(users.id, req.user.id),
+      });
+      if (user) {
+        const { name, email, photo, bio } = user;
+        user.email = email;
+        user.name = req.body.name || name;
+        user.photo = req.body.photo || photo;
+        user.bio = req.body.bio || bio;
+        const updatedUserArray = await db
+          .update(users)
+          .set(user)
+          .where(eq(users.id, req.user.id))
+          .returning();
+        const updatedUser = updatedUserArray[0];
+        res.status(200).json({
+          id: updatedUser.id,
+          name: updatedUser.name,
+          email: updatedUser.email,
+          photo: updatedUser.photo,
+          bio: updatedUser.bio,
+        });
+      }
+    }
   }
-});
+);
 
 export const changePassword = [
   body("password")
     .trim()
     .isLength({ min: 6, max: 24 })
     .withMessage("Password must be between 6 and 24 characters."),
-  asyncHandler(async (req, res) => {
+  asyncHandler(async (req: RequestUserAttached, res) => {
     // extract the validation errors from a request
     const errors = validationResult(req);
     // there are errors
@@ -225,17 +234,26 @@ export const changePassword = [
       res.status(400);
       throw new Error(errors.array()[0].msg);
     }
-    const user = await User.findById(req.user._id);
+    if (!req.user) {
+      res.status(400);
+      throw new Error("User not found");
+    }
+    const user = await db.query.users.findFirst({
+      where: eq(users.id, req.user.id),
+    });
     if (!user) {
       res.status(400);
       throw new Error("User not found");
     }
     const { oldPassword, password } = req.body;
     // check old password
-    const passwordIsCorrect = await bcrypt.compare(oldPassword, user.password);
+    const passwordIsCorrect = await bcrypt.compare(oldPassword, user.passhash);
     if (user && passwordIsCorrect) {
-      user.password = password;
-      await user.save();
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await db
+        .update(users)
+        .set({ passhash: hashedPassword })
+        .where(eq(users.id, req.user.id));
       res.status(200).send("Password changed successfuly");
     } else {
       res.status(400);

@@ -1,18 +1,24 @@
-import express, {
-  Express,
-  Request,
-  Response,
-  NextFunction,
-  Application,
-} from "express";
+import { Request, Response, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import db from "../db";
 import { eq } from "drizzle-orm";
-import { User, users } from "../schema";
+import { users } from "../schema";
+
+export type UserFromDB = {
+  id: number;
+  name?: string;
+  email?: string;
+  passhash?: string;
+  photo?: string;
+  bio?: string;
+};
+export interface RequestUserAttached extends Request {
+  user?: UserFromDB;
+}
 
 export const protect = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: RequestUserAttached, res: Response, next: NextFunction) => {
     try {
       const token = req.cookies.token;
       if (!token) {
@@ -20,7 +26,10 @@ export const protect = asyncHandler(
         throw new Error("Not authorized, please login");
       }
       // verify token
-      const verified: User = jwt.verify(token, String(process.env.JWT_SECRET));
+      const verified = jwt.verify(
+        token,
+        String(process.env.JWT_SECRET)
+      ) as JwtPayload;
       // get userID from token
       const user = await db.query.users.findFirst({
         where: eq(users.id, verified.id),

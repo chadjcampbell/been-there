@@ -7,8 +7,9 @@ import { sendEmail } from "../utils/sendEmail";
 import { Request, Response, NextFunction } from "express";
 import db from "../db";
 import { eq } from "drizzle-orm";
-import { users } from "../schema";
+import { tokens, users } from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
+import { PgTimestamp, PgTimestampString } from "drizzle-orm/pg-core";
 
 const generateToken = (id: string) => {
   return jwt.sign({ id }, String(process.env.JWT_SECRET), { expiresIn: "1d" });
@@ -264,16 +265,15 @@ export const changePassword = [
 
 export const forgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
-  const user = await User.findOne({ email });
+  const user = await db.query.users.findFirst({
+    where: eq(users.email, email),
+  });
   if (!user) {
     res.status(404);
     throw new Error("User does not exist");
   }
   // delete old token if exists
-  let oldToken = await Token.findOne({ userId: user._id });
-  if (oldToken) {
-    await oldToken.deleteOne();
-  }
+  await db.delete(tokens).where(eq(users.id, user.id));
 
   // create reset token
   let resetToken = crypto.randomBytes(32).toString("hex") + user._id;
@@ -284,12 +284,12 @@ export const forgotPassword = asyncHandler(async (req, res) => {
     .digest("hex");
 
   // save token to db
-  await new Token({
-    userId: user._id,
+  await db.insert(tokens).values({
+    userId: user.id,
     token: hashedToken,
-    createdAt: Date.now(),
-    expiresAt: Date.now() + 30 * (60 * 1000), // 30 minutes
-  }).save();
+    createdAt: Date.now() as PgTimestampString,
+    expiresAt: (Date.now() + 30 * (60 * 1000)) as PgTimestampString, // 30 minute expiration
+  });
 
   // construct reset url
   const resetURL = `${process.env.FRONTEND_URL}/resetPassword/${resetToken}`;

@@ -3,11 +3,10 @@ import { Server } from "socket.io";
 require("dotenv").config();
 import helmet from "helmet";
 import cors from "cors";
-import { userRoute } from "./routes/userRoute";
+import { router as userRoute } from "./routes/userRoute";
 const app = express();
 import cookieParser from "cookie-parser";
-import { sessionMiddleware, wrap } from "./controllers/serverController";
-import { authorizeUser } from "./controllers/socketController";
+import { errorHandler } from "./middleware/errorMiddleware";
 
 const port = process.env.PORT || 3000;
 const server = require("http").createServer(app);
@@ -34,11 +33,9 @@ app.use(express.urlencoded({ extended: false }));
 // routes
 app.use("/auth", userRoute);
 
-// socket.io middleware
-io.use(wrap(sessionMiddleware));
-io.use(authorizeUser);
+// socket.io connection
 io.on("connect", (socket) => {
-  console.log(socket.user);
+  console.log(socket);
 });
 
 // error middleware

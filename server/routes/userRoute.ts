@@ -1,5 +1,5 @@
 import express from "express";
-const router = express.Router();
+export const router = express.Router();
 import {
   registerUser,
   loginUser,
@@ -11,7 +11,7 @@ import {
   forgotPassword,
   resetPassword,
 } from "../controllers/userController";
-import protect from "../middleware/authMiddleware";
+import { protect } from "../middleware/authMiddleware";
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
@@ -22,5 +22,3 @@ router.patch("/updateUser", protect, updateUser);
 router.patch("/changePassword", protect, changePassword);
 router.post("/forgotPassword", forgotPassword);
 router.put("/resetPassword/:resetToken", resetPassword);
-
-module.exports = router;

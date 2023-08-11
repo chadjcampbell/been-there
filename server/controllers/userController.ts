@@ -12,6 +12,8 @@ import express, {
   Application,
 } from "express";
 import db from "../db";
+import { eq } from "drizzle-orm";
+import { users } from "../schema";
 
 const generateToken = (id: string) => {
   return jwt.sign({ id }, String(process.env.JWT_SECRET), { expiresIn: "1d" });
@@ -40,18 +42,16 @@ export const registerUser = [
       // data from form is valid
       // check if user already exists
       const { name, email, password } = req.body;
-      const userExists = await db.query.users.findFirst();
+      const userExists = await db.query.users.findFirst({
+        where: eq(email, users.email),
+      });
       if (userExists) {
         res.status(400);
         throw new Error("User already exists with that email");
       } else {
-        const user = await User.create({
-          name,
-          email,
-          password,
-        });
+        const user = await db.insert(users).values({ name: name });
         // generate token
-        const token = generateToken(user._id);
+        const token = generateToken(user.id);
         // send http cookie
         res.cookie("token", token, {
           path: "/",

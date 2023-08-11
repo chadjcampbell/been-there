@@ -12,9 +12,10 @@ import {
   resetPassword,
 } from "../controllers/userController";
 import { protect } from "../middleware/authMiddleware";
+import rateLimiter from "../middleware/rateLimiter";
 
 router.post("/register", registerUser);
-router.post("/login", loginUser);
+router.post("/login", rateLimiter, loginUser);
 router.get("/logout", logoutUser);
 router.get("/getUser", protect, getUser);
 router.get("/loggedIn", loginStatus);

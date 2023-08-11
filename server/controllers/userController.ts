@@ -4,16 +4,11 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { sendEmail } from "../utils/sendEmail";
-import express, {
-  Express,
-  Request,
-  Response,
-  NextFunction,
-  Application,
-} from "express";
+import { Request, Response, NextFunction } from "express";
 import db from "../db";
 import { eq } from "drizzle-orm";
 import { users } from "../schema";
+import { RequestUserAttached } from "../middleware/authMiddleware";
 
 const generateToken = (id: string) => {
   return jwt.sign({ id }, String(process.env.JWT_SECRET), { expiresIn: "1d" });
@@ -49,9 +44,14 @@ export const registerUser = [
         res.status(400);
         throw new Error("User already exists with that email");
       } else {
-        const user = await db.insert(users).values({ name: name });
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const userArray = await db
+          .insert(users)
+          .values({ name: name, passhash: hashedPassword, email: email })
+          .returning();
         // generate token
-        const token = generateToken(user.id);
+        const user = userArray[0];
+        const token = generateToken(String(user.id));
         // send http cookie
         res.cookie("token", token, {
           path: "/",
@@ -62,13 +62,12 @@ export const registerUser = [
         });
 
         if (user) {
-          const { _id, name, email, photo, phone, bio } = user;
+          const { id, name, email, photo, bio } = user;
           res.status(201).json({
-            _id,
+            id,
             name,
             email,
             photo,
-            phone,
             bio,
             token,
           });
@@ -99,16 +98,18 @@ export const loginUser = [
     } else {
       // check if user exists
       const { email, password } = req.body;
-      const user = await User.findOne({ email });
+      const user = await db.query.users.findFirst({
+        where: eq(email, users.email),
+      });
       if (!user) {
         res.status(400);
         throw new Error("User not found, please sign up");
       } else {
         // user exists, compare passwords
-        const passwordIsCorrect = await bcrypt.compare(password, user.password);
+        const passwordIsCorrect = await bcrypt.compare(password, user.passhash);
         if (passwordIsCorrect) {
           // generate token
-          const token = generateToken(user._id);
+          const token = generateToken(String(user.id));
           // send http cookie
           res.cookie("token", token, {
             path: "/",
@@ -117,13 +118,12 @@ export const loginUser = [
             sameSite: "none",
             secure: true,
           });
-          const { _id, name, email, photo, phone, bio } = user;
+          const { id, name, email, photo, bio } = user;
           res.status(200).json({
-            _id,
+            id,
             name,
             email,
             photo,
-            phone,
             bio,
             token,
           });
@@ -144,19 +144,25 @@ export const logoutUser = asyncHandler(async (req, res) => {
     sameSite: "none",
     secure: true,
   });
-  return res.status(200).json({ message: "Logged out" });
+  res.status(200).json({ message: "Logged out" });
+  return;
 });
 
-export const getUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
+export const getUser = asyncHandler(async (req: RequestUserAttached, res) => {
+  if (!req.user) {
+    res.status(400);
+    throw new Error("User not found");
+  }
+  const user = await db.query.users.findFirst({
+    where: eq(req.user.id, users.id),
+  });
   if (user) {
-    const { _id, name, email, photo, phone, bio } = user;
+    const { id, name, email, photo, bio } = user;
     res.status(200).json({
-      _id,
+      id,
       name,
       email,
       photo,
-      phone,
       bio,
     });
   } else {
@@ -168,14 +174,17 @@ export const getUser = asyncHandler(async (req, res) => {
 export const loginStatus = asyncHandler(async (req, res) => {
   const token = req.cookies.token;
   if (!token) {
-    return res.json(false);
+    res.json(false);
+    return;
   }
   // verify token
-  const verified = jwt.verify(token, process.env.JWT_SECRET);
+  const verified = jwt.verify(token, String(process.env.JWT_SECRET));
   if (verified) {
-    return res.json(true);
+    res.json(true);
+    return;
   } else {
-    return res.json(false);
+    res.json(false);
+    return;
   }
 });
 

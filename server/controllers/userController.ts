@@ -4,12 +4,10 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { sendEmail } from "../utils/sendEmail";
-import { Request, Response, NextFunction } from "express";
 import db from "../db";
-import { eq } from "drizzle-orm";
+import { and, eq, gt } from "drizzle-orm";
 import { tokens, users } from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
-import { PgTimestamp, PgTimestampString } from "drizzle-orm/pg-core";
 
 const generateToken = (id: string) => {
   return jwt.sign({ id }, String(process.env.JWT_SECRET), { expiresIn: "1d" });
@@ -276,7 +274,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
   await db.delete(tokens).where(eq(users.id, user.id));
 
   // create reset token
-  let resetToken = crypto.randomBytes(32).toString("hex") + user._id;
+  let resetToken = crypto.randomBytes(32).toString("hex") + user.id;
   // hash token
   const hashedToken = crypto
     .createHash("sha256")
@@ -326,17 +324,30 @@ export const resetPassword = asyncHandler(async (req, res) => {
     .digest("hex");
 
   // find token in db
-  const userToken = await Token.findOne({
-    token: hashedToken,
-    expiresAt: { $gt: Date.now() },
-  });
+  const userTokenArray = await db
+    .select()
+    .from(tokens)
+    .where(
+      and(gt(tokens.expiresAt, Date.now()), eq(tokens.token, hashedToken))
+    );
+  const userToken = userTokenArray[0];
   if (!userToken) {
     res.status(404);
     throw new Error("Invalid or expired token");
   }
   // find user
-  const user = await User.findOne({ _id: userToken.userId });
-  user.password = password;
-  await user.save();
-  res.status(200).json({ message: "Password successfully reset" });
+  const user = await db.query.users.findFirst({
+    where: eq(users.id, userToken.userId),
+  });
+  if (user && userToken) {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await db
+      .update(users)
+      .set({ passhash: hashedPassword })
+      .where(eq(users.id, user.id));
+    res.status(200).json({ message: "Password successfully reset" });
+  } else {
+    res.status(400);
+    throw new Error("Old password is incorrect");
+  }
 });

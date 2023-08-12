@@ -7,5 +7,5 @@ export const errorHandler = (
   next: NextFunction
 ) => {
   const statusCode = res.statusCode ? res.statusCode : 500;
-  res.status(statusCode).send("An error has occurred");
+  res.status(statusCode).send(err);
 };

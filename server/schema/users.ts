@@ -3,8 +3,8 @@ import { InferModel } from "drizzle-orm";
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  email: varchar("email", { length: 30 }).notNull().unique(),
+  name: varchar("name", { length: 60 }).notNull(),
+  email: varchar("email", { length: 40 }).notNull().unique(),
   passhash: varchar("passhash").notNull(),
   photo: varchar("photo")
     .notNull()

@@ -17,14 +17,18 @@ export const registerUser = [
   // validate and sanitize fields
   body("name")
     .trim()
-    .isLength({ min: 3 })
+    .isLength({ min: 3, max: 40 })
     .escape()
     .withMessage("Name must be specified."),
   body("password")
     .trim()
     .isLength({ min: 6, max: 24 })
     .withMessage("Password must be between 6 and 24 characters."),
-  body("email").trim().isEmail().withMessage("Email must be valid."),
+  body("email")
+    .trim()
+    .isEmail()
+    .isLength({ min: 3, max: 40 })
+    .withMessage("Email must be valid."),
   asyncHandler(async (req, res) => {
     // extract the validation errors from a request
     const errors = validationResult(req);
@@ -299,7 +303,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
   <p>This reset link is valid for only 30 minutes</p>
   <a href=${resetURL} clicktracking=off>${resetURL}</a>
   <p>Regards,</p>
-  <p>inStock Team</p>
+  <p>Been There Team</p>
   `;
   const subject = "Password Reset Request";
   const send_to = user.email;

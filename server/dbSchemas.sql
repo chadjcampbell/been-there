@@ -1,8 +1,15 @@
 CREATE TABLE users(
   id SERIAL PRIMARY KEY,
-  email VARCHAR(30) NOT NULL UNIQUE,
+  name VARCHAR(60) NOT NULL,
+  email VARCHAR(40) NOT NULL UNIQUE,
   passhash VARCHAR NOT NULL,
-  userid VARCHAR NOT NULL UNIQUE
+  photo VARCHAR NOT NULL DEFAULT 'https://cdn-icons-png.flaticon.com/512/149/149071.png?w=740&t=st=1686866825~exp=1686867425~hmac=249cf4990844c725b121c896f61d1efd0efe31fc8af6dc522628c05fd6afe430',
+  bio VARCHAR NOT NULL DEFAULT 'Your bio here...'
 ) 
 
-INSERT INTO users(email,passhash) values($1,$2)
+CREATE TABLE tokens(
+  id INT NOT NULL PRIMARY KEY,
+  token VARCHAR NOT NULL,
+  createdAt INT NOT NULL,
+  expiresAt INT NOT NULL
+) 

@@ -1,4 +1,4 @@
-import { pgTable, timestamp, varchar, integer } from "drizzle-orm/pg-core";
+import { pgTable, varchar, integer } from "drizzle-orm/pg-core";
 import { InferModel } from "drizzle-orm";
 
 export const tokens = pgTable("tokens", {

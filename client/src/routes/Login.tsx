@@ -1,9 +1,8 @@
-import axios from "axios";
-import { useContext } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/UserContext";
+import { useLoginUserMutation } from "../redux/api/authApi";
+import Loading from "../components/global/Loading";
 
 export interface IFormLoginInputs {
   email: string;
@@ -11,26 +10,24 @@ export interface IFormLoginInputs {
 }
 
 const Login = () => {
-  const { setUser } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const [loginUser, { data, isLoading, isError, error, isSuccess }] =
+    useLoginUserMutation();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormLoginInputs>();
 
+  const navigate = useNavigate();
+
   const handleLogin: SubmitHandler<IFormLoginInputs> = async (formData) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/login`,
-        formData
-      );
-      if (response.data.loggedIn) {
-        setUser({ ...response.data });
+      await loginUser(formData);
+      if (isSuccess) {
         toast.success("Successfully logged in");
         navigate("/");
       } else {
-        toast.error(response.data.status);
+        toast.error(String(data?.message));
       }
     } catch (error: any) {
       console.error(error);
@@ -38,7 +35,9 @@ const Login = () => {
     }
   };
 
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <div className="p-4 bg-secondary-content relative flex flex-col justify-center min-h-screen">
       <div className="w-full p-6 m-auto bg-white rounded-md shadow-md lg:max-w-lg">
         <img src="./globe-pins.webp" />

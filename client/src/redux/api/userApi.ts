@@ -11,7 +11,7 @@ export const userApi = createApi({
   }),
   tagTypes: ["User"],
   endpoints: (builder) => ({
-    getMe: builder.query<IUser, null>({
+    getUser: builder.query<IUser, null>({
       query() {
         return {
           url: "getUser",

@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { IFormLoginInputs } from "../../routes/Login";
 import { IFormRegisterInputs } from "../../routes/Register";
-import { IGenericResponse } from "./types";
+import { IGenericResponse, IUser } from "./types";
 import { userApi } from "./userApi";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL as string;
@@ -22,7 +22,7 @@ export const authApi = createApi({
       },
     }),
     loginUser: builder.mutation<
-      { access_token: string; status: string },
+      { status: number; user?: IUser; message?: string },
       IFormLoginInputs
     >({
       query(data) {
@@ -36,7 +36,7 @@ export const authApi = createApi({
       async onQueryStarted(_args, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
-          await dispatch(userApi.endpoints.getMe.initiate(null));
+          await dispatch(userApi.endpoints.getUser.initiate(null));
         } catch (error) {}
       },
     }),

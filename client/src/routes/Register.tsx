@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/UserContext";
 
-interface IFormRegisterInputs {
+export interface IFormRegisterInputs {
   name: string;
   email: string;
   password: string;

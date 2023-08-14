@@ -5,14 +5,16 @@ import { BsGlobeAmericas } from "react-icons/bs";
 import { FaUserFriends } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { BsChatDots } from "react-icons/bs";
-import axios from "axios";
 import useSocketSetup from "../../hooks/useSocketSetup";
+import { toast } from "react-hot-toast";
+import { useLogoutUserMutation } from "../../redux/api/authApi";
 
 type NavWrapperProps = {
   children: ReactNode;
 };
 
 const NavWrapper = ({ children }: NavWrapperProps) => {
+  const [logoutUser] = useLogoutUserMutation();
   const navigate = useNavigate();
   useSocketSetup();
 
@@ -26,9 +28,15 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
     }
   };
 
-  const handleLogout = () => {
-    axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/logout`);
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      toast.success("Successfully logged out");
+      navigate("/login");
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Something went wrong");
+    }
   };
 
   return (

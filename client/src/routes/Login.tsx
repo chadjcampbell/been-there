@@ -23,15 +23,11 @@ const Login = () => {
   const handleLogin: SubmitHandler<IFormLoginInputs> = async (formData) => {
     try {
       await loginUser(formData);
-      if (isSuccess) {
-        toast.success("Successfully logged in");
-        navigate("/");
-      } else {
-        toast.error(String(data?.message));
-      }
+      toast.success("Successfully logged in");
+      navigate("/");
     } catch (error: any) {
       console.error(error);
-      toast.error("Invalid username or password");
+      toast.error(String(data?.message));
     }
   };
 

@@ -14,7 +14,7 @@ type NavWrapperProps = {
 };
 
 const NavWrapper = ({ children }: NavWrapperProps) => {
-  const [logoutUser] = useLogoutUserMutation();
+  const [logoutUser, { isLoading }] = useLogoutUserMutation();
   const navigate = useNavigate();
   useSocketSetup();
 
@@ -166,7 +166,11 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
                 onClick={handleLogout}
                 className="btn text-white bg-primary"
               >
-                Logout
+                {isLoading ? (
+                  <span className="loading loading-spinner text-white loading-lg"></span>
+                ) : (
+                  "Logout"
+                )}
               </button>
             </div>
           </div>

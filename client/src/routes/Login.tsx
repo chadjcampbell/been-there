@@ -2,7 +2,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useLoginUserMutation } from "../redux/api/authApi";
-import Loading from "../components/global/Loading";
+import { useEffect } from "react";
 
 export interface IFormLoginInputs {
   email: string;
@@ -10,7 +10,7 @@ export interface IFormLoginInputs {
 }
 
 const Login = () => {
-  const [loginUser, { data, isLoading, isError, error, isSuccess }] =
+  const [loginUser, { isLoading, isError, error, isSuccess }] =
     useLoginUserMutation();
   const {
     register,
@@ -21,19 +21,24 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin: SubmitHandler<IFormLoginInputs> = async (formData) => {
-    try {
-      await loginUser(formData);
-      toast.success("Successfully logged in");
-      navigate("/");
-    } catch (error: any) {
-      console.error(error);
-      toast.error(String(data?.message));
-    }
+    await loginUser(formData);
   };
 
-  return isLoading ? (
-    <Loading />
-  ) : (
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("You successfully logged in");
+      navigate("/");
+    }
+    if (isError) {
+      if (Array.isArray((error as any).data.error)) {
+        (error as any).data.error.forEach((el: any) => toast.error(el.message));
+      } else {
+        toast.error((error as any).data.message);
+      }
+    }
+  }, [isLoading]);
+
+  return (
     <div className="p-4 bg-secondary-content relative flex flex-col justify-center min-h-screen">
       <div className="w-full p-6 m-auto bg-white rounded-md shadow-md lg:max-w-lg">
         <img src="./globe-pins.webp" />
@@ -96,7 +101,11 @@ const Login = () => {
           </a>
           <div>
             <button type="submit" className="w-full btn btn-secondary">
-              Login
+              {isLoading ? (
+                <span className="loading loading-spinner text-white loading-lg"></span>
+              ) : (
+                "Login"
+              )}
             </button>
           </div>
         </form>

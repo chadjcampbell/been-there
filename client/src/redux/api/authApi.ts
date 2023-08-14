@@ -3,6 +3,7 @@ import { IFormLoginInputs } from "../../routes/Login";
 import { IFormRegisterInputs } from "../../routes/Register";
 import { IGenericResponse, IUser } from "./types";
 import { userApi } from "./userApi";
+import { setUser } from "../features/userSlice";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -58,6 +59,12 @@ export const authApi = createApi({
           url: "logout",
           credentials: "include",
         };
+      },
+      async onQueryStarted(_args, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(setUser(null));
+        } catch (error) {}
       },
     }),
   }),

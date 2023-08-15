@@ -18,7 +18,6 @@ export const userApi = createApi({
           credentials: "include",
         };
       },
-      transformResponse: (result: IUser) => result,
       async onQueryStarted(_args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;

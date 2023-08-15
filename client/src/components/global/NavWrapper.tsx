@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AiTwotoneHome } from "react-icons/ai";
 import { BsGlobeAmericas } from "react-icons/bs";
@@ -8,14 +8,46 @@ import { BsChatDots } from "react-icons/bs";
 import useSocketSetup from "../../hooks/useSocketSetup";
 import { toast } from "react-hot-toast";
 import { useLogoutUserMutation } from "../../redux/api/authApi";
+import { useAppSelector } from "../../redux/store";
 
 type NavWrapperProps = {
   children: ReactNode;
 };
 
 const NavWrapper = ({ children }: NavWrapperProps) => {
-  const [logoutUser, { isLoading }] = useLogoutUserMutation();
   const navigate = useNavigate();
+  const user = useAppSelector((state) => state.userState.user);
+
+  const [logoutUser, { isLoading, isSuccess, error, isError }] =
+    useLogoutUserMutation();
+
+  useEffect(() => {
+    if (isSuccess) {
+      // window.location.href = '/login';
+      navigate("/login");
+      toast.success("Successfully logged out");
+    }
+
+    if (isError) {
+      if (Array.isArray((error as any).data.error)) {
+        (error as any).data.error.forEach((el: any) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
+      } else {
+        toast.error((error as any).data.message, {
+          position: "top-right",
+        });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading]);
+
+  const onLogoutHandler = async () => {
+    logoutUser();
+  };
+
   useSocketSetup();
 
   // close the nav menu after a small animation
@@ -25,17 +57,6 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
       setTimeout(() => {
         elem?.blur();
       }, 250);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await logoutUser();
-      toast.success("Successfully logged out");
-      navigate("/login");
-    } catch (error: any) {
-      console.error(error);
-      toast.error("Something went wrong");
     }
   };
 
@@ -163,7 +184,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
                 </div>
               </button>
               <button
-                onClick={handleLogout}
+                onClick={onLogoutHandler}
                 className="btn text-white bg-primary"
               >
                 {isLoading ? (

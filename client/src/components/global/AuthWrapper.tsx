@@ -1,8 +1,10 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { userApi } from "../../redux/api/userApi";
 import Loading from "./Loading";
 
 const AuthWrapper = () => {
+  const location = useLocation();
+
   const { isLoading, isFetching } = userApi.endpoints.getUser.useQuery(null, {
     skip: false,
     refetchOnMountOrArgChange: true,
@@ -14,14 +16,17 @@ const AuthWrapper = () => {
     selectFromResult: ({ data }) => data,
   });
 
-  console.log(user);
   if (loading) {
     return <Loading />;
-  } else if (user) {
-    return <Outlet />;
-  } else {
-    return <Navigate to="/login" />;
   }
+  console.log(user);
+  console.log(cookies);
+
+  return cookies && user ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/login" state={{ from: location }} replace />
+  );
 };
 
 export default AuthWrapper;

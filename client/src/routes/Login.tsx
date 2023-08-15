@@ -1,6 +1,6 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useLoginUserMutation } from "../redux/api/authApi";
 import { useEffect } from "react";
 
@@ -19,24 +19,33 @@ const Login = () => {
   } = useForm<IFormLoginInputs>();
 
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleLogin: SubmitHandler<IFormLoginInputs> = async (formData) => {
-    await loginUser(formData);
-  };
+  const from = ((location.state as any)?.from.pathname as string) || "/";
 
   useEffect(() => {
     if (isSuccess) {
       toast.success("You successfully logged in");
-      navigate("/");
+      navigate(from);
     }
     if (isError) {
       if (Array.isArray((error as any).data.error)) {
-        (error as any).data.error.forEach((el: any) => toast.error(el.message));
+        (error as any).data.error.forEach((el: any) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
       } else {
-        toast.error((error as any).data.message);
+        toast.error((error as any).data.message, {
+          position: "top-right",
+        });
       }
     }
   }, [isLoading]);
+
+  const onSubmitHandler: SubmitHandler<IFormLoginInputs> = (values) => {
+    loginUser(values);
+  };
 
   return (
     <div className="p-4 bg-secondary-content relative flex flex-col justify-center min-h-screen">
@@ -48,7 +57,7 @@ const Login = () => {
         <h2 className="py-3 text-3xl font-semibold text-center text-secondary">
           Where have you been?
         </h2>
-        <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-4">
           <div>
             <label htmlFor="email" className="label">
               <span className="text-base label-text">Email</span>

@@ -1,8 +1,10 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useLoginUserMutation } from "../redux/api/authApi";
-import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../redux/features/auth/authService";
+import { SET_LOGIN, SET_NAME } from "../redux/features/auth/authSlice";
 
 export interface IFormLoginInputs {
   email: string;
@@ -10,41 +12,71 @@ export interface IFormLoginInputs {
 }
 
 const Login = () => {
-  const [loginUser, { isLoading, isError, error, isSuccess }] =
-    useLoginUserMutation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [nameIndex, setNameIndex] = useState(0);
+  const [passIndex, setPassIndex] = useState(0);
+  const [guestBool, setGuestBool] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormLoginInputs>();
-
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const from = ((location.state as any)?.from.pathname as string) || "/";
+  const guestData = { email: "chadjcampbell@gmail.com", password: "fakepass" };
 
   useEffect(() => {
-    if (isSuccess) {
-      toast.success("You successfully logged in");
-      navigate(from);
+    let timer: NodeJS.Timeout | undefined;
+    if (nameIndex < guestData.email.length && guestBool) {
+      timer = setTimeout(() => {
+        setEmail((prev) => prev + guestData.email[nameIndex]);
+        setNameIndex((nameIndex) => nameIndex + 1);
+      }, 50);
     }
-    if (isError) {
-      if (Array.isArray((error as any).data.error)) {
-        (error as any).data.error.forEach((el: any) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
-        );
-      } else {
-        toast.error((error as any).data.message, {
-          position: "top-right",
-        });
-      }
+    if (
+      passIndex < guestData.password.length &&
+      nameIndex === guestData.email.length &&
+      guestBool
+    ) {
+      timer = setTimeout(() => {
+        setPassword((prev) => prev + guestData.password[passIndex]);
+        setPassIndex((passIndex) => passIndex + 1);
+      }, 50);
     }
-  }, [isLoading]);
+    if (
+      passIndex === guestData.password.length &&
+      nameIndex === guestData.email.length &&
+      guestBool
+    ) {
+      timer = setTimeout(() => {
+        handleSubmit(onSubmitHandler);
+      }, 500);
+    }
 
-  const onSubmitHandler: SubmitHandler<IFormLoginInputs> = (values) => {
-    loginUser(values);
+    return () => clearTimeout(timer);
+  }, [guestBool, nameIndex, passIndex]);
+
+  const handleGuestLogin = () => {
+    setEmail("");
+    setPassword("");
+    setGuestBool(true);
+  };
+
+  const onSubmitHandler: SubmitHandler<IFormLoginInputs> = async () => {
+    const userData = { email, password };
+    setIsLoading(true);
+    try {
+      const data = await loginUser(userData);
+      dispatch(SET_LOGIN(true));
+      dispatch(SET_NAME(data.name));
+      navigate("/dashboard");
+      setIsLoading(false);
+    } catch (error: any) {
+      toast.error(error);
+      setIsLoading(false);
+    }
   };
 
   return (

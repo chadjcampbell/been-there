@@ -9,8 +9,25 @@ import Register from "./routes/Register";
 import Error from "./routes/Error";
 import AuthWrapper from "./components/global/AuthWrapper";
 import Chats from "./routes/Chats";
+import axios from "axios";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { getLoginStatus } from "./redux/features/auth/authService";
+import { SET_LOGIN } from "./redux/features/auth/authSlice";
+
+axios.defaults.withCredentials = true;
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    async function loginStatus() {
+      const status = await getLoginStatus();
+      dispatch(SET_LOGIN(status));
+    }
+    loginStatus();
+  }, [dispatch]);
+
   return (
     <BrowserRouter>
       <Routes>

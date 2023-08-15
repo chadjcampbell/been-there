@@ -8,7 +8,8 @@ import { BsChatDots } from "react-icons/bs";
 import useSocketSetup from "../../hooks/useSocketSetup";
 import { toast } from "react-hot-toast";
 import { useLogoutUserMutation } from "../../redux/api/authApi";
-import { useAppSelector } from "../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { logout } from "../../redux/features/userSlice";
 
 type NavWrapperProps = {
   children: ReactNode;
@@ -16,6 +17,7 @@ type NavWrapperProps = {
 
 const NavWrapper = ({ children }: NavWrapperProps) => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.userState.user);
 
   const [logoutUser, { isLoading, isSuccess, error, isError }] =
@@ -23,7 +25,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
 
   useEffect(() => {
     if (isSuccess) {
-      // window.location.href = '/login';
+      dispatch(logout());
       navigate("/login");
       toast.success("Successfully logged out");
     }

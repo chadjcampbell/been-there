@@ -4,7 +4,6 @@ import Loading from "./Loading";
 
 const AuthWrapper = () => {
   const location = useLocation();
-
   const { isLoading, isFetching } = userApi.endpoints.getUser.useQuery(null, {
     skip: false,
     refetchOnMountOrArgChange: true,
@@ -20,9 +19,8 @@ const AuthWrapper = () => {
     return <Loading />;
   }
   console.log(user);
-  console.log(cookies);
 
-  return cookies && user ? (
+  return user ? (
     <Outlet />
   ) : (
     <Navigate to="/login" state={{ from: location }} replace />

@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { ReactNode, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { AiTwotoneHome } from "react-icons/ai";
 import { BsGlobeAmericas } from "react-icons/bs";
 import { FaUserFriends } from "react-icons/fa";
@@ -8,15 +8,25 @@ import { BsChatDots } from "react-icons/bs";
 import useSocketSetup from "../../hooks/useSocketSetup";
 
 import useAuthRedirect from "../../hooks/useAuthRedirect";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../../redux/features/auth/authService";
+import { SET_LOGIN } from "../../redux/features/auth/authSlice";
 
 type NavWrapperProps = {
   children: ReactNode;
 };
 
 const NavWrapper = ({ children }: NavWrapperProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   useAuthRedirect("/login");
   const onLogoutHandler = async () => {
-    //logoutUser();
+    setIsLoading(true);
+    await logoutUser();
+    dispatch(SET_LOGIN(false));
+    navigate("/login");
+    setIsLoading(false);
   };
 
   useSocketSetup();
@@ -158,7 +168,11 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
                 onClick={onLogoutHandler}
                 className="btn text-white bg-primary"
               >
-                Logout
+                {isLoading ? (
+                  <span className="loading loading-spinner text-white loading-lg"></span>
+                ) : (
+                  "Logout"
+                )}
               </button>
             </div>
           </div>

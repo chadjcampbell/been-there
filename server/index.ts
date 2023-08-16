@@ -35,7 +35,7 @@ app.use("/auth", userRoute);
 
 // socket.io connection
 io.on("connect", (socket) => {
-  console.log(socket);
+  console.log("connected");
 });
 
 // error middleware

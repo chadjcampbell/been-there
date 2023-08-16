@@ -50,6 +50,7 @@ export const loginUser = async (userData: UserDataType) => {
     }
     return response.data;
   } catch (error: any) {
+    console.log(error);
     const message =
       (error.response && error.response.data && error.response.data.message) ||
       error.message ||

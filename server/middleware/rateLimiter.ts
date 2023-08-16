@@ -9,12 +9,10 @@ const rateLimiter = async (req: Request, res: Response, next: NextFunction) => {
     .expire(ip, 60)
     .exec((err, result) => {
       if (result && (result[0][1] as number) > 3) {
-        return res.json({
-          loggedIn: false,
-          status: "Too many attempts. Try again later.",
-        });
+        res.status(400);
+        throw new Error("Too many requests. Try again later.");
       }
-      next();
+      next(err);
     });
 };
 

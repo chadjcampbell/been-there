@@ -64,17 +64,16 @@ const Login = () => {
     setGuestBool(true);
   };
 
-  const onSubmitHandler: SubmitHandler<IFormLoginInputs> = async () => {
-    const userData = { email, password };
+  const onSubmitHandler: SubmitHandler<IFormLoginInputs> = async (values) => {
+    const userData = { ...values };
     setIsLoading(true);
     try {
       const data = await loginUser(userData);
       dispatch(SET_LOGIN(true));
       dispatch(SET_NAME(data.name));
-      navigate("/dashboard");
+      navigate("/");
       setIsLoading(false);
     } catch (error: any) {
-      toast.error(error);
       setIsLoading(false);
     }
   };

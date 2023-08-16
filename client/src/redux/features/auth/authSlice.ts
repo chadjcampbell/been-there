@@ -6,11 +6,11 @@ const initialState = {
   isLoggedIn: false,
   name: name ? name : "",
   user: {
+    id: "",
     name: "",
     email: "",
-    phone: "",
-    bio: "",
     photo: "",
+    bio: "",
   },
 };
 
@@ -26,12 +26,11 @@ const authSlice = createSlice({
       state.name = action.payload;
     },
     SET_USER(state, action) {
-      const profile = action.payload;
-      state.user.name = profile.name;
-      state.user.email = profile.email;
-      state.user.phone = profile.phone;
-      state.user.bio = profile.bio;
-      state.user.photo = profile.photo;
+      state.user.id = action.payload.id;
+      state.user.name = action.payload.name;
+      state.user.email = action.payload.email;
+      state.user.bio = action.payload.bio;
+      state.user.photo = action.payload.photo;
     },
   },
 });

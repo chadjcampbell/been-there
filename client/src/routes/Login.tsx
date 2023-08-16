@@ -3,7 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../redux/features/auth/authService";
-import { SET_LOGIN, SET_NAME } from "../redux/features/auth/authSlice";
+import {
+  SET_LOGIN,
+  SET_NAME,
+  SET_USER,
+} from "../redux/features/auth/authSlice";
 
 export interface IFormLoginInputs {
   email: string;
@@ -71,8 +75,10 @@ const Login = () => {
     setIsLoading(true);
     try {
       const data = await loginUser(userData);
+      console.log(data);
       dispatch(SET_LOGIN(true));
       dispatch(SET_NAME(data.name));
+      dispatch(SET_USER(data));
       navigate("/");
       setIsLoading(false);
       setGuestBool(false);

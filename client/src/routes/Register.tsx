@@ -1,9 +1,14 @@
-import axios from "axios";
-import { useContext } from "react";
+import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/UserContext";
+import { registerUser } from "../redux/features/auth/authService";
+import {
+  SET_LOGIN,
+  SET_NAME,
+  SET_USER,
+} from "../redux/features/auth/authSlice";
+import { useDispatch } from "react-redux";
 
 export interface IFormRegisterInputs {
   name: string;
@@ -13,8 +18,9 @@ export interface IFormRegisterInputs {
 }
 
 const Register = () => {
-  const { setUser } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const {
     watch,
     register,
@@ -22,20 +28,19 @@ const Register = () => {
     formState: { errors },
   } = useForm<IFormRegisterInputs>();
 
-  const handleRegister: SubmitHandler<IFormRegisterInputs> = async (
-    formData
-  ) => {
+  const handleRegister: SubmitHandler<IFormRegisterInputs> = async (values) => {
+    const userData = { ...values };
+    setIsLoading(true);
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/register`,
-        formData
-      );
-      toast.success("Successfully registered");
-      setUser({ ...response.data });
+      const data = await registerUser(userData);
+      dispatch(SET_LOGIN(true));
+      dispatch(SET_NAME(data.name));
+      dispatch(SET_USER(data));
       navigate("/");
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
+      setIsLoading(false);
+    } catch (error: any) {
+      toast.error(error);
+      setIsLoading(false);
     }
   };
   return (
@@ -48,12 +53,18 @@ const Register = () => {
         <h2 className="py-3 text-3xl font-semibold text-center">
           Have you <span className=" text-secondary">Been There?</span>
         </h2>
-        <form onSubmit={handleSubmit(handleRegister)} className="space-y-4">
+        <form
+          aria-disabled={isLoading}
+          onSubmit={handleSubmit(handleRegister)}
+          className="space-y-4"
+        >
           <div>
             <label htmlFor="name" className="label">
               <span className="text-base label-text">Name</span>
             </label>
             <input
+              disabled={isLoading}
+              id="name"
               autoComplete="name"
               type="text"
               {...register("name", {
@@ -87,6 +98,9 @@ const Register = () => {
               <span className="text-base label-text">Email</span>
             </label>
             <input
+              autoComplete="email"
+              disabled={isLoading}
+              id="email"
               type="text"
               {...register("email", {
                 required: "Email is required",
@@ -111,6 +125,9 @@ const Register = () => {
               <span className="text-base label-text">Password</span>
             </label>
             <input
+              autoComplete="new-password"
+              disabled={isLoading}
+              id="password"
               type="password"
               {...register("password", {
                 required: true,
@@ -139,6 +156,9 @@ const Register = () => {
               <span className="text-base label-text">Confirm Password</span>
             </label>
             <input
+              autoComplete="new-password"
+              disabled={isLoading}
+              id="password2"
               type="password"
               {...register("password2", {
                 required: true,

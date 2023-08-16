@@ -75,8 +75,10 @@ const Login = () => {
       dispatch(SET_NAME(data.name));
       navigate("/");
       setIsLoading(false);
+      setGuestBool(false);
     } catch (error: any) {
       setIsLoading(false);
+      setGuestBool(false);
     }
   };
 
@@ -97,6 +99,7 @@ const Login = () => {
             </label>
             {guestBool ? (
               <input
+                disabled
                 className=" w-full input input-bordered input-primary"
                 value={email}
               />
@@ -128,6 +131,7 @@ const Login = () => {
             </label>
             {guestBool ? (
               <input
+                disabled
                 type="password"
                 className=" w-full input input-bordered input-primary"
                 value={password}
@@ -158,7 +162,11 @@ const Login = () => {
             Forget Password?
           </a>
           <div>
-            <button type="submit" className="w-full btn btn-secondary">
+            <button
+              disabled={isLoading || guestBool}
+              type="submit"
+              className="w-full btn btn-secondary"
+            >
               {isLoading ? (
                 <span className="loading loading-spinner text-white loading-lg"></span>
               ) : (
@@ -169,6 +177,7 @@ const Login = () => {
         </form>
         <div className="my-6">
           <button
+            disabled={isLoading || guestBool}
             onClick={() => navigate("/register")}
             type="button"
             className="w-full btn btn-primary"
@@ -178,6 +187,7 @@ const Login = () => {
         </div>
         <div className="my-6">
           <button
+            disabled={isLoading || guestBool}
             onClick={handleGuestLogin}
             type="button"
             className="w-full btn btn-warning"

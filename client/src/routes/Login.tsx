@@ -105,6 +105,8 @@ const Login = () => {
               />
             ) : (
               <input
+                autoComplete="email"
+                id="email"
                 type="text"
                 {...register("email", {
                   required: "Email is required",
@@ -138,6 +140,8 @@ const Login = () => {
               />
             ) : (
               <input
+                autoComplete="current-password"
+                id="password"
                 type="password"
                 {...register("password", {
                   required: true,

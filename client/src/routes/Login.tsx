@@ -1,5 +1,4 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -15,18 +14,21 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [nameIndex, setNameIndex] = useState(0);
-  const [passIndex, setPassIndex] = useState(0);
-  const [guestBool, setGuestBool] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormLoginInputs>();
+
+  // this state is only for guest login functionality
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [nameIndex, setNameIndex] = useState(0);
+  const [passIndex, setPassIndex] = useState(0);
+  const [guestBool, setGuestBool] = useState(false);
   const guestData = { email: "chadjcampbell@gmail.com", password: "fakepass" };
 
+  // this useEffect is the logic for guest login "typewriter" effect
   useEffect(() => {
     let timer: NodeJS.Timeout | undefined;
     if (nameIndex < guestData.email.length && guestBool) {
@@ -51,7 +53,7 @@ const Login = () => {
       guestBool
     ) {
       timer = setTimeout(() => {
-        handleSubmit(onSubmitHandler);
+        onSubmitHandler({ email, password });
       }, 500);
     }
 
@@ -93,19 +95,26 @@ const Login = () => {
             <label htmlFor="email" className="label">
               <span className="text-base label-text">Email</span>
             </label>
-            <input
-              type="text"
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                  message: "Please enter a valid email",
-                },
-              })}
-              placeholder="Email Address"
-              className=" w-full input input-bordered input-primary"
-              aria-invalid={errors.email ? "true" : "false"}
-            />
+            {guestBool ? (
+              <input
+                className=" w-full input input-bordered input-primary"
+                value={email}
+              />
+            ) : (
+              <input
+                type="text"
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                    message: "Please enter a valid email",
+                  },
+                })}
+                placeholder="Email Address"
+                className=" w-full input input-bordered input-primary"
+                aria-invalid={errors.email ? "true" : "false"}
+              />
+            )}
             {errors.email?.message && (
               <p className="m-2 p-1 w-fit rounded bg-red-700 text-xs text-white">
                 {" "}
@@ -117,15 +126,24 @@ const Login = () => {
             <label htmlFor="password" className="label">
               <span className="text-base label-text">Password</span>
             </label>
-            <input
-              type="password"
-              {...register("password", {
-                required: true,
-              })}
-              placeholder="Enter Password"
-              className="w-full input input-bordered input-primary"
-              aria-invalid={errors.password ? "true" : "false"}
-            />
+            {guestBool ? (
+              <input
+                type="password"
+                className=" w-full input input-bordered input-primary"
+                value={password}
+              />
+            ) : (
+              <input
+                type="password"
+                {...register("password", {
+                  required: true,
+                })}
+                placeholder="Enter Password"
+                className="w-full input input-bordered input-primary"
+                aria-invalid={errors.password ? "true" : "false"}
+              />
+            )}
+
             {errors.password?.message && (
               <p className="m-2 p-1 w-fit rounded bg-red-700 text-xs text-white">
                 {" "}
@@ -156,6 +174,15 @@ const Login = () => {
             className="w-full btn btn-primary"
           >
             New Here? Sign Up!
+          </button>
+        </div>
+        <div className="my-6">
+          <button
+            onClick={handleGuestLogin}
+            type="button"
+            className="w-full btn btn-warning"
+          >
+            Demo Account Login
           </button>
         </div>
       </div>

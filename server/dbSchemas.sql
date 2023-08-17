@@ -3,8 +3,8 @@ CREATE TABLE users(
   name VARCHAR(60) NOT NULL,
   email VARCHAR(40) NOT NULL UNIQUE,
   passhash VARCHAR NOT NULL,
-  photo VARCHAR NOT NULL DEFAULT 'https://cdn-icons-png.flaticon.com/512/149/149071.png?w=740&t=st=1686866825~exp=1686867425~hmac=249cf4990844c725b121c896f61d1efd0efe31fc8af6dc522628c05fd6afe430',
-  bio VARCHAR NOT NULL DEFAULT 'Your bio here...'
+  photo VARCHAR NOT NULL DEFAULT 'https://img.freepik.com/free-icon/user_318-159711.jpg?t=st=0~exp=0~hmac=7ec3ecd49f9d99da3d2907db79b3d1abfcae7d393cdd51ab28bbab45dcc51596',
+  bio VARCHAR NOT NULL DEFAULT 'Add your bio here to tell people who you are and where you''ve been...'
 ) 
 
 CREATE TABLE tokens(

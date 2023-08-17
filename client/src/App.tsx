@@ -11,8 +11,8 @@ import Chats from "./routes/Chats";
 import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { getLoginStatus } from "./redux/features/auth/authService";
-import { SET_LOGIN } from "./redux/features/auth/authSlice";
+import { getLoginStatus, getUser } from "./redux/features/auth/authService";
+import { SET_LOGIN, SET_USER } from "./redux/features/auth/authSlice";
 
 axios.defaults.withCredentials = true;
 
@@ -23,6 +23,10 @@ function App() {
     async function loginStatus() {
       const status = await getLoginStatus();
       dispatch(SET_LOGIN(status));
+      if (status) {
+        const user = await getUser();
+        dispatch(SET_USER(user));
+      }
     }
     loginStatus();
   }, [dispatch]);

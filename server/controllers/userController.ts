@@ -72,7 +72,6 @@ export const registerUser = [
             email,
             photo,
             bio,
-            token,
           });
         } else {
           res.status(400);
@@ -128,7 +127,6 @@ export const loginUser = [
             email,
             photo,
             bio,
-            token,
           });
         } else {
           res.status(400);

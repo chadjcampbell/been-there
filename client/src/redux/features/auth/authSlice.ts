@@ -26,11 +26,7 @@ const authSlice = createSlice({
       state.name = action.payload;
     },
     SET_USER(state, action) {
-      state.user.id = action.payload.id;
-      state.user.name = action.payload.name;
-      state.user.email = action.payload.email;
-      state.user.bio = action.payload.bio;
-      state.user.photo = action.payload.photo;
+      state.user = action.payload;
     },
   },
 });

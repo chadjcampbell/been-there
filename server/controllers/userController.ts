@@ -54,7 +54,7 @@ export const registerUser = [
           .returning();
         // generate token
         const user = userArray[0];
-        const token = generateToken(String(user.id));
+        const token = generateToken(String(user.user_id));
         // send http cookie
         res.cookie("token", token, {
           path: "/",
@@ -65,13 +65,15 @@ export const registerUser = [
         });
 
         if (user) {
-          const { id, name, email, photo, bio } = user;
+          const { user_id, name, email, photo_url, bio, registration_date } =
+            user;
           res.status(201).json({
-            id,
+            userId: user_id,
             name,
             email,
-            photo,
+            photoUrl: photo_url,
             bio,
+            registrationDate: registration_date,
           });
         } else {
           res.status(400);
@@ -111,7 +113,7 @@ export const loginUser = [
         const passwordIsCorrect = await bcrypt.compare(password, user.passhash);
         if (passwordIsCorrect) {
           // generate token
-          const token = generateToken(String(user.id));
+          const token = generateToken(String(user.user_id));
           // send http cookie
           res.cookie("token", token, {
             path: "/",
@@ -120,13 +122,15 @@ export const loginUser = [
             sameSite: "none",
             secure: true,
           });
-          const { id, name, email, photo, bio } = user;
+          const { user_id, name, email, photo_url, bio, registration_date } =
+            user;
           res.status(200).json({
-            id,
+            userId: user_id,
             name,
             email,
-            photo,
+            photoUrl: photo_url,
             bio,
+            registrationDate: registration_date,
           });
         } else {
           res.status(400);
@@ -155,16 +159,17 @@ export const getUser = asyncHandler(async (req: RequestUserAttached, res) => {
     throw new Error("User not found");
   }
   const user = await db.query.users.findFirst({
-    where: eq(users.id, req.user.id),
+    where: eq(users.user_id, req.user.user_id),
   });
   if (user) {
-    const { id, name, email, photo, bio } = user;
+    const { user_id, name, email, photo_url, bio, registration_date } = user;
     res.status(200).json({
-      id,
+      userId: user_id,
       name,
       email,
-      photo,
+      photoUrl: photo_url,
       bio,
+      registrationDate: registration_date,
     });
   } else {
     res.status(400);
@@ -196,26 +201,28 @@ export const updateUser = asyncHandler(
       throw new Error("User not found");
     } else {
       const user = await db.query.users.findFirst({
-        where: eq(users.id, req.user.id),
+        where: eq(users.user_id, req.user.user_id),
       });
       if (user) {
-        const { name, email, photo, bio } = user;
+        const { user_id, name, email, photo_url, bio, registration_date } =
+          user;
         user.email = email;
         user.name = req.body.name || name;
-        user.photo = req.body.photo || photo;
+        user.photo_url = req.body.photo || photo_url;
         user.bio = req.body.bio || bio;
         const updatedUserArray = await db
           .update(users)
           .set(user)
-          .where(eq(users.id, req.user.id))
+          .where(eq(users.user_id, req.user.user_id))
           .returning();
         const updatedUser = updatedUserArray[0];
         res.status(200).json({
-          id: updatedUser.id,
+          userId: updatedUser.user_id,
           name: updatedUser.name,
           email: updatedUser.email,
-          photo: updatedUser.photo,
+          photoUrl: updatedUser.photo_url,
           bio: updatedUser.bio,
+          registrationDate: updatedUser.registration_date,
         });
       }
     }
@@ -240,7 +247,7 @@ export const changePassword = [
       throw new Error("User not found");
     }
     const user = await db.query.users.findFirst({
-      where: eq(users.id, req.user.id),
+      where: eq(users.user_id, req.user.user_id),
     });
     if (!user) {
       res.status(400);
@@ -254,7 +261,7 @@ export const changePassword = [
       await db
         .update(users)
         .set({ passhash: hashedPassword })
-        .where(eq(users.id, req.user.id));
+        .where(eq(users.user_id, req.user.user_id));
       res.status(200).send("Password changed successfuly");
     } else {
       res.status(400);
@@ -273,10 +280,10 @@ export const forgotPassword = asyncHandler(async (req, res) => {
     throw new Error("User does not exist");
   }
   // delete old token if exists
-  await db.delete(tokens).where(eq(users.id, user.id));
+  await db.delete(tokens).where(eq(users.user_id, user.user_id));
 
   // create reset token
-  let resetToken = crypto.randomBytes(32).toString("hex") + user.id;
+  let resetToken = crypto.randomBytes(32).toString("hex") + user.user_id;
   // hash token
   const hashedToken = crypto
     .createHash("sha256")
@@ -285,10 +292,10 @@ export const forgotPassword = asyncHandler(async (req, res) => {
 
   // save token to db
   await db.insert(tokens).values({
-    userId: user.id,
+    user_id: user.user_id,
     token: hashedToken,
-    createdAt: Date.now(),
-    expiresAt: Date.now() + 30 * (60 * 1000), // 30 minute expiration
+    created_at: Date.now(),
+    expires_at: Date.now() + 30 * (60 * 1000), // 30 minute expiration
   });
 
   // construct reset url
@@ -330,7 +337,7 @@ export const resetPassword = asyncHandler(async (req, res) => {
     .select()
     .from(tokens)
     .where(
-      and(gt(tokens.expiresAt, Date.now()), eq(tokens.token, hashedToken))
+      and(gt(tokens.expires_at, Date.now()), eq(tokens.token, hashedToken))
     );
   const userToken = userTokenArray[0];
   if (!userToken) {
@@ -339,14 +346,14 @@ export const resetPassword = asyncHandler(async (req, res) => {
   }
   // find user
   const user = await db.query.users.findFirst({
-    where: eq(users.id, userToken.userId),
+    where: eq(users.user_id, userToken.user_id),
   });
   if (user && userToken) {
     const hashedPassword = await bcrypt.hash(password, 10);
     await db
       .update(users)
       .set({ passhash: hashedPassword })
-      .where(eq(users.id, user.id));
+      .where(eq(users.user_id, user.user_id));
     res.status(200).json({ message: "Password successfully reset" });
   } else {
     res.status(400);

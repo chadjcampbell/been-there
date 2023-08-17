@@ -6,12 +6,13 @@ import { eq } from "drizzle-orm";
 import { users } from "../schema";
 
 export type UserFromDB = {
-  id: number;
+  user_id: number;
   name?: string;
   email?: string;
   passhash?: string;
-  photo?: string;
+  photo_url?: string;
   bio?: string;
+  registration_date?: Date;
 };
 export interface RequestUserAttached extends Request {
   user?: UserFromDB;
@@ -32,7 +33,7 @@ export const protect = asyncHandler(
       ) as JwtPayload;
       // get userID from token
       const user = await db.query.users.findFirst({
-        where: eq(users.id, verified.id),
+        where: eq(users.user_id, verified.user_id),
         columns: { passhash: false },
       });
       if (!user) {

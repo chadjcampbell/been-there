@@ -12,7 +12,6 @@ const useAuthRedirect = (path: string) => {
     const authRedirect = async () => {
       const isLoggedIn = await getLoginStatus();
       dispatch(SET_LOGIN(isLoggedIn));
-
       if (!isLoggedIn) {
         toast.error("Session expired, please login");
         navigate(path);

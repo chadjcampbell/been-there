@@ -33,7 +33,7 @@ export const protect = asyncHandler(
       ) as JwtPayload;
       // get userID from token
       const user = await db.query.users.findFirst({
-        where: eq(users.user_id, verified.user_id),
+        where: eq(users.user_id, verified.id),
         columns: { passhash: false },
       });
       if (!user) {

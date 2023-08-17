@@ -6,11 +6,12 @@ const initialState = {
   isLoggedIn: false,
   name: name ? name : "",
   user: {
-    id: "",
+    userId: "",
     name: "",
     email: "",
-    photo: "",
+    photoUrl: "",
     bio: "",
+    registrationDate: "",
   },
 };
 

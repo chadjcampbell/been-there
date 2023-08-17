@@ -12,7 +12,7 @@ export type userUpdateData = {
   name: string;
   phone: string;
   bio: string;
-  photo: string;
+  photoUrl: string;
 };
 
 export type PasswordUpdateData = {

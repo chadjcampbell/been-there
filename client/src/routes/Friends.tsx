@@ -5,27 +5,27 @@ import FriendListCard from "../components/friends/FriendListCard";
 export const dummyFriendChatList = [
   {
     name: "Luis1990",
-    photoURL: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
+    photoUrl: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
     recentMessage: "Pick me at 9:00 Am",
   },
   {
     name: "Luis1991",
-    photoURL: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
+    photoUrl: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
     recentMessage: "Pick me at 9:00 Am",
   },
   {
     name: "Luis1992",
-    photoURL: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
+    photoUrl: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
     recentMessage: "Pick me at 9:00 Am",
   },
   {
     name: "Luis1993",
-    photoURL: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
+    photoUrl: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
     recentMessage: "Pick me at 9:00 Am",
   },
   {
     name: "Luis1994",
-    photoURL: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
+    photoUrl: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
     recentMessage: "Pick me at 9:00 Am",
   },
 ];
@@ -52,8 +52,8 @@ const Friends = () => {
                 key={friend.name}
                 name={friend.name}
                 photoURL={
-                  friend.photoURL
-                    ? friend.photoURL
+                  friend.photoUrl
+                    ? friend.photoUrl
                     : "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg"
                 }
               />

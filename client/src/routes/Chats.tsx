@@ -55,8 +55,8 @@ const Chats = () => {
                   key={chat.name}
                   name={chat.name}
                   photoURL={
-                    chat.photoURL
-                      ? chat.photoURL
+                    chat.photoUrl
+                      ? chat.photoUrl
                       : "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg"
                   }
                   recentMessage={chat.recentMessage ? chat.recentMessage : ""}

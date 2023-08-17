@@ -1,10 +1,45 @@
-import { useContext } from "react";
-import { FriendContext } from "../context/FriendContext";
+import { useState } from "react";
 import FindFriendModal from "../components/friends/FindFriendModal";
 import FriendListCard from "../components/friends/FriendListCard";
 
+export const dummyFriendChatList = [
+  {
+    name: "Luis1990",
+    photoURL: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
+    recentMessage: "Pick me at 9:00 Am",
+  },
+  {
+    name: "Luis1991",
+    photoURL: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
+    recentMessage: "Pick me at 9:00 Am",
+  },
+  {
+    name: "Luis1992",
+    photoURL: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
+    recentMessage: "Pick me at 9:00 Am",
+  },
+  {
+    name: "Luis1993",
+    photoURL: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
+    recentMessage: "Pick me at 9:00 Am",
+  },
+  {
+    name: "Luis1994",
+    photoURL: "https://source.unsplash.com/_7LbC5J-jw4/600x600",
+    recentMessage: "Pick me at 9:00 Am",
+  },
+];
+
+export type FriendType = {
+  id?: number;
+  name: string;
+  email?: string;
+  photoURL?: string;
+  recentMessage?: string;
+};
+
 const Friends = () => {
-  const { friendList, setFriendList } = useContext(FriendContext);
+  const [friendList, setFriendList] = useState(dummyFriendChatList);
   return (
     <div className="p-6 flex w-full min-h-screen justify-center">
       <div className="text-center">

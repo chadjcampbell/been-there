@@ -1,13 +1,14 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { socket } from "../socket";
-import { AuthContext } from "../context/UserContext";
+import { useSelector } from "react-redux";
+import { selectUser } from "../redux/features/auth/authSlice";
 
 const useSocketSetup = () => {
-  const { setUser } = useContext(AuthContext);
+  const user = useSelector(selectUser);
   useEffect(() => {
     socket.connect();
     socket.on("connect_error", () => {
-      setUser({ loggedIn: null, user: null });
+      console.log("Socket IO Error");
     });
     return () => {
       socket.off("connect_error");

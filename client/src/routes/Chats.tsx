@@ -1,13 +1,13 @@
-import { useContext } from "react";
+import { useState } from "react";
 import ChatListCard from "../components/chats/ChatListCard";
 import {
   FriendChatMessage,
   MyChatMessage,
 } from "../components/chats/ChatMessage";
-import { FriendContext } from "../context/FriendContext";
+import { dummyFriendChatList } from "./Friends";
 
 const Chats = () => {
-  const { friendList } = useContext(FriendContext);
+  const [friendList, setFriendList] = useState(dummyFriendChatList);
 
   return (
     <div className=" mx-auto ">

@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AiTwotoneHome } from "react-icons/ai";
 import { BsGlobeAmericas } from "react-icons/bs";
@@ -8,25 +8,37 @@ import { BsChatDots } from "react-icons/bs";
 import useSocketSetup from "../../hooks/useSocketSetup";
 
 import useAuthRedirect from "../../hooks/useAuthRedirect";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../redux/features/auth/authService";
-import { SET_LOGIN } from "../../redux/features/auth/authSlice";
+import {
+  SET_LOGIN,
+  selectIsLoggedIn,
+} from "../../redux/features/auth/authSlice";
+import Loading from "./Loading";
 
 type NavWrapperProps = {
   children: ReactNode;
 };
 
 const NavWrapper = ({ children }: NavWrapperProps) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoggingOut, setisLoggingOut] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setLoading(!isLoggedIn);
+  }, []);
+
   useAuthRedirect("/login");
+
   const onLogoutHandler = async () => {
-    setIsLoading(true);
+    setisLoggingOut(true);
     await logoutUser();
     dispatch(SET_LOGIN(false));
     navigate("/login");
-    setIsLoading(false);
+    setisLoggingOut(false);
   };
 
   useSocketSetup();
@@ -41,7 +53,9 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
     }
   };
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <header>
         <nav>
@@ -168,7 +182,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
                 onClick={onLogoutHandler}
                 className="btn text-white bg-primary"
               >
-                {isLoading ? (
+                {isLoggingOut ? (
                   <span className="loading loading-spinner text-white loading-lg"></span>
                 ) : (
                   "Logout"

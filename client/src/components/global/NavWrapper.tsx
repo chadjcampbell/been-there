@@ -29,7 +29,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
 
   useEffect(() => {
     setLoading(!isLoggedIn);
-  }, []);
+  }, [isLoggedIn]);
 
   useAuthRedirect("/login");
 

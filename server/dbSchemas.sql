@@ -9,12 +9,23 @@ CREATE TABLE users(
 ) 
 
 CREATE TABLE friends (
-    friendship_id INT PRIMARY KEY,
+    friendship_id SERIAL PRIMARY KEY,
     user_id_1 INT NOT NULL,
     user_id_2 INT NOT NULL,
-    FOREIGN KEY (user_id_1) REFERENCES Users(user_id),
-    FOREIGN KEY (user_id_2) REFERENCES Users(user_id),
+    FOREIGN KEY (user_id_1) REFERENCES users(user_id),
+    FOREIGN KEY (user_id_2) REFERENCES users(user_id),
     UNIQUE (user_id_1, user_id_2)
+);
+
+CREATE TYPE request_status AS ENUM ('pending', 'accepted', 'rejected');
+
+CREATE TABLE friendRequests (
+    request_id SERIAL PRIMARY KEY,
+    sender_id INT NOT NULL,
+    receiver_id INT NOT NULL,
+    status request_status NOT NULL,
+    FOREIGN KEY (sender_id) REFERENCES users(user_id),
+    FOREIGN KEY (receiver_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE tokens(

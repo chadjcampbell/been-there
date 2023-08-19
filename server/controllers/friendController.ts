@@ -20,6 +20,7 @@ export const findAllFriends = asyncHandler(async (req, res) => {
     throw new Error("No friends found");
   }
   res.status(200).json(friendsList);
+  return;
 });
 
 export const findNewFriend = asyncHandler(async (req, res) => {
@@ -32,6 +33,7 @@ export const findNewFriend = asyncHandler(async (req, res) => {
     throw new Error("No users found with that name");
   }
   res.status(200).json(potentialFriends);
+  return;
 });
 
 export const sendFriendRequest = [
@@ -112,3 +114,21 @@ export const acceptFriendRequest = [
     res.status(200).end();
   }),
 ];
+
+export const pendingFriends = asyncHandler(
+  async (req: RequestUserAttached, res) => {
+    if (!req.user) {
+      res.status(400);
+      throw new Error("Not authorized, please log in");
+    }
+    const pendingFriends = await db.query.users.findMany({
+      with: {
+        friendRequests: {
+          where: eq(friendRequests.receiver_id, req.user.user_id),
+        },
+      },
+    });
+    res.status(200).json(pendingFriends);
+    return;
+  }
+);

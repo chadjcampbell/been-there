@@ -31,3 +31,17 @@ export const sendFriendRequest = async (friendId: number) => {
     toast.error(message);
   }
 };
+
+export const getPendingFriends = async () => {
+  try {
+    const response = await axios.get(API_URL + "pendingFriends/");
+    console.log(response);
+    return response.data;
+  } catch (error: any) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};

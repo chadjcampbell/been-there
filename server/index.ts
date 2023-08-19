@@ -4,6 +4,7 @@ require("dotenv").config();
 import helmet from "helmet";
 import cors from "cors";
 import { router as userRoute } from "./routes/userRoute";
+import { router as friendRoute } from "./routes/friendRoute";
 const app = express();
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorMiddleware";
@@ -32,6 +33,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // routes
 app.use("/auth", userRoute);
+app.use("/friends", friendRoute);
 
 // socket.io connection
 io.on("connect", (socket) => {

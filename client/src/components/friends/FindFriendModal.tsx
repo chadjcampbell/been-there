@@ -1,47 +1,41 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import { socket } from "../../socket";
 import { toast } from "react-hot-toast";
+import { findNewFriend } from "../../redux/features/friends/friendService";
+import FoundFriendCard from "./FoundFriendCard";
+import { FriendType } from "../../routes/Friends";
 declare global {
   interface Window {
     find_friend_modal: HTMLDialogElement;
   }
 }
 
-type SocketEmitReturnTypes = {
-  errorMsg: string;
-  done: boolean;
-};
-
 const FindFriendModal = () => {
-  const [error, setError] = useState("");
   const [friendName, setFriendName] = useState("");
+  const [error, setError] = useState("");
+  const [foundFriends, setFoundFriends] = useState([]);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     let value = event.target.value;
     setFriendName(value);
   };
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    socket.emit(
-      "add_friend",
-      friendName,
-      ({ errorMsg, done }: SocketEmitReturnTypes) => {
-        if (done) {
-          toast.success("Friend added");
-          window.find_friend_modal.close();
-          return;
-        }
-        if (errorMsg) {
-          setError(errorMsg);
-          setTimeout(() => {
-            setError("");
-          }, 2000);
-        }
+    try {
+      const result = await findNewFriend(friendName);
+      if (result.length) {
+        setFoundFriends(result);
+        setFriendName("");
+        return;
+      } else {
+        setError("No users found");
+        setTimeout(() => {
+          setError("");
+        }, 2000);
       }
-    );
-    // logic to find friends here
-    setFriendName("");
+    } catch {
+      toast.error("Something went wrong");
+    }
   };
 
   return (
@@ -56,10 +50,13 @@ const FindFriendModal = () => {
         {" "}
         <div className="modal-box flex flex-col-reverse">
           {error && (
-            <h3 className="mt-4 font-bold text-lg text-red-500">
-              No users found
-            </h3>
+            <h3 className="mt-4 font-bold text-lg text-red-500">{error}</h3>
           )}
+          <div className="flex flex-column content-center justify-center w-full">
+            {foundFriends.map((friend: FriendType) => (
+              <FoundFriendCard key={friend.user_id} friend={friend} />
+            ))}
+          </div>
           <form
             onSubmit={handleSubmit}
             className="flex items-center justify-center"
@@ -75,7 +72,10 @@ const FindFriendModal = () => {
             <button className="ml-2 btn btn-secondary">Search</button>
           </form>
           <form method="dialog">
-            <button className="btn btn-circle btn-outline absolute right-2 top-2">
+            <button
+              onClick={() => setFoundFriends([])}
+              className="btn btn-circle btn-outline absolute right-2 top-2"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"

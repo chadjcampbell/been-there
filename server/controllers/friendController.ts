@@ -22,37 +22,17 @@ export const findAllFriends = asyncHandler(async (req, res) => {
   res.status(200).json(friendsList);
 });
 
-export const findNewFriend = [
-  // validate and sanitize fields
-  body("friendName").trim(),
-  asyncHandler(async (req, res) => {
-    // extract the validation errors from a request
-    const errors = validationResult(req);
-    // there are errors
-    if (!errors.isEmpty()) {
-      res.status(400);
-      throw new Error("Invalid name");
-    }
-    // check if user exists
-    const { friendName } = req.body;
-    const friend = await db.query.users.findFirst({
-      where: eq(users.name, friendName),
-    });
-    if (!friend) {
-      res.status(400);
-      throw new Error("No users found with that name");
-    }
-    const { user_id, name, email, photo_url, bio, registration_date } = friend;
-    res.status(200).json({
-      userId: user_id,
-      name,
-      email,
-      photoUrl: photo_url,
-      bio,
-      registrationDate: registration_date,
-    });
-  }),
-];
+export const findNewFriend = asyncHandler(async (req, res) => {
+  // check if user exists
+  const potentialFriends = await db.query.users.findMany({
+    where: eq(users.name, req.params.friendName),
+  });
+  if (!potentialFriends) {
+    res.status(400);
+    throw new Error("No users found with that name");
+  }
+  res.status(200).json(potentialFriends);
+});
 
 export const sendFriendRequest = [
   // validate and sanitize fields

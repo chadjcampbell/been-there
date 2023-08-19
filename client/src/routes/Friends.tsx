@@ -31,11 +31,10 @@ export const dummyFriendChatList = [
 ];
 
 export type FriendType = {
-  id?: number;
+  user_id: number;
   name: string;
-  email?: string;
-  photoURL?: string;
-  recentMessage?: string;
+  email: string;
+  photo_url: string;
 };
 
 const Friends = () => {

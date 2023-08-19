@@ -54,7 +54,11 @@ const FindFriendModal = () => {
           )}
           <div className="flex flex-column content-center justify-center w-full">
             {foundFriends.map((friend: FriendType) => (
-              <FoundFriendCard key={friend.user_id} friend={friend} />
+              <FoundFriendCard
+                key={friend.user_id}
+                friend={friend}
+                setFoundFriends={setFoundFriends}
+              />
             ))}
           </div>
           <form

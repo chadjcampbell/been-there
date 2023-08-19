@@ -60,21 +60,28 @@ export const sendFriendRequest = [
       res.status(400);
       throw new Error("Error sending friend request");
     }
-    const friendRequestStatus = await db.query.friendRequests.findFirst({
-      where: and(
-        eq(friendRequests.sender_id, req.user.user_id),
-        eq(friendRequests.receiver_id, friendId)
-      ),
-    });
+    const friendRequestStatus = await db
+      .select()
+      .from(friendRequests)
+      .where(
+        and(
+          eq(friendRequests.sender_id, req.user.user_id),
+          eq(friendRequests.receiver_id, friendId)
+        )
+      );
+
     if (friendRequestStatus) {
       res.status(400);
       throw new Error("Friend request already sent");
     }
-    const SQLArray = await db.insert(friendRequests).values({
-      sender_id: req.user.user_id,
-      receiver_id: friend.user_id,
-      status: "pending",
-    });
+    await db
+      .insert(friendRequests)
+      .values({
+        sender_id: req.user.user_id,
+        receiver_id: friend.user_id,
+        status: "pending",
+      })
+      .returning();
     res.status(200).end();
   }),
 ];
@@ -121,13 +128,7 @@ export const pendingFriends = asyncHandler(
       res.status(400);
       throw new Error("Not authorized, please log in");
     }
-    const pendingFriends = await db.query.users.findMany({
-      with: {
-        friendRequests: {
-          where: eq(friendRequests.receiver_id, req.user.user_id),
-        },
-      },
-    });
+    const pendingFriends = await db.select().from(users);
     res.status(200).json(pendingFriends);
     return;
   }

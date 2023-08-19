@@ -19,10 +19,13 @@ export const findNewFriend = async (friendName: string) => {
 
 export const sendFriendRequest = async (friendId: number) => {
   try {
-    const response = await axios.post(API_URL + "sendFriendRequest", friendId);
+    const response = await axios.post(API_URL + "sendFriendRequest", {
+      friendId: friendId,
+    });
     if (response.statusText == "OK") {
       toast.success("Friend request sent");
     }
+    console.log(response);
   } catch (error: any) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||

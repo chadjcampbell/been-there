@@ -2,16 +2,20 @@ import { BsPersonFillAdd } from "react-icons/bs";
 import { FriendType } from "../../routes/Friends";
 import { sendFriendRequest } from "../../redux/features/friends/friendService";
 import { toast } from "react-hot-toast";
+import { Dispatch, SetStateAction } from "react";
 
 type FoundFriendCardProps = {
   friend: FriendType;
+  setFoundFriends: Dispatch<SetStateAction<never[]>>;
 };
 
-const FoundFriendCard = ({ friend }: FoundFriendCardProps) => {
+const FoundFriendCard = ({ friend, setFoundFriends }: FoundFriendCardProps) => {
   const handleAddFriend = async () => {
     try {
-      await sendFriendRequest(friend.user_id);
+      const result = await sendFriendRequest(friend.user_id);
       window.find_friend_modal.close();
+      console.log(result);
+      setFoundFriends([]);
     } catch {
       toast.error("Something went wrong");
     }

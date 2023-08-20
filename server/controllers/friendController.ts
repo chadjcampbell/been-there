@@ -110,7 +110,7 @@ export const acceptFriendRequest = [
       res.status(400);
       throw new Error("Error accepting friend request");
     }
-    const SQLArray = await db.insert(friends).values({
+    await db.insert(friends).values({
       user_id_1: req.user.user_id,
       user_id_2: friendId,
     });
@@ -124,7 +124,13 @@ export const pendingFriends = asyncHandler(
       res.status(400);
       throw new Error("Not authorized, please log in");
     }
-    const pendingFriends = await db.select().from(users);
+    const pendingFriends = await db
+      .select()
+      .from(users)
+      .leftJoin(
+        friend_requests,
+        eq(friend_requests.receiver_id, req.user.user_id)
+      );
     res.status(200).json(pendingFriends);
     return;
   }

@@ -19,7 +19,7 @@ CREATE TABLE friends (
 
 CREATE TYPE request_status AS ENUM ('pending', 'accepted', 'rejected');
 
-CREATE TABLE friendRequests (
+CREATE TABLE friend_requests (
     request_id SERIAL PRIMARY KEY,
     sender_id INT NOT NULL,
     receiver_id INT NOT NULL,

@@ -12,4 +12,4 @@ export const friends = pgTable("friends", {
     .references(() => users.user_id),
 });
 
-export type Friends = InferModel<typeof friends>; // return type when queried
+export type Friend = InferModel<typeof friends>; // return type when queried

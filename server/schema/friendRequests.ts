@@ -1,6 +1,5 @@
 import { pgTable, serial, integer, pgEnum } from "drizzle-orm/pg-core";
 import { InferModel } from "drizzle-orm";
-import { users } from "./users";
 
 export const request_status = pgEnum("request_status", [
   "pending",
@@ -8,15 +7,11 @@ export const request_status = pgEnum("request_status", [
   "rejected",
 ]);
 
-export const friendRequests = pgTable("friendRequests", {
+export const friend_requests = pgTable("friend_requests", {
   request_id: serial("request_id").primaryKey(),
-  sender_id: integer("sender_id")
-    .notNull()
-    .references(() => users.user_id),
-  receiver_id: integer("receiver_id")
-    .notNull()
-    .references(() => users.user_id),
+  sender_id: integer("sender_id").notNull(),
+  receiver_id: integer("receiver_id").notNull(),
   status: request_status("status").notNull(),
 });
 
-export type FriendRequests = InferModel<typeof friendRequests>; // return type when queried
+export type FriendRequest = InferModel<typeof friend_requests>; // return type when queried

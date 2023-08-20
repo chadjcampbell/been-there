@@ -2,7 +2,7 @@ import { and, eq, or } from "drizzle-orm";
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
 import db from "../db";
-import { friendRequests, friends, users } from "../schema";
+import { friend_requests, friends, users } from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
 
 export const findAllFriends = asyncHandler(async (req, res) => {
@@ -62,26 +62,22 @@ export const sendFriendRequest = [
     }
     const friendRequestStatus = await db
       .select()
-      .from(friendRequests)
+      .from(friend_requests)
       .where(
         and(
-          eq(friendRequests.sender_id, req.user.user_id),
-          eq(friendRequests.receiver_id, friendId)
+          eq(friend_requests.sender_id, req.user.user_id),
+          eq(friend_requests.receiver_id, friendId)
         )
       );
-
-    if (friendRequestStatus) {
+    if (friendRequestStatus.length > 0) {
       res.status(400);
       throw new Error("Friend request already sent");
     }
-    await db
-      .insert(friendRequests)
-      .values({
-        sender_id: req.user.user_id,
-        receiver_id: friend.user_id,
-        status: "pending",
-      })
-      .returning();
+    await db.insert(friend_requests).values({
+      sender_id: req.user.user_id,
+      receiver_id: friend.user_id,
+      status: "pending",
+    });
     res.status(200).end();
   }),
 ];
@@ -103,11 +99,11 @@ export const acceptFriendRequest = [
     }
     // check if friendRequest exists
     const { friendId } = req.body;
-    const friendRequestPending = await db.query.friendRequests.findFirst({
+    const friendRequestPending = await db.query.friend_requests.findFirst({
       where: and(
-        eq(friendRequests.sender_id, friendId),
-        eq(friendRequests.receiver_id, req.user.user_id),
-        eq(friendRequests.status, "pending")
+        eq(friend_requests.sender_id, friendId),
+        eq(friend_requests.receiver_id, req.user.user_id),
+        eq(friend_requests.status, "pending")
       ),
     });
     if (!friendRequestPending) {

@@ -1,4 +1,4 @@
-import { and, eq, or } from "drizzle-orm";
+import { and, eq, ne, or } from "drizzle-orm";
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
 import db from "../db";
@@ -11,19 +11,30 @@ export const findAllFriends = asyncHandler(
       res.status(400);
       throw new Error("Not authorized, please log in");
     }
-    const friendsList = await db
-      .select()
-      .from(friends)
-      .where(
+    const data = await db
+      .select({ users })
+      .from(users)
+      .innerJoin(
+        friends,
         or(
-          eq(friends.user_id_1, req.user.user_id),
-          eq(friends.user_id_2, req.user.user_id)
+          eq(friends.user_id_1, users.user_id),
+          eq(friends.user_id_2, users.user_id)
+        )
+      )
+      .where(
+        and(
+          ne(users.user_id, req.user.user_id),
+          or(
+            eq(friends.user_id_1, req.user.user_id),
+            eq(friends.user_id_2, req.user.user_id)
+          )
         )
       );
-    if (!friendsList) {
+    if (!data) {
       res.status(400);
       throw new Error("No friends found");
     }
+    const friendsList = data.map((item) => item.users);
     res.status(200).json(friendsList);
     return;
   }

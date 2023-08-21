@@ -18,11 +18,11 @@ const FriendListCard = ({ name, photoURL }: FriendListCardProps) => {
       </div>
       <div className="w-full">
         <div className="text-lg font-semibold">{name}</div>
-        <button className="btn btn-sm">
+        <button className="btn btn-sm bg-blue-200">
           <BsChatDots />
           Chat
         </button>
-        <button className="btn btn-sm ml-2">
+        <button className="btn btn-sm ml-2 bg-purple-200">
           <CgProfile />
           Profile
         </button>

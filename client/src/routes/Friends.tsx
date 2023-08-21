@@ -30,7 +30,6 @@ const Friends = () => {
     findPendingFriends();
     getAllFriends();
   }, []);
-  console.log(friendList);
 
   return (
     <div className="p-6 flex w-full min-h-screen justify-center">
@@ -60,7 +59,7 @@ const Friends = () => {
             <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {friendList?.map((friend) => (
                 <FriendListCard
-                  key={friend.name}
+                  key={friend.user_id}
                   name={friend.name}
                   photoURL={
                     friend.photo_url

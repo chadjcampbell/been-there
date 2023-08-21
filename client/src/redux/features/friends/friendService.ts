@@ -46,3 +46,37 @@ export const getPendingFriends = async () => {
     toast.error(message);
   }
 };
+
+export const acceptFriendRequest = async (friendId: number) => {
+  try {
+    const response = await axios.post(API_URL + "acceptFriendRequest", {
+      friendId: friendId,
+    });
+    if (response.statusText == "OK") {
+      toast.success("Friend request sent");
+    }
+  } catch (error: any) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};
+
+export const rejectFriendRequest = async (friendId: number) => {
+  try {
+    const response = await axios.post(API_URL + "rejectFriendRequest", {
+      friendId: friendId,
+    });
+    if (response.statusText == "OK") {
+      toast.success("Friend request sent");
+    }
+  } catch (error: any) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};

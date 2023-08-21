@@ -3,6 +3,7 @@ import { selectUser } from "../redux/features/auth/authSlice";
 
 const Profile = () => {
   const user = useSelector(selectUser);
+  console.log(user);
   return (
     <section>
       <div className="card w-auto  flex-row content-center justify-center bg-base-100 shadow-xl m-8">

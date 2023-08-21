@@ -82,6 +82,29 @@ export const sendFriendRequest = [
   }),
 ];
 
+export const pendingFriends = asyncHandler(
+  async (req: RequestUserAttached, res) => {
+    if (!req.user) {
+      res.status(400);
+      throw new Error("Not authorized, please log in");
+    }
+    const data = await db
+      .select({ users })
+      .from(users)
+      .innerJoin(friend_requests, eq(users.user_id, friend_requests.sender_id))
+      .where(
+        and(
+          eq(friend_requests.receiver_id, req.user.user_id),
+          eq(friend_requests.status, "pending")
+        )
+      );
+
+    const pendingFriends = data.map((item) => item.users);
+    res.status(200).json(pendingFriends);
+    return;
+  }
+);
+
 export const acceptFriendRequest = [
   // validate and sanitize fields
   body("friendId").trim(),
@@ -118,20 +141,38 @@ export const acceptFriendRequest = [
   }),
 ];
 
-export const pendingFriends = asyncHandler(
-  async (req: RequestUserAttached, res) => {
+export const rejectFriendRequest = [
+  // validate and sanitize fields
+  body("friendId").trim(),
+  asyncHandler(async (req: RequestUserAttached, res) => {
+    // extract the validation errors from a request
+    const errors = validationResult(req);
+    // there are errors
+    if (!errors.isEmpty()) {
+      res.status(400);
+      throw new Error("Error accepting friend request");
+    }
     if (!req.user) {
       res.status(400);
       throw new Error("Not authorized, please log in");
     }
-    const data = await db
-      .select({ users })
-      .from(users)
-      .innerJoin(friend_requests, eq(users.user_id, friend_requests.sender_id))
-      .where(eq(friend_requests.receiver_id, req.user.user_id));
-
-    const pendingFriends = data.map((item) => item.users);
-    res.status(200).json(pendingFriends);
-    return;
-  }
-);
+    // check if friendRequest exists
+    const { friendId } = req.body;
+    const friendRequestPending = await db.query.friend_requests.findFirst({
+      where: and(
+        eq(friend_requests.sender_id, friendId),
+        eq(friend_requests.receiver_id, req.user.user_id),
+        eq(friend_requests.status, "pending")
+      ),
+    });
+    if (!friendRequestPending) {
+      res.status(400);
+      throw new Error("Error accepting friend request");
+    }
+    await db.insert(friends).values({
+      user_id_1: req.user.user_id,
+      user_id_2: friendId,
+    });
+    res.status(200).end();
+  }),
+];

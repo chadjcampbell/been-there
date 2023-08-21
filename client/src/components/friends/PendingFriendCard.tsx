@@ -1,6 +1,10 @@
 import { BsPersonFillAdd } from "react-icons/bs";
+import { TbUserCancel } from "react-icons/tb";
 import { FriendType } from "../../routes/Friends";
-import { sendFriendRequest } from "../../redux/features/friends/friendService";
+import {
+  acceptFriendRequest,
+  rejectFriendRequest,
+} from "../../redux/features/friends/friendService";
 import { toast } from "react-hot-toast";
 
 type FoundFriendCardProps = {
@@ -8,9 +12,18 @@ type FoundFriendCardProps = {
 };
 
 const PendingFriendCard = ({ friend }: FoundFriendCardProps) => {
-  const handleAddFriend = async () => {
+  const handleAcceptFriend = async () => {
     try {
-      await sendFriendRequest(friend.user_id);
+      await acceptFriendRequest(friend.user_id);
+      window.find_friend_modal.close();
+    } catch {
+      toast.error("Something went wrong");
+    }
+  };
+
+  const handleRejectFriend = async () => {
+    try {
+      await rejectFriendRequest(friend.user_id);
       window.find_friend_modal.close();
     } catch {
       toast.error("Something went wrong");
@@ -28,9 +41,19 @@ const PendingFriendCard = ({ friend }: FoundFriendCardProps) => {
       </div>
       <div className="w-full">
         <div className="text-lg font-semibold">{friend.name}</div>
-        <button onClick={handleAddFriend} className="btn btn-sm">
+        <button
+          onClick={handleAcceptFriend}
+          className="btn btn-sm bg-green-200"
+        >
           <BsPersonFillAdd />
-          Accept Friend Request
+          Accept
+        </button>
+        <button
+          onClick={handleRejectFriend}
+          className="btn btn-sm ml-2 bg-red-200"
+        >
+          <TbUserCancel />
+          Reject
         </button>
       </div>
     </div>

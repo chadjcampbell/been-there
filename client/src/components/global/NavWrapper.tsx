@@ -9,9 +9,10 @@ import useSocketSetup from "../../hooks/useSocketSetup";
 
 import useAuthRedirect from "../../hooks/useAuthRedirect";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutUser } from "../../redux/features/auth/authService";
+import { getUser, logoutUser } from "../../redux/features/auth/authService";
 import {
   SET_LOGIN,
+  SET_USER,
   selectIsLoggedIn,
 } from "../../redux/features/auth/authSlice";
 import Loading from "./Loading";
@@ -29,6 +30,11 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
 
   useEffect(() => {
     setLoading(!isLoggedIn);
+    const setUserState = async () => {
+      const data = await getUser();
+      dispatch(SET_USER(data));
+    };
+    isLoggedIn && setUserState();
   }, [isLoggedIn]);
 
   useAuthRedirect("/login");

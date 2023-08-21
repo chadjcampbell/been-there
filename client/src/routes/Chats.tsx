@@ -1,13 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChatListCard from "../components/chats/ChatListCard";
 import {
   FriendChatMessage,
   MyChatMessage,
 } from "../components/chats/ChatMessage";
-import { dummyFriendChatList } from "./Friends";
+import { FriendType } from "./Friends";
+import { findAllFriends } from "../redux/features/friends/friendService";
 
 const Chats = () => {
-  const [friendList, setFriendList] = useState(dummyFriendChatList);
+  const [friendList, setFriendList] = useState<FriendType[] | []>([]);
+  useEffect(() => {
+    const getAllFriends = async () => {
+      const result = await findAllFriends();
+      setFriendList(result);
+    };
+    getAllFriends();
+  }, []);
 
   return (
     <div className=" mx-auto ">
@@ -55,11 +63,11 @@ const Chats = () => {
                   key={chat.name}
                   name={chat.name}
                   photoURL={
-                    chat.photoUrl
-                      ? chat.photoUrl
+                    chat.photo_url
+                      ? chat.photo_url
                       : "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg"
                   }
-                  recentMessage={chat.recentMessage ? chat.recentMessage : ""}
+                  recentMessage={""}
                 />
               ))
             ) : (

@@ -4,6 +4,19 @@ import toast from "react-hot-toast";
 
 const API_URL = BACKEND_URL + "/friends/";
 
+export const findAllFriends = async () => {
+  try {
+    const response = await axios.get(API_URL + "findAllFriends");
+    return response.data;
+  } catch (error: any) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};
+
 export const findNewFriend = async (friendName: string) => {
   try {
     const response = await axios.get(API_URL + "findNewFriend/" + friendName);
@@ -53,7 +66,7 @@ export const acceptFriendRequest = async (friendId: number) => {
       friendId: friendId,
     });
     if (response.statusText == "OK") {
-      toast.success("Friend request sent");
+      toast.success("Friend added");
     }
   } catch (error: any) {
     const message =
@@ -70,7 +83,7 @@ export const rejectFriendRequest = async (friendId: number) => {
       friendId: friendId,
     });
     if (response.statusText == "OK") {
-      toast.success("Friend request sent");
+      toast.success("Friend request rejected");
     }
   } catch (error: any) {
     const message =

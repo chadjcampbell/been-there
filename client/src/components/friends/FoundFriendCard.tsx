@@ -12,7 +12,7 @@ type FoundFriendCardProps = {
 const FoundFriendCard = ({ friend, setFoundFriends }: FoundFriendCardProps) => {
   const handleAddFriend = async () => {
     try {
-      const result = await sendFriendRequest(friend.user_id);
+      await sendFriendRequest(friend.user_id);
       window.find_friend_modal.close();
       setFoundFriends([]);
     } catch {

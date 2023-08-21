@@ -51,6 +51,8 @@ const Friends = () => {
     findPendingFriends();
   }, []);
 
+  console.log(pendingFriends);
+
   return (
     <div className="p-6 flex w-full min-h-screen justify-center">
       <div className="text-center">

@@ -124,13 +124,13 @@ export const pendingFriends = asyncHandler(
       res.status(400);
       throw new Error("Not authorized, please log in");
     }
-    const pendingFriends = await db
-      .select()
+    const data = await db
+      .select({ users })
       .from(users)
-      .leftJoin(
-        friend_requests,
-        eq(friend_requests.receiver_id, req.user.user_id)
-      );
+      .innerJoin(friend_requests, eq(users.user_id, friend_requests.sender_id))
+      .where(eq(friend_requests.receiver_id, req.user.user_id));
+
+    const pendingFriends = data.map((item) => item.users);
     res.status(200).json(pendingFriends);
     return;
   }

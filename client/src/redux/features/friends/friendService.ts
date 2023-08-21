@@ -25,7 +25,6 @@ export const sendFriendRequest = async (friendId: number) => {
     if (response.statusText == "OK") {
       toast.success("Friend request sent");
     }
-    console.log(response);
   } catch (error: any) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -38,7 +37,6 @@ export const sendFriendRequest = async (friendId: number) => {
 export const getPendingFriends = async () => {
   try {
     const response = await axios.get(API_URL + "pendingFriends/");
-    console.log(response);
     return response.data;
   } catch (error: any) {
     const message =

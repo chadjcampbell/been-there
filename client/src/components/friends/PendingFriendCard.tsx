@@ -8,7 +8,6 @@ type FoundFriendCardProps = {
 };
 
 const PendingFriendCard = ({ friend }: FoundFriendCardProps) => {
-  console.log(friend);
   const handleAddFriend = async () => {
     try {
       await sendFriendRequest(friend.user_id);

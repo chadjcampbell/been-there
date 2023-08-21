@@ -14,7 +14,6 @@ const FoundFriendCard = ({ friend, setFoundFriends }: FoundFriendCardProps) => {
     try {
       const result = await sendFriendRequest(friend.user_id);
       window.find_friend_modal.close();
-      console.log(result);
       setFoundFriends([]);
     } catch {
       toast.error("Something went wrong");

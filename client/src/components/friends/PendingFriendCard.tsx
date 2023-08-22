@@ -6,17 +6,36 @@ import {
   rejectFriendRequest,
 } from "../../redux/features/friends/friendService";
 import { toast } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectFriendsList,
+  selectPendingFriends,
+  SET_FRIENDS_LIST,
+  SET_PENDING_FRIENDS,
+} from "../../redux/features/friends/friendsSlice";
 
 type FoundFriendCardProps = {
   friend: FriendType;
 };
 
 const PendingFriendCard = ({ friend }: FoundFriendCardProps) => {
+  const dispatch = useDispatch();
+  const currentFriends = useSelector(selectFriendsList);
+  const currentPending = useSelector(selectPendingFriends);
+
   const handleAcceptFriend = async () => {
     try {
       await acceptFriendRequest(friend.user_id);
-      window.find_friend_modal.close();
-    } catch {
+      dispatch(SET_FRIENDS_LIST([...currentFriends, friend]));
+      dispatch(
+        SET_PENDING_FRIENDS(
+          currentPending.filter(
+            (item: FriendType) => item.user_id != friend.user_id
+          )
+        )
+      );
+    } catch (err) {
+      console.log(err);
       toast.error("Something went wrong");
     }
   };
@@ -24,7 +43,13 @@ const PendingFriendCard = ({ friend }: FoundFriendCardProps) => {
   const handleRejectFriend = async () => {
     try {
       await rejectFriendRequest(friend.user_id);
-      window.find_friend_modal.close();
+      dispatch(
+        SET_PENDING_FRIENDS(
+          currentPending.filter(
+            (item: FriendType) => item.user_id != friend.user_id
+          )
+        )
+      );
     } catch {
       toast.error("Something went wrong");
     }

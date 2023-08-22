@@ -16,6 +16,10 @@ import {
   selectIsLoggedIn,
 } from "../../redux/features/auth/authSlice";
 import Loading from "./Loading";
+import {
+  SET_FRIENDS_LIST,
+  SET_PENDING_FRIENDS,
+} from "../../redux/features/friends/friendsSlice";
 
 type NavWrapperProps = {
   children: ReactNode;
@@ -43,6 +47,8 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
     setisLoggingOut(true);
     await logoutUser();
     dispatch(SET_LOGIN(false));
+    dispatch(SET_FRIENDS_LIST([]));
+    dispatch(SET_PENDING_FRIENDS([]));
     navigate("/login");
     setisLoggingOut(false);
   };

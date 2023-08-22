@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "../redux/features/auth/authSlice";
+import friendsReducer from "../redux/features/friends/friendsSlice";
 import thunkMiddleware from "redux-thunk";
 import { useDispatch } from "react-redux";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    friends: friendsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(thunkMiddleware),

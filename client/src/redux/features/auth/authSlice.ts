@@ -2,6 +2,15 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const name = localStorage.getItem("name");
 
+export type UserType = {
+  userId: number;
+  name: string;
+  email: string;
+  photoUrl: string;
+  bio: string;
+  registrationDate: Date;
+};
+
 const initialState = {
   isLoggedIn: null,
   name: name ? name : "",
@@ -36,6 +45,6 @@ export const { SET_LOGIN, SET_NAME, SET_USER } = authSlice.actions;
 
 export const selectIsLoggedIn = (state: any) => state.auth.isLoggedIn;
 export const selectName = (state: any) => state.auth.name;
-export const selectUser = (state: any) => state.auth.user;
+export const selectUser = (state: any) => state.auth.user as UserType;
 
 export default authSlice.reducer;

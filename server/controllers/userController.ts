@@ -204,8 +204,7 @@ export const updateUser = asyncHandler(
         where: eq(users.user_id, req.user.user_id),
       });
       if (user) {
-        const { user_id, name, email, photo_url, bio, registration_date } =
-          user;
+        const { name, email, photo_url, bio } = user;
         user.email = email;
         user.name = req.body.name || name;
         user.photo_url = req.body.photo || photo_url;

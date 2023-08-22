@@ -4,7 +4,8 @@ import {
   userUpdateData,
   updateUser,
 } from "../../redux/features/auth/authService";
-import { UserType } from "../../redux/features/auth/authSlice";
+import { SET_USER, UserType } from "../../redux/features/auth/authSlice";
+import { useDispatch } from "react-redux";
 
 type ProfileEditProps = {
   setUpdateMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,8 +16,11 @@ export const ProfileEdit = ({ user, setUpdateMode }: ProfileEditProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [profile, setProfile] = useState(user);
   const [profileImage, setProfileImage] = useState<File | null>(null);
+  const dispatch = useDispatch();
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     let value = event.target.value;
     setProfile({ ...profile, [event.target.name]: value });
   };
@@ -55,40 +59,68 @@ export const ProfileEdit = ({ user, setUpdateMode }: ProfileEditProps) => {
       }
 
       // set photo
-      const newPhoto = imageURL !== "" ? imageURL : profile.photo;
+      const newPhoto = imageURL !== "" ? imageURL : user.photoUrl;
 
       // send all data to mongoDB
       const formData: userUpdateData = {
         name: profile.name,
-        phone: profile.phone,
         bio: profile.bio,
         photo: newPhoto,
       };
       const data = await updateUser(formData);
-      console.log(data);
+      dispatch(SET_USER(data));
       toast.success("User updated successfully");
     } catch (error: any) {
       console.log(error);
-      setIsLoading(false);
       toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+      setUpdateMode(false);
     }
   };
 
   return isLoading ? (
     <span className="loading loading-spinner text-secondary loading-lg"></span>
   ) : (
-    <form>
-      <h1 className="text-5xl font-bold">{user.name}</h1>
-      <p className="py-6 text-xs">
-        Member since: {new Date(user.registrationDate).toLocaleDateString()}
-      </p>
-      <p className="py-6">{user.bio}</p>
-      <button
-        onClick={() => setUpdateMode(false)}
-        className="btn btn-secondary"
-      >
-        Save Changes
-      </button>
-    </form>
+    <div className="card-body flex-col lg:flex-row">
+      <div className="flex content-center justify-center max-h-96 aspect-square ">
+        <img
+          src={profileImage ? URL.createObjectURL(profileImage) : user.photoUrl}
+          alt={user.name}
+          className=" m-6 p-2 rounded-full shadow-sm"
+        />
+      </div>
+      <form onSubmit={saveProfile}>
+        <input
+          value={profile.name}
+          name="name"
+          onChange={handleInputChange}
+          className="text-2xl font-bold w-full border border-primary rounded-lg p-1"
+        />
+        <div className="my-3 border border-primary rounded-lg p-1">
+          <p className="font-bold">Profile Picture</p>
+          <p className="my-1 text-xs">
+            Supported formats: jpg, jpeg, png, webp
+          </p>
+          <input name="image" onChange={handleImageChange} type="file" />
+        </div>
+        <textarea
+          value={profile.bio}
+          name="bio"
+          onChange={handleInputChange}
+          className="my-4 w-full block border border-primary rounded-lg p-1"
+        />
+        <button type="submit" className="btn btn-secondary">
+          Save Changes
+        </button>
+        <button
+          onClick={() => setUpdateMode(false)}
+          type="button"
+          className="ml-4 btn btn-error"
+        >
+          Cancel
+        </button>
+      </form>
+    </div>
   );
 };

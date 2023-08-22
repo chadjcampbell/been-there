@@ -10,9 +10,8 @@ export type UserDataType = {
 
 export type userUpdateData = {
   name: string;
-  phone: string;
   bio: string;
-  photoUrl: string;
+  photo: string;
 };
 
 export type PasswordUpdateData = {

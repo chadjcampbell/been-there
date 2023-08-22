@@ -32,13 +32,13 @@ const Friends = () => {
   }, []);
 
   return (
-    <div className="p-6 flex w-full min-h-screen justify-center">
+    <div className="p-6 flex w-full max-w-7xl min-h-screen justify-center">
       <div className="text-center">
         <FindFriendModal />
         {pendingFriends?.length > 0 && (
           <>
             <h1 className="text-3xl font-bold">Pending Friend Requests</h1>
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            <div className="w-full flex flex-wrap justify-center items-center">
               {pendingFriends?.map((friend) => (
                 <PendingFriendCard key={friend.user_id} friend={friend} />
               ))}
@@ -56,7 +56,7 @@ const Friends = () => {
           <>
             {" "}
             <h1 className="text-3xl font-bold">Friends</h1>
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            <div className="w-full flex flex-wrap justify-center items-center">
               {friendList?.map((friend) => (
                 <FriendListCard
                   key={friend.user_id}

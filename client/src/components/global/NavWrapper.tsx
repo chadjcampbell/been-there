@@ -198,7 +198,9 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
           </div>
         </nav>
       </header>
-      <main className="h-[calc(100vh-4rem)]">{children}</main>
+      <main className="h-[calc(100vh-4rem)] flex justify-center w-full">
+        {children}
+      </main>
     </>
   );
 };

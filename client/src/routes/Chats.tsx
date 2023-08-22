@@ -18,7 +18,7 @@ const Chats = () => {
   }, []);
 
   return (
-    <div className=" mx-auto ">
+    <div className=" mx-auto w-full">
       <div className="z-10 drawer lg:drawer-open ">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col-reverse items-center justify-center h-[calc(100vh-4rem)]">

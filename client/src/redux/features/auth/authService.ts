@@ -29,8 +29,11 @@ export const registerUser = async (userData: UserDataType) => {
         withCredentials: true,
       }
     );
-    if (response.statusText === "OK") {
-      toast.success("User Registered Successfully");
+    if (response.status >= 200 && response.status < 300) {
+      toast.success("Welcome to Been There!");
+      setTimeout(() => {
+        toast.success("Where have you been?");
+      }, 1000);
     }
     return response.data;
   } catch (error: any) {

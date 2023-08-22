@@ -1,4 +1,4 @@
-import { and, eq, ne, or } from "drizzle-orm";
+import { and, eq, ilike, ne, or } from "drizzle-orm";
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
 import db from "../db";
@@ -43,7 +43,7 @@ export const findAllFriends = asyncHandler(
 export const findNewFriend = asyncHandler(async (req, res) => {
   // check if user exists
   const potentialFriends = await db.query.users.findMany({
-    where: eq(users.name, req.params.friendName),
+    where: ilike(users.name, `%${req.params.friendName}%`),
   });
   if (!potentialFriends) {
     res.status(400);

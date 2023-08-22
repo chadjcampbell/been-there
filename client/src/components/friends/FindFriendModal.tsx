@@ -52,7 +52,7 @@ const FindFriendModal = () => {
           {error && (
             <h3 className="mt-4 font-bold text-lg text-red-500">{error}</h3>
           )}
-          <div className="flex flex-column content-center justify-center w-full">
+          <div className="flex flex-column flex-wrap items-center justify-center w-full">
             {foundFriends.map((friend: FriendType) => (
               <FoundFriendCard
                 key={friend.user_id}

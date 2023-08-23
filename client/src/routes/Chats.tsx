@@ -1,21 +1,14 @@
-import { useEffect, useState } from "react";
 import ChatListCard from "../components/chats/ChatListCard";
 import {
   FriendChatMessage,
   MyChatMessage,
 } from "../components/chats/ChatMessage";
+import { useSelector } from "react-redux";
+import { selectFriendsList } from "../redux/features/friends/friendsSlice";
 import { FriendType } from "./Friends";
-import { findAllFriends } from "../redux/features/friends/friendService";
 
 const Chats = () => {
-  const [friendList, setFriendList] = useState<FriendType[] | []>([]);
-  useEffect(() => {
-    const getAllFriends = async () => {
-      const result = await findAllFriends();
-      setFriendList(result);
-    };
-    getAllFriends();
-  }, []);
+  const friendList = useSelector(selectFriendsList);
 
   return (
     <div className=" mx-auto w-full">
@@ -58,7 +51,7 @@ const Chats = () => {
           <section className="menu p-4 w-80 h-full bg-base-200 text-base-content">
             {/* Sidebar content here */}
             {friendList ? (
-              friendList.map((chat) => (
+              friendList.map((chat: FriendType) => (
                 <ChatListCard
                   key={chat.name}
                   name={chat.name}

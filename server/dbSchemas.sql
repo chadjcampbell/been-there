@@ -34,3 +34,13 @@ CREATE TABLE tokens(
   created_at INT NOT NULL,
   expires_at INT NOT NULL
 ) 
+
+CREATE TABLE posts (
+    post_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    content TEXT NOT NULL,
+    post_photo_url VARCHAR(255),
+    post_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_location JSONB, 
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);

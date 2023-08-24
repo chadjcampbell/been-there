@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/features/auth/authSlice";
 import { MdAddAPhoto } from "react-icons/md";
+import { GoSmiley } from "react-icons/go";
 import { BsSendFill } from "react-icons/bs";
 import {
   PostFormData,
@@ -8,6 +9,8 @@ import {
 } from "../../redux/features/posts/postService";
 import { useState, ChangeEvent, FormEvent, useRef } from "react";
 import toast from "react-hot-toast";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 
 export const MakePost = () => {
   const user = useSelector(selectUser);
@@ -21,6 +24,12 @@ export const MakePost = () => {
   ) => {
     let value = event.target.value;
     setPost({ ...post, [event.target.name]: value });
+  };
+
+  const handleEmojiSelect = (event: ChangeEvent<any>) => {
+    console.log(event);
+    const newText = post.content + event.native;
+    setPost({ ...post, content: newText });
   };
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -60,13 +69,10 @@ export const MakePost = () => {
         imageURL = imageData.url.toString();
       }
 
-      // set photo
-      const newPhoto = imageURL !== "" ? imageURL : user.photoUrl;
-
       // send all data to backend
       const formData: PostFormData = {
         content: post.content,
-        postPhotoUrl: newPhoto,
+        postPhotoUrl: imageURL,
       };
       const data = await makeNewPost(formData);
       console.log(data);
@@ -97,12 +103,23 @@ export const MakePost = () => {
           </div>
         )}
         <form onSubmit={submitPost}>
-          <textarea
-            onChange={handleInputChange}
-            name="content"
-            placeholder="Where have you been?"
-            className="my-4 w-full block border border-primary rounded-lg p-1"
-          />
+          <div className="flex items-center">
+            <textarea
+              onChange={handleInputChange}
+              name="content"
+              placeholder="Where have you been?"
+              className="my-4 w-full block border border-primary rounded-lg p-1"
+            />
+            <details className="dropdown">
+              <summary className="m-1 btn">
+                <GoSmiley />
+              </summary>
+              <div className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                <Picker data={data} onEmojiSelect={handleEmojiSelect} />
+              </div>
+            </details>
+          </div>
+
           <div className="card-actions justify-between mt-4">
             <input
               type="file"

@@ -61,7 +61,7 @@ export const ProfileEdit = ({ user, setUpdateMode }: ProfileEditProps) => {
       // set photo
       const newPhoto = imageURL !== "" ? imageURL : user.photoUrl;
 
-      // send all data to mongoDB
+      // send all data to backend
       const formData: userUpdateData = {
         name: profile.name,
         bio: profile.bio,

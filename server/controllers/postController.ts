@@ -29,7 +29,6 @@ export const makePost = [
     .withMessage("Post text is required.")
     .isLength({ max: 280 })
     .withMessage("Post text must be at most 280 characters long."),
-  ,
   asyncHandler(async (req: RequestUserAttached, res) => {
     // check for erros in validation
     const errors = validationResult(req);

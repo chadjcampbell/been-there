@@ -39,6 +39,7 @@ CREATE TABLE posts (
     post_id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     content TEXT NOT NULL,
+    likes INT DEFAULT 0,
     post_photo_url VARCHAR(255),
     post_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_location JSONB, 

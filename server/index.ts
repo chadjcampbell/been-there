@@ -5,6 +5,7 @@ import helmet from "helmet";
 import cors from "cors";
 import { router as userRoute } from "./routes/userRoute";
 import { router as friendRoute } from "./routes/friendRoute";
+import { router as postRoute } from "./routes/postRoute";
 const app = express();
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorMiddleware";
@@ -34,6 +35,7 @@ app.use(express.urlencoded({ extended: false }));
 // routes
 app.use("/auth", userRoute);
 app.use("/friends", friendRoute);
+app.use("/posts", postRoute);
 
 // socket.io connection
 io.on("connect", (socket) => {

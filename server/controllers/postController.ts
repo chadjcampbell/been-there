@@ -35,7 +35,7 @@ export const makePost = [
     // there are errors
     if (!errors.isEmpty()) {
       res.status(400);
-      throw new Error("Error accepting friend request");
+      throw new Error(errors.array()[0].msg);
     }
     // check if user exists
     if (!req.user) {

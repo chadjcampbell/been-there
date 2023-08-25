@@ -24,9 +24,7 @@ export type PostFormData = {
 
 export const makeNewPost = async (formData: PostFormData) => {
   try {
-    const response = await axios.post(API_URL + "acceptFriendRequest", {
-      formData,
-    });
+    const response = await axios.post(API_URL + "makePost", formData);
     if (response.status >= 200 && response.status < 300) {
       toast.success(response.data.message);
       return response.data.post;

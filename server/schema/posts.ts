@@ -11,7 +11,7 @@ import { InferModel } from "drizzle-orm";
 import { users } from "./users";
 
 export const posts = pgTable("posts", {
-  post_id: serial("friendship_id").primaryKey(),
+  post_id: serial("post_id").primaryKey(),
   user_id: integer("user_id")
     .notNull()
     .references(() => users.user_id),

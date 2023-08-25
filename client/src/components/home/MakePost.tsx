@@ -16,7 +16,8 @@ export const MakePost = () => {
   const user = useSelector(selectUser);
   const hiddenFileInput = useRef<HTMLInputElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [post, setPost] = useState({ content: "", postPhotoUrl: "" });
+  const initialPostValues = { content: "", postPhotoUrl: "" };
+  const [post, setPost] = useState(initialPostValues);
   const [postImage, setPostImage] = useState<File | null>(null);
   const pickerRef = useRef<HTMLDetailsElement | null>(null);
 
@@ -82,6 +83,8 @@ export const MakePost = () => {
       };
       const data = await makeNewPost(formData);
       console.log(data);
+      setPost(initialPostValues);
+      setPostImage(null);
     } catch (error: any) {
       console.log(error);
       toast.error(error.message);

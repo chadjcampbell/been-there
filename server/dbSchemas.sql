@@ -45,3 +45,15 @@ CREATE TABLE posts (
     user_location JSONB, 
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
+
+CREATE TABLE comments (
+    comment_id SERIAL PRIMARY KEY,
+    post_id INT NOT NULL,
+    user_id INT NOT NULL,
+    content TEXT NOT NULL,
+    likes INT DEFAULT 0,
+    comment_photo_url VARCHAR(255),
+    comment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES Posts(post_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);

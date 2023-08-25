@@ -13,6 +13,7 @@
     "@emoji-mart/data": "^1.1.2",
     "@emoji-mart/react": "^1.1.1",
     "@reduxjs/toolkit": "^1.9.5",
+    "@types/emoji-mart": "^3.0.9",
     "axios": "^1.4.0",
     "emoji-mart": "^5.5.2",
     "react": "^18.2.0",

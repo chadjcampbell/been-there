@@ -18,6 +18,7 @@ export const MakePost = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [post, setPost] = useState({ content: "", postPhotoUrl: "" });
   const [postImage, setPostImage] = useState<File | null>(null);
+  const pickerRef = useRef<HTMLDetailsElement | null>(null);
 
   const handleInputChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -26,10 +27,15 @@ export const MakePost = () => {
     setPost({ ...post, [event.target.name]: value });
   };
 
-  const handleEmojiSelect = (event: ChangeEvent<any>) => {
-    console.log(event);
+  const handleEmojiSelect = (event: { native: string }) => {
     const newText = post.content + event.native;
     setPost({ ...post, content: newText });
+  };
+
+  const closeEmojiPicker = () => {
+    if (pickerRef.current) {
+      pickerRef.current.open = false;
+    }
   };
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -105,17 +111,23 @@ export const MakePost = () => {
         <form onSubmit={submitPost}>
           <div className="flex items-center">
             <textarea
+              required
+              value={post.content}
               onChange={handleInputChange}
               name="content"
               placeholder="Where have you been?"
               className="my-4 w-full block border border-primary rounded-lg p-1"
             />
-            <details className="dropdown">
+            <details ref={pickerRef} className="dropdown hidden md:block">
               <summary className="m-1 btn">
                 <GoSmiley />
               </summary>
               <div className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
-                <Picker data={data} onEmojiSelect={handleEmojiSelect} />
+                <Picker
+                  onClickOutside={closeEmojiPicker}
+                  data={data}
+                  onEmojiSelect={handleEmojiSelect}
+                />
               </div>
             </details>
           </div>
@@ -135,8 +147,14 @@ export const MakePost = () => {
               <MdAddAPhoto size="1.5rem" title="Add Picture to post" />
             </button>
             <button type="submit" className="badge btn btn-secondary">
-              <BsSendFill />
-              Post
+              {isLoading ? (
+                <span className="loading loading-spinner text-white loading-lg"></span>
+              ) : (
+                <>
+                  <BsSendFill />
+                  Post
+                </>
+              )}
             </button>
           </div>
         </form>

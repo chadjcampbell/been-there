@@ -7,7 +7,7 @@ import {
   timestamp,
   jsonb,
 } from "drizzle-orm/pg-core";
-import { InferModel } from "drizzle-orm";
+import { InferModel, relations } from "drizzle-orm";
 import { users } from "./users";
 
 export const posts = pgTable("posts", {
@@ -21,5 +21,12 @@ export const posts = pgTable("posts", {
   post_date: timestamp("post_date").notNull().defaultNow(),
   user_location: jsonb("user_location"),
 });
+
+export const postsRelations = relations(posts, ({ one }) => ({
+  user_id: one(users, {
+    fields: [posts.user_id],
+    references: [users.user_id],
+  }),
+}));
 
 export type Posts = InferModel<typeof posts>; // return type when queried

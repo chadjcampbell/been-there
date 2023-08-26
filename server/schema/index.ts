@@ -3,3 +3,4 @@ export * from "./tokens";
 export * from "./friends";
 export * from "./friendRequests";
 export * from "./posts";
+export * from "./comments";

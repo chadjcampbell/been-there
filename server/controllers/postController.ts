@@ -1,9 +1,10 @@
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
 import db from "../db";
-import { posts } from "../schema";
+import { posts, users, comments } from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
 import axios from "axios";
+import { sql } from "drizzle-orm";
 
 export const findAllPosts = asyncHandler(
   async (req: RequestUserAttached, res) => {
@@ -11,7 +12,16 @@ export const findAllPosts = asyncHandler(
       res.status(400);
       throw new Error("Not authorized, please log in");
     }
-    const data = await db.select().from(posts);
+    const data = await db
+      .select({
+        posts,
+        user_name: users.name,
+        user_photo_url: users.photo_url,
+        count: sql<number>`coalesce(comments.comment_id, 0)`.mapWith(Number),
+      })
+      .from(posts)
+      .innerJoin();
+
     if (!data) {
       res.status(400);
       throw new Error("No posts found");

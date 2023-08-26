@@ -12,15 +12,16 @@ export const findAllPosts = asyncHandler(
       res.status(400);
       throw new Error("Not authorized, please log in");
     }
-    const data = await db
-      .select({
-        posts,
-        user_name: users.name,
-        user_photo_url: users.photo_url,
-        count: sql<number>`coalesce(comments.comment_id, 0)`.mapWith(Number),
-      })
-      .from(posts)
-      .innerJoin();
+    const data = await db.query.posts.findMany({
+      with: {
+        users: {
+          columns: {
+            name: true,
+            photo_url: true,
+          },
+        },
+      },
+    });
 
     if (!data) {
       res.status(400);

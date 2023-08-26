@@ -1,5 +1,9 @@
 import { pgTable, serial, timestamp, varchar } from "drizzle-orm/pg-core";
-import { InferModel } from "drizzle-orm";
+import { InferModel, relations } from "drizzle-orm";
+import { posts } from "./posts";
+import { comments } from "./comments";
+import { friends } from "./friends";
+import { friend_requests } from "./friendRequests";
 
 export const users = pgTable("users", {
   user_id: serial("user_id").primaryKey(),
@@ -18,5 +22,12 @@ export const users = pgTable("users", {
     ),
   registration_date: timestamp("registration_date").notNull().defaultNow(),
 });
+
+export const usersRelations = relations(users, ({ many }) => ({
+  posts: many(posts),
+  comments: many(comments),
+  friends: many(friends),
+  friend_requests: many(friend_requests),
+}));
 
 export type User = InferModel<typeof users>; // return type when queried

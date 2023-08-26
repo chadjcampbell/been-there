@@ -1,5 +1,5 @@
 import { pgTable, serial, integer } from "drizzle-orm/pg-core";
-import { InferModel } from "drizzle-orm";
+import { InferModel, relations } from "drizzle-orm";
 import { users } from "./users";
 
 export const friends = pgTable("friends", {
@@ -11,5 +11,16 @@ export const friends = pgTable("friends", {
     .notNull()
     .references(() => users.user_id),
 });
+
+export const friendsRelations = relations(friends, ({ one }) => ({
+  user_id_1: one(users, {
+    fields: [friends.user_id_1],
+    references: [users.user_id],
+  }),
+  user_id_2: one(users, {
+    fields: [friends.user_id_2],
+    references: [users.user_id],
+  }),
+}));
 
 export type Friend = InferModel<typeof friends>; // return type when queried

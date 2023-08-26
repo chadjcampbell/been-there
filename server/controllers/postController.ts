@@ -4,7 +4,7 @@ import db from "../db";
 import { posts, users, comments } from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
 import axios from "axios";
-import { sql } from "drizzle-orm";
+import { asc, desc } from "drizzle-orm";
 
 export const findAllPosts = asyncHandler(
   async (req: RequestUserAttached, res) => {
@@ -13,16 +13,9 @@ export const findAllPosts = asyncHandler(
       throw new Error("Not authorized, please log in");
     }
     const data = await db.query.posts.findMany({
-      with: {
-        users: {
-          columns: {
-            name: true,
-            photo_url: true,
-          },
-        },
-      },
+      with: { user_id: { columns: { name: true, photo_url: true } } },
+      orderBy: [desc(posts.post_date)],
     });
-
     if (!data) {
       res.status(400);
       throw new Error("No posts found");

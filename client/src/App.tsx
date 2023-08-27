@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { getLoginStatus } from "./redux/features/auth/authService";
 import { SET_LOGIN } from "./redux/features/auth/authSlice";
+import { ErrorBoundary } from "react-error-boundary";
 
 axios.defaults.withCredentials = true;
 
@@ -27,53 +28,55 @@ function App() {
   }, [dispatch]);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <NavWrapper>
-              <Home />
-            </NavWrapper>
-          }
-        />
-        <Route
-          path="/map"
-          element={
-            <NavWrapper>
-              <Map />
-            </NavWrapper>
-          }
-        />
-        <Route
-          path="/friends"
-          element={
-            <NavWrapper>
-              <Friends />
-            </NavWrapper>
-          }
-        />
-        <Route
-          path="/chats"
-          element={
-            <NavWrapper>
-              <Chats />
-            </NavWrapper>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <NavWrapper>
-              <Profile />
-            </NavWrapper>
-          }
-        />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="*" element={<Error />} />
-      </Routes>
-    </BrowserRouter>
+    <ErrorBoundary FallbackComponent={Error}>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <NavWrapper>
+                <Home />
+              </NavWrapper>
+            }
+          />
+          <Route
+            path="/map"
+            element={
+              <NavWrapper>
+                <Map />
+              </NavWrapper>
+            }
+          />
+          <Route
+            path="/friends"
+            element={
+              <NavWrapper>
+                <Friends />
+              </NavWrapper>
+            }
+          />
+          <Route
+            path="/chats"
+            element={
+              <NavWrapper>
+                <Chats />
+              </NavWrapper>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <NavWrapper>
+                <Profile />
+              </NavWrapper>
+            }
+          />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="*" element={<Error />} />
+        </Routes>
+      </BrowserRouter>{" "}
+    </ErrorBoundary>
   );
 }
 

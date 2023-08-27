@@ -37,7 +37,7 @@ const Home = () => {
       </section>
       <section>
         {posts.map((post) => (
-          <PostCard post={post} />
+          <PostCard key={post.posts.post_id} post={post} />
         ))}
       </section>
     </div>

@@ -1,8 +1,4 @@
-import { useNavigate } from "react-router-dom";
-
 const Error = () => {
-  const navigate = useNavigate();
-
   return (
     <div className="p-4 bg-secondary-content relative flex flex-col justify-center min-h-screen">
       <div className="w-full p-6 m-auto bg-white rounded-md shadow-md lg:max-w-lg">
@@ -14,13 +10,16 @@ const Error = () => {
           Not sure how you got here
         </h2>
         <div className="my-6">
-          <button
-            onClick={() => navigate("/")}
+          <a href="/" type="button" className="w-full btn btn-primary">
+            Head to Home
+          </a>
+          <a
+            href="login"
             type="button"
-            className="w-full btn btn-primary"
+            className="w-full btn btn-secondary my-6"
           >
-            Head back home
-          </button>
+            Head to Login
+          </a>
         </div>
       </div>
     </div>

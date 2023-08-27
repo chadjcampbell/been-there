@@ -1,10 +1,10 @@
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
 import db from "../db";
-import { posts, users, comments } from "../schema";
+import { comments, friends, posts, users } from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
 import axios from "axios";
-import { asc, desc } from "drizzle-orm";
+import { desc, eq, or, and, ne, sql } from "drizzle-orm";
 
 export const findAllPosts = asyncHandler(
   async (req: RequestUserAttached, res) => {
@@ -12,15 +12,45 @@ export const findAllPosts = asyncHandler(
       res.status(400);
       throw new Error("Not authorized, please log in");
     }
-    const data = await db.query.posts.findMany({
+
+    /*     const data = await db.query.posts.findMany({
       with: { user_id: { columns: { name: true, photo_url: true } } },
       orderBy: [desc(posts.post_date)],
     });
-    if (!data) {
+ */
+
+    const result = db
+      .select({
+        posts,
+        user_name: users.name,
+        user_photo_url: users.photo_url,
+        comment_count: sql<number>`count(comments.comment_id)`.mapWith(Number),
+      })
+      .from(posts)
+      .innerJoin(users, eq(posts.user_id, users.user_id))
+      .leftJoin(comments, eq(posts.post_id, comments.post_id))
+      .leftJoin(
+        friends,
+        or(
+          and(
+            eq(posts.user_id, friends.user_id_1),
+            eq(friends.user_id_2, req.user.user_id)
+          ),
+          and(
+            eq(posts.user_id, friends.user_id_2),
+            eq(friends.user_id_1, req.user.user_id)
+          )
+        )
+      )
+      .where(or(eq(posts.user_id, req.user.user_id), friends.friendship_id))
+      .orderBy(desc(posts.post_date));
+
+    if (!result) {
       res.status(400);
       throw new Error("No posts found");
     }
-    res.status(200).json(data);
+    console.log(result);
+    res.status(200).json(result);
     return;
   }
 );

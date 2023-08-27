@@ -7,6 +7,22 @@ type PostCardProps = {
 };
 
 export const PostCard = ({ post }: PostCardProps) => {
+  const userLocInfo = () => {
+    if (post.posts.user_location.region && post.posts.user_location.country) {
+      const flag = getFlagEmoji(post.posts.user_location.country);
+      return `${flag} ${post.posts.user_location.region}, ${post.posts.user_location.country}`;
+    } else {
+      return "💀 Kno, Where";
+    }
+  };
+
+  function getFlagEmoji(countryCode: string) {
+    return [...countryCode.toUpperCase()]
+      .map((char) => String.fromCodePoint(127397 + char.charCodeAt()))
+      .reduce((a, b) => `${a}${b}`);
+  }
+
+  console.log(post);
   return (
     <div className="card max-w-[600px] bg-base-100 shadow-xl m-4">
       <figure className="flex flex-col">
@@ -15,7 +31,7 @@ export const PostCard = ({ post }: PostCardProps) => {
           src={post.posts.post_photo_url}
           alt="User post photo"
         />
-        <figcaption>🇫🇷 Paris, France</figcaption>
+        <figcaption>{userLocInfo()}</figcaption>
       </figure>
       <div className="card-body">
         <div className="avatar">

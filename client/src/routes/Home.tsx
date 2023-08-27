@@ -17,7 +17,20 @@ export type PostType = {
   post_photo_url: string;
   user_id: number;
   post_id: number;
-  user_location: {};
+  user_location: UserLocation;
+};
+
+export type UserLocation = {
+  ip: string;
+  hostname: string;
+  city: string;
+  region: string;
+  country: string;
+  loc: string;
+  org: string;
+  postal: string;
+  timezone: string;
+  readme: string;
 };
 
 const Home = () => {

@@ -1,9 +1,9 @@
 import { AiOutlineHeart } from "react-icons/ai";
 import { FaRegCommentAlt } from "react-icons/fa";
-import { PostType } from "../../routes/Home";
+import { PostsResponseType } from "../../routes/Home";
 
 type PostCardProps = {
-  post: PostType;
+  post: PostsResponseType;
 };
 
 export const PostCard = ({ post }: PostCardProps) => {
@@ -12,7 +12,7 @@ export const PostCard = ({ post }: PostCardProps) => {
       <figure className="flex flex-col">
         <img
           className="max-w-md rounded-xl m-4"
-          src={post.post_photo_url}
+          src={post.posts.post_photo_url}
           alt="User post photo"
         />
         <figcaption>🇫🇷 Paris, France</figcaption>
@@ -20,20 +20,20 @@ export const PostCard = ({ post }: PostCardProps) => {
       <div className="card-body">
         <div className="avatar">
           <div className="w-24 rounded-full">
-            <img src={post.user_id.photo_url} />
+            <img src={post.user_photo_url} />
           </div>
         </div>
-        <h2 className="card-title">{post.user_id.name}</h2>
-        <p>{post.content}</p>
+        <h2 className="card-title">{post.user_name}</h2>
+        <p>{post.posts.content}</p>
         <div className="card-actions justify-between mt-4">
-          <div className="badge btn">
+          <button className="badge btn">
             <AiOutlineHeart />
-            13
-          </div>
-          <div className="badge btn btn-secondary">
+            {post.posts.likes}
+          </button>
+          <button className="badge btn btn-secondary">
             <FaRegCommentAlt />
-            11 Comments
-          </div>
+            {post.comment_count}
+          </button>
         </div>
       </div>
     </div>

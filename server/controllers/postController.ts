@@ -4,7 +4,7 @@ import db from "../db";
 import { comments, friends, posts, users } from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
 import axios from "axios";
-import { desc, eq, or, and, ne, sql } from "drizzle-orm";
+import { desc, eq, or, and, ne, sql, isNotNull } from "drizzle-orm";
 
 export const findAllPosts = asyncHandler(
   async (req: RequestUserAttached, res) => {
@@ -19,7 +19,7 @@ export const findAllPosts = asyncHandler(
     });
  */
 
-    const result = db
+    const result = await db
       .select({
         posts,
         user_name: users.name,
@@ -42,7 +42,13 @@ export const findAllPosts = asyncHandler(
           )
         )
       )
-      .where(or(eq(posts.user_id, req.user.user_id), friends.friendship_id))
+      .where(
+        or(
+          eq(posts.user_id, req.user.user_id),
+          isNotNull(friends.friendship_id)
+        )
+      )
+      .groupBy(posts.post_id, users.name, users.photo_url)
       .orderBy(desc(posts.post_date));
 
     if (!result) {

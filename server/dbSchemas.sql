@@ -57,3 +57,12 @@ CREATE TABLE comments (
     FOREIGN KEY (post_id) REFERENCES Posts(post_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
+
+CREATE TABLE likes (
+    like_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    target_id INT NOT NULL, -- ID of the liked post or comment
+    target_type VARCHAR(10) NOT NULL, -- 'post' or 'comment'
+    UNIQUE (user_id, target_id, target_type),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);

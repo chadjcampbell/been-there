@@ -47,13 +47,15 @@ export const PostCard = ({ post }: PostCardProps) => {
   };
 
   return (
-    <div className="card max-w-[600px] bg-base-100 shadow-xl m-4">
-      <figure className="flex flex-col">
-        <img
-          className="max-w-md rounded-xl m-4"
-          src={post.post_photo_url}
-          alt="User post photo"
-        />
+    <div className="card max-w-[90vw] bg-base-100 shadow-xl m-4">
+      <figure className="flex flex-col ">
+        <div className="max-w-md m-4">
+          <img
+            className="rounded-xl object-contain"
+            src={post.post_photo_url}
+            alt="User post photo"
+          />
+        </div>
         <figcaption>{userLocInfo()}</figcaption>
       </figure>
       <div className="card-body">
@@ -65,7 +67,7 @@ export const PostCard = ({ post }: PostCardProps) => {
         <h2 className="card-title">{post.user.name}</h2>
         <p>{post.content}</p>
         <div className="card-actions justify-between mt-4">
-          <button onClick={likeThisPost} className="badge btn">
+          <motion.button onClick={likeThisPost} className="badge btn">
             {userLiked ? (
               <motion.div transition={spring} animate={{ scale: [0, 2, 1.2] }}>
                 <BsFillHeartFill size="20" color="red" />
@@ -74,7 +76,7 @@ export const PostCard = ({ post }: PostCardProps) => {
               <AiOutlineHeart />
             )}
             {numLikes}
-          </button>
+          </motion.button>
           <button className="badge btn btn-secondary">
             <FaRegCommentAlt />
             {post.comments.length}

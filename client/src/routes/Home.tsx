@@ -66,6 +66,9 @@ const Home = () => {
           <PostCard key={post.post_id} post={post} />
         ))}
       </section>
+      <div className="flex items-center justify-center py-24">
+        Loading... (coming soon)
+      </div>
     </div>
   );
 };

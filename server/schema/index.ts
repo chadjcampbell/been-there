@@ -4,3 +4,4 @@ export * from "./friends";
 export * from "./friendRequests";
 export * from "./posts";
 export * from "./comments";
+export * from "./likes";

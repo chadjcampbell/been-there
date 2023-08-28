@@ -3,7 +3,7 @@ import { InferModel, relations } from "drizzle-orm";
 import { users } from "./users";
 
 export const likes = pgTable("likes", {
-  like_id: serial("post_id").primaryKey(),
+  like_id: serial("like_id").primaryKey(),
   user_id: integer("user_id")
     .notNull()
     .references(() => users.user_id),

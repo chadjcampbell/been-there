@@ -37,3 +37,22 @@ export const makeNewPost = async (formData: PostFormData) => {
     toast.error(message);
   }
 };
+
+export type LikeFormData = {
+  postId: number;
+};
+
+export const likePost = async (formData: LikeFormData) => {
+  try {
+    const response = await axios.post(API_URL + "likePost", formData);
+    if (response.status >= 200 && response.status < 300) {
+      return true;
+    }
+  } catch (error: any) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};

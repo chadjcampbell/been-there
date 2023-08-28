@@ -81,9 +81,15 @@ export const sendFriendRequest = [
       .select()
       .from(friend_requests)
       .where(
-        and(
-          eq(friend_requests.sender_id, req.user.user_id),
-          eq(friend_requests.receiver_id, friendId)
+        or(
+          and(
+            eq(friend_requests.sender_id, req.user.user_id),
+            eq(friend_requests.receiver_id, friendId)
+          ),
+          and(
+            eq(friend_requests.receiver_id, req.user.user_id),
+            eq(friend_requests.sender_id, friendId)
+          )
         )
       );
     if (friendRequestStatus.length > 0) {

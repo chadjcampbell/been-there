@@ -8,6 +8,8 @@ export type PostsResponseType = {
   user_name: string;
   user_photo_url: string;
   comment_count: number;
+  like_count: number;
+  user_has_liked: number;
 };
 
 export type PostType = {

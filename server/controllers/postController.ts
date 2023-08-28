@@ -1,11 +1,10 @@
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
 import db from "../db";
-import { comments, friends, likes, posts, users } from "../schema";
+import { likes, posts } from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
 import axios from "axios";
-import { desc, eq, or, and, ne, sql, isNotNull } from "drizzle-orm";
-import { alias } from "drizzle-orm/pg-core";
+import { eq, and } from "drizzle-orm";
 
 export const findAllPosts = asyncHandler(
   async (req: RequestUserAttached, res) => {
@@ -14,53 +13,20 @@ export const findAllPosts = asyncHandler(
       throw new Error("Not authorized, please log in");
     }
 
-    const selfLike = alias(likes, "selfLike");
-    const result = await db
-      .select({
-        posts,
-        user_name: users.name,
-        user_photo_url: users.photo_url,
-        comment_count: sql<number>`count(comments.comment_id)`.mapWith(Number),
-        like_count: sql<number>`count(likes.like_id)`.mapWith(Number),
-        user_has_liked: sql<number>`count(selfLike.like_id)`.mapWith(Number),
-      })
-      .from(posts)
-      .innerJoin(users, eq(posts.user_id, users.user_id))
-      .leftJoin(comments, eq(posts.post_id, comments.post_id))
-      .leftJoin(
-        likes,
-        and(eq(posts.post_id, likes.target_id), eq(likes.target_type, "post"))
-      )
-      .leftJoin(
-        selfLike,
-        and(
-          eq(posts.post_id, likes.target_id),
-          eq(likes.target_type, "post"),
-          eq(likes.user_id, req.user.user_id)
-        )
-      )
-      .leftJoin(
-        friends,
-        or(
-          and(
-            eq(posts.user_id, friends.user_id_1),
-            eq(friends.user_id_2, req.user.user_id)
-          ),
-          and(
-            eq(posts.user_id, friends.user_id_2),
-            eq(friends.user_id_1, req.user.user_id)
-          )
-        )
-      )
-      .where(
-        or(
-          eq(posts.user_id, req.user.user_id),
-          isNotNull(friends.friendship_id)
-        )
-      )
-      .groupBy(posts.post_id, users.name, users.photo_url)
-      .orderBy(desc(posts.post_date));
-
+    const result = await db.query.posts.findMany({
+      with: {
+        user: {
+          columns: {
+            user_id: false,
+            passhash: false,
+          },
+        },
+        comments: true,
+        likes: true,
+      },
+      orderBy: (posts, { desc }) => [desc(posts.post_date)],
+    });
+    console.log(result);
     if (!result) {
       res.status(400);
       throw new Error("No posts found");

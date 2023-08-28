@@ -2,24 +2,35 @@ import { useEffect, useState } from "react";
 import MakePost from "../components/home/MakePost";
 import PostCard from "../components/home/PostCard";
 import { findAllPosts } from "../redux/features/posts/postService";
+import { FriendType } from "./Friends";
 
 export type PostsResponseType = {
-  posts: PostType;
-  user_name: string;
-  user_photo_url: string;
-  comment_count: number;
-  like_count: number;
-  user_has_liked: number;
-};
-
-export type PostType = {
   content: string;
-  likes: number;
+  likes: LikesType[];
   post_date: Date;
   post_photo_url: string;
   user_id: number;
   post_id: number;
   user_location: UserLocation;
+  user: FriendType;
+  comments: CommentType[];
+};
+
+export type LikesType = {
+  like_id: number;
+  user_id: number;
+  target_id: number;
+  target_type: string;
+};
+
+export type CommentType = {
+  comment_id: number;
+  post_id: number;
+  user_id: number;
+  content: string;
+  likes: number;
+  comment_photo_url: string;
+  comment_date: Date;
 };
 
 export type UserLocation = {
@@ -52,7 +63,7 @@ const Home = () => {
       </section>
       <section>
         {posts.map((post) => (
-          <PostCard key={post.posts.post_id} post={post} />
+          <PostCard key={post.post_id} post={post} />
         ))}
       </section>
     </div>

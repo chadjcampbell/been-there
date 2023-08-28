@@ -1,23 +1,28 @@
 import { AiOutlineHeart } from "react-icons/ai";
 import { FaRegCommentAlt } from "react-icons/fa";
 import { BsFillHeartFill } from "react-icons/bs";
-import { PostsResponseType } from "../../routes/Home";
+import { LikesType, PostsResponseType } from "../../routes/Home";
 import { likePost } from "../../redux/features/posts/postService";
 import { useState } from "react";
 import { motion, spring } from "framer-motion";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/features/auth/authSlice";
 
 type PostCardProps = {
   post: PostsResponseType;
 };
 
 export const PostCard = ({ post }: PostCardProps) => {
-  const [userLiked, setUserLiked] = useState(post.user_has_liked);
-  const [numLikes, setNumLikes] = useState(post.like_count);
+  const user = useSelector(selectUser);
+  const [userLiked, setUserLiked] = useState(
+    post.likes.filter((like: LikesType) => like.user_id == user.userId).length
+  );
+  const [numLikes, setNumLikes] = useState(post.likes.length);
 
   const userLocInfo = () => {
-    if (post.posts.user_location.region && post.posts.user_location.country) {
-      const flag = getFlagEmoji(post.posts.user_location.country);
-      return `${flag} ${post.posts.user_location.region}, ${post.posts.user_location.country}`;
+    if (post.user_location.region && post.user_location.country) {
+      const flag = getFlagEmoji(post.user_location.country);
+      return `${flag} ${post.user_location.region}, ${post.user_location.country}`;
     } else {
       return "💀 Kno, Where";
     }
@@ -29,11 +34,9 @@ export const PostCard = ({ post }: PostCardProps) => {
       .reduce((a, b) => `${a}${b}`);
   };
 
-  console.log(post);
-
   const likeThisPost = async () => {
     try {
-      const result = await likePost({ postId: post.posts.post_id });
+      const result = await likePost({ postId: post.post_id });
       if (result) {
         setUserLiked(1);
         setNumLikes((prev) => prev + 1);
@@ -48,7 +51,7 @@ export const PostCard = ({ post }: PostCardProps) => {
       <figure className="flex flex-col">
         <img
           className="max-w-md rounded-xl m-4"
-          src={post.posts.post_photo_url}
+          src={post.post_photo_url}
           alt="User post photo"
         />
         <figcaption>{userLocInfo()}</figcaption>
@@ -56,15 +59,15 @@ export const PostCard = ({ post }: PostCardProps) => {
       <div className="card-body">
         <div className="avatar">
           <div className="w-24 rounded-full">
-            <img src={post.user_photo_url} />
+            <img src={post.user.photo_url} />
           </div>
         </div>
-        <h2 className="card-title">{post.user_name}</h2>
-        <p>{post.posts.content}</p>
+        <h2 className="card-title">{post.user.name}</h2>
+        <p>{post.content}</p>
         <div className="card-actions justify-between mt-4">
           <button onClick={likeThisPost} className="badge btn">
             {userLiked ? (
-              <motion.div transition={spring} animate={{ scale: 1.2 }}>
+              <motion.div transition={spring} animate={{ scale: [0, 2, 1.2] }}>
                 <BsFillHeartFill size="20" color="red" />
               </motion.div>
             ) : (
@@ -74,7 +77,7 @@ export const PostCard = ({ post }: PostCardProps) => {
           </button>
           <button className="badge btn btn-secondary">
             <FaRegCommentAlt />
-            {post.comment_count}
+            {post.comments.length}
           </button>
         </div>
       </div>

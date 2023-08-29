@@ -1,10 +1,10 @@
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
 import db from "../db";
-import { likes, posts } from "../schema";
+import { friends, likes, posts } from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
 import axios from "axios";
-import { eq, and } from "drizzle-orm";
+import { eq, and, or, inArray } from "drizzle-orm";
 
 export const findAllPosts = asyncHandler(
   async (req: RequestUserAttached, res) => {
@@ -13,7 +13,22 @@ export const findAllPosts = asyncHandler(
       throw new Error("Not authorized, please log in");
     }
 
+    const friendArray = await db.query.friends.findMany({
+      where: or(
+        eq(friends.user_id_1, req.user.user_id),
+        eq(friends.user_id_2, req.user.user_id)
+      ),
+    });
+
+    const friendIdSet = new Set<number>();
+    for (const friendship of friendArray) {
+      friendIdSet.add(friendship.user_id_1);
+      friendIdSet.add(friendship.user_id_2);
+    }
+    const filteredFriendIds: number[] = Array.from(friendIdSet);
+
     const result = await db.query.posts.findMany({
+      where: inArray(posts.user_id, filteredFriendIds),
       with: {
         user: {
           columns: {
@@ -26,12 +41,12 @@ export const findAllPosts = asyncHandler(
       },
       orderBy: (posts, { desc }) => [desc(posts.post_date)],
     });
-    console.log(result);
+
     if (!result) {
       res.status(400);
       throw new Error("No posts found");
     }
-    console.log(result);
+    console.log(filteredFriendIds);
     res.status(200).json(result);
     return;
   }

@@ -4,7 +4,7 @@ import { BsFillHeartFill } from "react-icons/bs";
 import { LikesType, PostsResponseType } from "../../routes/Home";
 import { likePost } from "../../redux/features/posts/postService";
 import { useState } from "react";
-import { motion, spring } from "framer-motion";
+import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/features/auth/authSlice";
 
@@ -30,8 +30,8 @@ export const PostCard = ({ post }: PostCardProps) => {
 
   const getFlagEmoji = (countryCode: string) => {
     return [...countryCode.toUpperCase()]
-      .map((char) => String.fromCodePoint(127397 + char.charCodeAt()))
-      .reduce((a, b) => `${a}${b}`);
+      .map((char) => String.fromCodePoint(127397 + char.charCodeAt(0)))
+      .join("");
   };
 
   const likeThisPost = async () => {
@@ -67,16 +67,24 @@ export const PostCard = ({ post }: PostCardProps) => {
         <h2 className="card-title">{post.user.name}</h2>
         <p>{post.content}</p>
         <div className="card-actions justify-between mt-4">
-          <motion.button onClick={likeThisPost} className="badge btn">
+          <button onClick={likeThisPost} className="badge btn">
             {userLiked ? (
-              <motion.div transition={spring} animate={{ scale: [0, 2, 1.2] }}>
-                <BsFillHeartFill size="20" color="red" />
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ rotate: 360, scale: 1.2 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 260,
+                  damping: 20,
+                }}
+              >
+                <BsFillHeartFill size="18" color="red" />
               </motion.div>
             ) : (
               <AiOutlineHeart />
             )}
             {numLikes}
-          </motion.button>
+          </button>
           <button className="badge btn btn-secondary">
             <FaRegCommentAlt />
             {post.comments.length}

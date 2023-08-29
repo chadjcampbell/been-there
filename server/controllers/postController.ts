@@ -46,7 +46,6 @@ export const findAllPosts = asyncHandler(
       res.status(400);
       throw new Error("No posts found");
     }
-    console.log(filteredFriendIds);
     res.status(200).json(result);
     return;
   }
@@ -88,11 +87,25 @@ export const makePost = [
           post_photo_url: postPhotoUrl ? postPhotoUrl : "",
           user_location: userLocation,
         })
-        .returning();
+        .returning({ postId: posts.post_id });
+
+      const newPost = await db.query.posts.findFirst({
+        where: eq(posts.post_id, result[0].postId),
+        with: {
+          user: {
+            columns: {
+              user_id: false,
+              passhash: false,
+            },
+          },
+          comments: true,
+          likes: true,
+        },
+      });
 
       res.status(201).json({
         message: "Post created successfully",
-        post: result,
+        post: newPost,
       });
     } catch (error: any) {
       console.error("Error creating post:", error.message);

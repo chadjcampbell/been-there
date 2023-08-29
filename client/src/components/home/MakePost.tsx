@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../redux/features/auth/authSlice";
 import { MdAddAPhoto } from "react-icons/md";
 import { GoSmiley } from "react-icons/go";
@@ -11,15 +11,18 @@ import { useState, ChangeEvent, FormEvent, useRef } from "react";
 import toast from "react-hot-toast";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
+import { SET_POSTS, selectPosts } from "../../redux/features/posts/postSlice";
 
 export const MakePost = () => {
   const user = useSelector(selectUser);
+  const currentPosts = useSelector(selectPosts);
   const hiddenFileInput = useRef<HTMLInputElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const initialPostValues = { content: "", postPhotoUrl: "" };
   const [post, setPost] = useState(initialPostValues);
   const [postImage, setPostImage] = useState<File | null>(null);
   const pickerRef = useRef<HTMLDetailsElement | null>(null);
+  const dispatch = useDispatch();
 
   const handleInputChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -81,8 +84,8 @@ export const MakePost = () => {
         content: post.content,
         postPhotoUrl: imageURL,
       };
-      const data = await makeNewPost(formData);
-      console.log(data);
+      const newPost = await makeNewPost(formData);
+      dispatch(SET_POSTS([...currentPosts, newPost]));
       setPost(initialPostValues);
       setPostImage(null);
     } catch (error: any) {

@@ -47,17 +47,28 @@ export const PostCard = ({ post }: PostCardProps) => {
   };
 
   return (
-    <div className="card max-w-[90vw] bg-base-100 shadow-xl m-4">
-      <figure className="flex flex-col ">
-        <div className="max-w-md m-4">
-          <img
-            className="rounded-xl object-contain"
-            src={post.post_photo_url}
-            alt="User post photo"
-          />
-        </div>
-        <figcaption>{userLocInfo()}</figcaption>
-      </figure>
+    <motion.div
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{
+        type: "spring",
+        stiffness: 260,
+        damping: 20,
+      }}
+      className="card max-w-[90vw] bg-base-100 shadow-xl m-4"
+    >
+      {post.post_photo_url && (
+        <figure className="flex flex-col ">
+          <div className="max-w-md m-4">
+            <img
+              className="rounded-xl object-contain"
+              src={post.post_photo_url}
+              alt="User post photo"
+            />
+          </div>
+          <figcaption>{userLocInfo()}</figcaption>
+        </figure>
+      )}
       <div className="card-body">
         <div className="avatar">
           <div className="w-24 rounded-full">
@@ -76,6 +87,7 @@ export const PostCard = ({ post }: PostCardProps) => {
                   type: "spring",
                   stiffness: 260,
                   damping: 20,
+                  duration: 1.5,
                 }}
               >
                 <BsFillHeartFill size="18" color="red" />
@@ -91,7 +103,7 @@ export const PostCard = ({ post }: PostCardProps) => {
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

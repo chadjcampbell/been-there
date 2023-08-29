@@ -3,6 +3,10 @@ import MakePost from "../components/home/MakePost";
 import PostCard from "../components/home/PostCard";
 import { findAllPosts } from "../redux/features/posts/postService";
 import { FriendType } from "./Friends";
+import { useDispatch, useSelector } from "react-redux";
+import { SET_POSTS, selectPosts } from "../redux/features/posts/postSlice";
+import { toast } from "react-hot-toast";
+import Loading from "../components/global/Loading";
 
 export type PostsResponseType = {
   content: string;
@@ -47,16 +51,27 @@ export type UserLocation = {
 };
 
 const Home = () => {
-  const [posts, setPosts] = useState<PostsResponseType[] | []>([]);
+  const posts: PostsResponseType[] | [] = useSelector(selectPosts);
+  const [loading, setLoading] = useState(!posts.length);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getPosts = async () => {
-      const result = await findAllPosts();
-      setPosts(result);
+      try {
+        const result = await findAllPosts();
+        dispatch(SET_POSTS(result));
+      } catch {
+        toast.error("Something went wrong");
+      } finally {
+        setLoading(false);
+      }
     };
     getPosts();
   }, []);
-  return (
+
+  return loading ? (
+    <Loading />
+  ) : (
     <div>
       <section>
         <MakePost />

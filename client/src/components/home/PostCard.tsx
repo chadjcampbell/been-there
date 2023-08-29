@@ -7,6 +7,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/features/auth/authSlice";
+import DeletePostModal from "./DeletePostModal";
 
 type PostCardProps = {
   post: PostsResponseType;
@@ -97,10 +98,13 @@ export const PostCard = ({ post }: PostCardProps) => {
             )}
             {numLikes}
           </button>
-          <button className="badge btn btn-secondary">
-            <FaRegCommentAlt />
-            {post.comments.length}
-          </button>
+          <div className="flex">
+            {post.user_id == user.userId && <DeletePostModal />}
+            <button className="badge btn btn-secondary ml-4">
+              <FaRegCommentAlt />
+              {post.comments.length}
+            </button>
+          </div>
         </div>
       </div>
     </motion.div>

@@ -38,13 +38,30 @@ export const makeNewPost = async (formData: PostFormData) => {
   }
 };
 
-export type LikeFormData = {
+export type PostIdFormData = {
   postId: number;
 };
 
-export const likePost = async (formData: LikeFormData) => {
+export const likePost = async (formData: PostIdFormData) => {
   try {
     const response = await axios.post(API_URL + "likePost", formData);
+    if (response.status >= 200 && response.status < 300) {
+      return true;
+    }
+  } catch (error: any) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};
+
+export const deletePost = async (formData: PostIdFormData) => {
+  try {
+    const response = await axios.delete(API_URL + "deletePost", {
+      data: formData,
+    });
     if (response.status >= 200 && response.status < 300) {
       return true;
     }

@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
 import db from "../db";
-import { friends, likes, posts } from "../schema";
+import { comments, friends, likes, posts } from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
 import axios from "axios";
 import { eq, and, or, inArray } from "drizzle-orm";
@@ -145,3 +145,29 @@ export const likePost = asyncHandler(async (req: RequestUserAttached, res) => {
     res.status(500).json({ error: "An error occurred while liking the post" });
   }
 });
+
+export const deletePost = asyncHandler(
+  async (req: RequestUserAttached, res) => {
+    if (!req.user) {
+      res.status(400);
+      throw new Error("Not authorized, please log in");
+    }
+    const { postId } = req.body;
+
+    try {
+      await db.delete(posts).where(eq(posts.post_id, postId));
+      await db
+        .delete(likes)
+        .where(
+          and(eq(posts.post_id, likes.target_id), eq(likes.target_type, "post"))
+        );
+      await db.delete(comments).where(eq(posts.post_id, comments.post_id));
+      res.status(201).send();
+    } catch (error: any) {
+      console.error("Error deleting post:", error.message);
+      res
+        .status(500)
+        .json({ error: "An error occurred while deleting the post" });
+    }
+  }
+);

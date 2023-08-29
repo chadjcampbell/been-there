@@ -3,14 +3,46 @@ import {
   FriendChatMessage,
   MyChatMessage,
 } from "../components/chats/ChatMessage";
-import { useSelector } from "react-redux";
-import { selectFriendsList } from "../redux/features/friends/friendsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  SET_FRIENDS_LIST,
+  SET_PENDING_FRIENDS,
+  selectFriendsList,
+} from "../redux/features/friends/friendsSlice";
 import { FriendType } from "./Friends";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import {
+  getPendingFriends,
+  findAllFriends,
+} from "../redux/features/friends/friendService";
+import Loading from "../components/global/Loading";
 
 const Chats = () => {
   const friendList = useSelector(selectFriendsList);
+  const [loading, setLoading] = useState(!friendList.length);
+  const dispatch = useDispatch();
 
-  return (
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const pendingFriendsResult = await getPendingFriends();
+        dispatch(SET_PENDING_FRIENDS(pendingFriendsResult));
+        const allFriendsResult = await findAllFriends();
+        dispatch(SET_FRIENDS_LIST(allFriendsResult));
+      } catch {
+        toast.error("Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [friendList.length]);
+
+  return loading ? (
+    <Loading />
+  ) : (
     <div className=" mx-auto w-full">
       <div className="z-10 drawer lg:drawer-open ">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />

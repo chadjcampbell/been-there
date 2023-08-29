@@ -23,8 +23,8 @@ export type FriendType = {
 };
 
 const Friends = () => {
-  const [loading, setLoading] = useState(true);
   const friendList = useSelector(selectFriendsList);
+  const [loading, setLoading] = useState(!friendList.length);
   const pendingFriends = useSelector(selectPendingFriends);
   const dispatch = useDispatch();
 
@@ -43,7 +43,7 @@ const Friends = () => {
     };
 
     fetchData();
-  }, []);
+  }, [friendList.length]);
 
   return loading ? (
     <span className="loading loading-spinner text-secondary loading-lg"></span>

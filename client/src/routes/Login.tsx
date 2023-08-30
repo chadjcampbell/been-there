@@ -30,7 +30,7 @@ const Login = () => {
   const [nameIndex, setNameIndex] = useState(0);
   const [passIndex, setPassIndex] = useState(0);
   const [guestBool, setGuestBool] = useState(false);
-  const guestData = { email: "chadjcampbell@gmail.com", password: "fakepass" };
+  const guestData = { email: "demoUser@gmail.com", password: "demoUser" };
 
   // this useEffect is the logic for guest login "typewriter" effect
   useEffect(() => {

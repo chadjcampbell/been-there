@@ -153,15 +153,9 @@ export const deletePost = asyncHandler(
       throw new Error("Not authorized, please log in");
     }
     const { postId } = req.body;
-
+    console.log(postId);
     try {
       await db.delete(posts).where(eq(posts.post_id, postId));
-      await db
-        .delete(likes)
-        .where(
-          and(eq(posts.post_id, likes.target_id), eq(likes.target_type, "post"))
-        );
-      await db.delete(comments).where(eq(posts.post_id, comments.post_id));
       res.status(201).send();
     } catch (error: any) {
       console.error("Error deleting post:", error.message);

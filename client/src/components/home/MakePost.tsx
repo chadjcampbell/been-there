@@ -85,7 +85,8 @@ export const MakePost = () => {
         postPhotoUrl: imageURL,
       };
       const newPost = await makeNewPost(formData);
-      dispatch(SET_POSTS([...currentPosts, newPost]));
+      const newPostArray = [newPost, ...currentPosts];
+      dispatch(SET_POSTS(newPostArray));
       setPost(initialPostValues);
       setPostImage(null);
     } catch (error: any) {

@@ -4,9 +4,14 @@ import PostCard from "../components/home/PostCard";
 import { findAllPosts } from "../redux/features/posts/postService";
 import { FriendType } from "./Friends";
 import { useDispatch, useSelector } from "react-redux";
-import { SET_POSTS, selectPosts } from "../redux/features/posts/postSlice";
+import {
+  SET_POSTS,
+  selectPostIdDelete,
+  selectPosts,
+} from "../redux/features/posts/postSlice";
 import { toast } from "react-hot-toast";
 import Loading from "../components/global/Loading";
+import DeletePostModal from "../components/home/DeletePostModal";
 
 export type PostsResponseType = {
   content: string;
@@ -52,8 +57,11 @@ export type UserLocation = {
 
 const Home = () => {
   const posts: PostsResponseType[] | [] = useSelector(selectPosts);
+  const postIdDelete = useSelector(selectPostIdDelete);
   const [loading, setLoading] = useState(!posts.length);
   const dispatch = useDispatch();
+
+  console.log(postIdDelete);
 
   useEffect(() => {
     const getPosts = async () => {
@@ -73,6 +81,7 @@ const Home = () => {
     <Loading />
   ) : (
     <div>
+      {postIdDelete > 0 && <DeletePostModal />}
       <section>
         <MakePost />
       </section>

@@ -3,11 +3,13 @@ import { FaRegCommentAlt } from "react-icons/fa";
 import { BsFillHeartFill } from "react-icons/bs";
 import { LikesType, PostsResponseType } from "../../routes/Home";
 import { likePost } from "../../redux/features/posts/postService";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/features/auth/authSlice";
 import DeletePostModal from "./DeletePostModal";
+import toast from "react-hot-toast";
+import DeletePostButton from "./DeletePostButton";
 
 type PostCardProps = {
   post: PostsResponseType;
@@ -99,7 +101,7 @@ export const PostCard = ({ post }: PostCardProps) => {
             {numLikes}
           </button>
           <div className="flex">
-            {post.user_id == user.userId && <DeletePostModal />}
+            {post.user_id == user.userId && <DeletePostButton post={post} />}
             <button className="badge btn btn-secondary ml-4">
               <FaRegCommentAlt />
               {post.comments.length}

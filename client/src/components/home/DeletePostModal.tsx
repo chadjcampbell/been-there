@@ -1,45 +1,47 @@
+import { useDispatch, useSelector } from "react-redux";
+import {
+  SET_POST_ID_DELETE,
+  selectPostIdDelete,
+} from "../../redux/features/posts/postSlice";
 import { FormEvent } from "react";
-import { toast } from "react-hot-toast";
-import { BsTrash } from "react-icons/bs";
-
-declare global {
-  interface Window {
-    delete_post_modal: HTMLDialogElement;
-  }
-}
-
-// TODO - need to pass posts and use id to make unique dialogs
+import toast from "react-hot-toast";
+import { deletePost } from "../../redux/features/posts/postService";
 
 const DeletePostModal = () => {
+  const dispatch = useDispatch();
+  const postIdDelete = useSelector(selectPostIdDelete);
+
   const handleDelete = async (event: FormEvent) => {
     event.preventDefault();
     try {
-      //delete post here
-      return;
+      const result = await deletePost({ postId: postIdDelete });
+      if (result) {
+        toast.success("Post deleted");
+      }
     } catch {
       toast.error("Something went wrong");
     } finally {
-      window.delete_post_modal.close();
+      dispatch(SET_POST_ID_DELETE(null));
     }
   };
 
   return (
-    <>
-      <button
-        className="btn btn-error mb-4"
-        onClick={() => window.delete_post_modal.showModal()}
-      >
-        <BsTrash />
-      </button>
-      <dialog id="delete_post_modal" className="modal">
-        <div className="modal-box flex flex-col">
-          <div className="flex flex-column flex-wrap items-center justify-center w-full">
-            <h2>Delete this post?</h2>
-            <button onClick={handleDelete}>Delete</button>
-          </div>
+    <div className="modal">
+      <div className="modal-box flex flex-col">
+        <div className="flex flex-column flex-wrap items-center justify-center w-full">
+          <h3 className="mb-4 font-bold text-lg">Delete this post?</h3>
+          <button className="btn btn-error" onClick={handleDelete}>
+            DELETE
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={() => dispatch(SET_POST_ID_DELETE(null))}
+          >
+            Cancel
+          </button>
         </div>
-      </dialog>
-    </>
+      </div>
+    </div>
   );
 };
 

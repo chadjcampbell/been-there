@@ -7,6 +7,12 @@ import { FormEvent } from "react";
 import toast from "react-hot-toast";
 import { deletePost } from "../../redux/features/posts/postService";
 
+declare global {
+  interface Window {
+    delete_post_modal: HTMLDialogElement;
+  }
+}
+
 const DeletePostModal = () => {
   const dispatch = useDispatch();
   const postIdDelete = useSelector(selectPostIdDelete);
@@ -25,23 +31,26 @@ const DeletePostModal = () => {
     }
   };
 
+  const handleCancel = () => {
+    window.delete_post_modal.close();
+    dispatch(SET_POST_ID_DELETE(null));
+  };
+
   return (
-    <div className="modal">
-      <div className="modal-box flex flex-col">
-        <div className="flex flex-column flex-wrap items-center justify-center w-full">
-          <h3 className="mb-4 font-bold text-lg">Delete this post?</h3>
-          <button className="btn btn-error" onClick={handleDelete}>
-            DELETE
-          </button>
-          <button
-            className="btn btn-primary"
-            onClick={() => dispatch(SET_POST_ID_DELETE(null))}
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
-    </div>
+    <dialog id="delete_post_modal" className="modal">
+      <form method="dialog" className="modal-box flex flex-col">
+        <h3 className="mb-4 font-bold text-lg">Delete this post?</h3>
+        <button className="btn btn-error" onClick={handleDelete}>
+          DELETE
+        </button>
+        <button className="btn btn-primary" onClick={handleCancel}>
+          Cancel
+        </button>
+      </form>
+      <form method="dialog" className="modal-backdrop">
+        <button onClick={handleCancel}>close</button>
+      </form>
+    </dialog>
   );
 };
 

@@ -8,12 +8,13 @@ type DeletePostModalProps = {
 };
 const DeletePostButton = ({ post }: DeletePostModalProps) => {
   const dispatch = useDispatch();
+  const handleBtnClick = () => {
+    window.delete_post_modal.showModal();
+    dispatch(SET_POST_ID_DELETE(post.post_id));
+  };
   return (
     <>
-      <button
-        className="btn btn-error mb-4"
-        onClick={() => dispatch(SET_POST_ID_DELETE(post.post_id))}
-      >
+      <button className="btn btn-error mb-4" onClick={handleBtnClick}>
         <BsTrash />
       </button>
     </>

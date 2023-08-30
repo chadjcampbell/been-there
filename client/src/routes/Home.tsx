@@ -57,11 +57,8 @@ export type UserLocation = {
 
 const Home = () => {
   const posts: PostsResponseType[] | [] = useSelector(selectPosts);
-  const postIdDelete = useSelector(selectPostIdDelete);
   const [loading, setLoading] = useState(!posts.length);
   const dispatch = useDispatch();
-
-  console.log(postIdDelete);
 
   useEffect(() => {
     const getPosts = async () => {
@@ -81,7 +78,7 @@ const Home = () => {
     <Loading />
   ) : (
     <div>
-      {postIdDelete > 0 && <DeletePostModal />}
+      <DeletePostModal />
       <section>
         <MakePost />
       </section>

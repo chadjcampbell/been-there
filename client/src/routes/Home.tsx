@@ -1,16 +1,8 @@
-import { useEffect, useState } from "react";
 import MakePost from "../components/home/MakePost";
 import PostCard from "../components/home/PostCard";
-import { findAllPosts } from "../redux/features/posts/postService";
 import { FriendType } from "./Friends";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  SET_POSTS,
-  selectPostIdDelete,
-  selectPosts,
-} from "../redux/features/posts/postSlice";
-import { toast } from "react-hot-toast";
-import Loading from "../components/global/Loading";
+import { useSelector } from "react-redux";
+import { selectPosts } from "../redux/features/posts/postSlice";
 import DeletePostModal from "../components/home/DeletePostModal";
 
 export type PostsResponseType = {
@@ -57,26 +49,8 @@ export type UserLocation = {
 
 const Home = () => {
   const posts: PostsResponseType[] | [] = useSelector(selectPosts);
-  const [loading, setLoading] = useState(!posts.length);
-  const dispatch = useDispatch();
 
-  useEffect(() => {
-    const getPosts = async () => {
-      try {
-        const result = await findAllPosts();
-        dispatch(SET_POSTS(result));
-      } catch {
-        toast.error("Something went wrong");
-      } finally {
-        setLoading(false);
-      }
-    };
-    getPosts();
-  }, []);
-
-  return loading ? (
-    <Loading />
-  ) : (
+  return (
     <div>
       <DeletePostModal />
       <section>

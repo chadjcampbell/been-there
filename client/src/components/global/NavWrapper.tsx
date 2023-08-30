@@ -20,6 +20,8 @@ import {
   SET_FRIENDS_LIST,
   SET_PENDING_FRIENDS,
 } from "../../redux/features/friends/friendsSlice";
+import { findAllPosts } from "../../redux/features/posts/postService";
+import { SET_POSTS } from "../../redux/features/posts/postSlice";
 
 type NavWrapperProps = {
   children: ReactNode;
@@ -33,10 +35,15 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setLoading(!isLoggedIn);
     const setUserState = async () => {
-      const data = await getUser();
-      dispatch(SET_USER(data));
+      try {
+        const userData = await getUser();
+        dispatch(SET_USER(userData));
+        const postsData = await findAllPosts();
+        dispatch(SET_POSTS(postsData));
+      } finally {
+        setLoading(false);
+      }
     };
     isLoggedIn && setUserState();
   }, [isLoggedIn]);
@@ -49,6 +56,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
     dispatch(SET_LOGIN(false));
     dispatch(SET_FRIENDS_LIST([]));
     dispatch(SET_PENDING_FRIENDS([]));
+    dispatch(SET_POSTS([]));
     navigate("/login");
     setisLoggingOut(false);
   };

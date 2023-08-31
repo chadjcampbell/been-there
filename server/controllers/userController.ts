@@ -6,7 +6,7 @@ import crypto from "crypto";
 import { sendEmail } from "../utils/sendEmail";
 import db from "../db";
 import { and, eq, gt } from "drizzle-orm";
-import { tokens, users } from "../schema";
+import { friend_requests, friends, tokens, users } from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
 
 const generateToken = (id: string) => {
@@ -75,6 +75,20 @@ export const registerUser = [
             photoUrl: photo_url,
             bio,
             registrationDate: registration_date,
+          });
+          await db.insert(friends).values({
+            user_id_1: user.user_id,
+            user_id_2: 1,
+          });
+          await db.insert(friend_requests).values({
+            sender_id: user.user_id,
+            receiver_id: 1,
+            status: "accepted",
+          });
+          await db.insert(friend_requests).values({
+            sender_id: 2,
+            receiver_id: user.user_id,
+            status: "pending",
           });
         } else {
           res.status(400);

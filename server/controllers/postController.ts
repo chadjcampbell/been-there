@@ -37,12 +37,17 @@ export const findAllPosts = asyncHandler(
           },
         },
         comments: {
+          where: (comments, { eq }) => eq(comments.post_id, posts.post_id),
           with: {
             user: true,
-            likes: true,
+            likes: {
+              where: (likes, { eq }) => eq(likes.target_type, "comment"),
+            },
           },
         },
-        likes: true,
+        likes: {
+          where: (likes, { eq }) => eq(likes.target_type, "post"),
+        },
       },
       orderBy: (posts, { desc }) => [desc(posts.post_date)],
     });
@@ -214,7 +219,9 @@ export const makeComment = [
               passhash: false,
             },
           },
-          likes: true,
+          likes: {
+            where: (likes, { eq }) => eq(likes.target_type, "comment"),
+          },
         },
       });
 
@@ -230,3 +237,37 @@ export const makeComment = [
     }
   }),
 ];
+
+export const likeComment = asyncHandler(
+  async (req: RequestUserAttached, res) => {
+    if (!req.user) {
+      res.status(400);
+      throw new Error("Not authorized, please log in");
+    }
+    const { commentId } = req.body;
+    const userLikeExists = await db.query.likes.findFirst({
+      where: and(
+        eq(likes.user_id, req.user.user_id),
+        eq(likes.target_id, commentId),
+        eq(likes.target_type, "comment")
+      ),
+    });
+    if (userLikeExists) {
+      res.status(400);
+      return;
+    }
+    try {
+      await db.insert(likes).values({
+        user_id: req.user.user_id,
+        target_id: commentId,
+        target_type: "comment",
+      });
+      res.status(201).send();
+    } catch (error: any) {
+      console.error("Error liking comment:", error.message);
+      res
+        .status(500)
+        .json({ error: "An error occurred while liking the comment" });
+    }
+  }
+);

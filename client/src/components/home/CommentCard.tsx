@@ -30,6 +30,8 @@ const CommentCard = ({ comment }: CommentCardProps) => {
       console.error(err);
     }
   };
+  console.log(comment);
+
   return (
     <div className="card-body">
       <div className="flex justify-center items-center">

@@ -4,6 +4,7 @@ import { protect } from "../middleware/authMiddleware";
 import {
   deletePost,
   findAllPosts,
+  likeComment,
   likePost,
   makeComment,
   makePost,
@@ -14,3 +15,4 @@ router.post("/makePost", protect, makePost);
 router.post("/likePost", protect, likePost);
 router.delete("/deletePost", protect, deletePost);
 router.post("/makeComment", protect, makeComment);
+router.post("/likeComment", protect, likeComment);

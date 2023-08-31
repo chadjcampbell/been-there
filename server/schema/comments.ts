@@ -20,15 +20,14 @@ export const comments = pgTable("comments", {
     .notNull()
     .references(() => users.user_id),
   content: text("content").notNull(),
-  likes: integer("likes").default(0),
   comment_photo_url: varchar("comment_photo_url", { length: 255 }),
   comment_date: timestamp("comment_date").notNull().defaultNow(),
 });
 
 export const commentsRelations = relations(comments, ({ one, many }) => ({
   post: one(posts, {
-    fields: [comments.user_id],
-    references: [posts.user_id],
+    fields: [comments.post_id],
+    references: [posts.post_id],
   }),
   user: one(users, {
     fields: [comments.user_id],

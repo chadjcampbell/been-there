@@ -18,7 +18,6 @@ export const posts = pgTable("posts", {
     .notNull()
     .references(() => users.user_id),
   content: text("content").notNull(),
-  likes: integer("likes").default(0),
   post_photo_url: varchar("post_photo_url", { length: 255 }),
   post_date: timestamp("post_date").notNull().defaultNow(),
   user_location: jsonb("user_location"),

@@ -2,6 +2,7 @@ import { pgTable, serial, integer, varchar } from "drizzle-orm/pg-core";
 import { InferModel, relations } from "drizzle-orm";
 import { users } from "./users";
 import { posts } from "./posts";
+import { comments } from "./comments";
 
 export const likes = pgTable("likes", {
   like_id: serial("like_id").primaryKey(),
@@ -20,6 +21,10 @@ export const likesRelations = relations(likes, ({ one }) => ({
   post: one(posts, {
     fields: [likes.target_id],
     references: [posts.post_id],
+  }),
+  comment: one(comments, {
+    fields: [likes.target_id],
+    references: [comments.comment_id],
   }),
 }));
 

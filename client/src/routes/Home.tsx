@@ -29,7 +29,8 @@ export type CommentType = {
   post_id: number;
   user_id: number;
   content: string;
-  likes: number;
+  likes: LikesType[];
+  user: FriendType;
   comment_photo_url: string;
   comment_date: Date;
 };

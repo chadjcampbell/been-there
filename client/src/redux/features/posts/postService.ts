@@ -73,3 +73,44 @@ export const deletePost = async (formData: PostIdFormData) => {
     toast.error(message);
   }
 };
+
+export type CommentFormData = {
+  postId: number;
+  content: string;
+  commentPhotoUrl?: string;
+};
+
+export const makeNewComment = async (formData: CommentFormData) => {
+  try {
+    const response = await axios.post(API_URL + "makeComment", formData);
+    if (response.status >= 200 && response.status < 300) {
+      toast.success(response.data.message);
+      return response.data.comment;
+    }
+  } catch (error: any) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};
+
+export type CommentIdFormData = {
+  commentId: number;
+};
+
+export const likeComment = async (formData: CommentIdFormData) => {
+  try {
+    const response = await axios.post(API_URL + "likeComment", formData);
+    if (response.status >= 200 && response.status < 300) {
+      return true;
+    }
+  } catch (error: any) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};

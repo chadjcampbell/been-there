@@ -6,12 +6,13 @@ import {
   varchar,
   timestamp,
 } from "drizzle-orm/pg-core";
-import { InferModel, relations } from "drizzle-orm";
+import { InferModel, Many, relations } from "drizzle-orm";
 import { users } from "./users";
 import { posts } from "./posts";
+import { likes } from "./likes";
 
 export const comments = pgTable("comments", {
-  comment_id: serial("post_id").primaryKey(),
+  comment_id: serial("comment_id").primaryKey(),
   post_id: integer("post_id")
     .notNull()
     .references(() => posts.post_id),
@@ -24,15 +25,16 @@ export const comments = pgTable("comments", {
   comment_date: timestamp("comment_date").notNull().defaultNow(),
 });
 
-export const commentsRelations = relations(comments, ({ one }) => ({
-  post_id: one(posts, {
+export const commentsRelations = relations(comments, ({ one, many }) => ({
+  post: one(posts, {
     fields: [comments.user_id],
     references: [posts.user_id],
   }),
-  user_id: one(users, {
+  user: one(users, {
     fields: [comments.user_id],
     references: [users.user_id],
   }),
+  likes: many(likes),
 }));
 
 export type Comments = InferModel<typeof comments>; // return type when queried

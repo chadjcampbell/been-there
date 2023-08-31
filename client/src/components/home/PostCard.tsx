@@ -59,7 +59,7 @@ export const PostCard = ({ post }: PostCardProps) => {
           stiffness: 260,
           damping: 20,
         }}
-        className="card max-w-[90vw] bg-base-100 shadow-xl m-4"
+        className="card max-w-[90vw] bg-base-100 shadow-xl mt-4 mx-4 z-10"
       >
         {post.post_photo_url && (
           <figure className="flex flex-col ">
@@ -117,7 +117,14 @@ export const PostCard = ({ post }: PostCardProps) => {
         </div>
       </motion.div>
       {showComments && (
-        <motion.div>
+        <motion.div
+          initial={{ y: -300, opacity: 0.5 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{
+            ease: "linear",
+            duration: 0.5,
+          }}
+        >
           <CommentsSection post={post} />
         </motion.div>
       )}

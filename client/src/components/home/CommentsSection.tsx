@@ -8,10 +8,10 @@ type CommentsSectionProps = {
 
 const CommentsSection = ({ post }: CommentsSectionProps) => {
   return (
-    <div>
+    <div className="card max-w-[480px] bg-base-100 shadow-xl mb-4 mx-8">
       <MakeComment post={post} />
       {post.comments.map((comment) => (
-        <CommentCard comment={comment} />
+        <CommentCard key={comment.comment_id} comment={comment} />
       ))}
     </div>
   );

@@ -36,7 +36,12 @@ export const findAllPosts = asyncHandler(
             passhash: false,
           },
         },
-        comments: true,
+        comments: {
+          with: {
+            user: true,
+            likes: true,
+          },
+        },
         likes: true,
       },
       orderBy: (posts, { desc }) => [desc(posts.post_date)],
@@ -165,3 +170,63 @@ export const deletePost = asyncHandler(
     }
   }
 );
+
+export const makeComment = [
+  // validate and sanitize fields
+  body("content")
+    .trim()
+    .notEmpty()
+    .withMessage("Post text is required.")
+    .isLength({ max: 280 })
+    .withMessage("Post text must be at most 280 characters long."),
+  asyncHandler(async (req: RequestUserAttached, res) => {
+    // check for erros in validation
+    const errors = validationResult(req);
+    // there are errors
+    if (!errors.isEmpty()) {
+      res.status(400);
+      throw new Error(errors.array()[0].msg);
+    }
+    // check if user exists
+    if (!req.user) {
+      res.status(400);
+      throw new Error("Not authorized, please log in");
+    }
+    try {
+      const { postId, content, commentPhotoUrl } = req.body;
+
+      const result = await db
+        .insert(comments)
+        .values({
+          post_id: postId,
+          user_id: req.user.user_id,
+          content: content,
+          comment_photo_url: commentPhotoUrl ? commentPhotoUrl : "",
+        })
+        .returning({ commentId: comments.comment_id });
+
+      const newComment = await db.query.comments.findFirst({
+        where: eq(comments.comment_id, result[0].commentId),
+        with: {
+          user: {
+            columns: {
+              user_id: false,
+              passhash: false,
+            },
+          },
+          likes: true,
+        },
+      });
+
+      res.status(201).json({
+        message: "Comment created successfully",
+        comment: newComment,
+      });
+    } catch (error: any) {
+      console.error("Error creating comment:", error.message);
+      res
+        .status(500)
+        .json({ error: "An error occurred while creating the comment" });
+    }
+  }),
+];

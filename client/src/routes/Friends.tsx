@@ -74,15 +74,7 @@ const Friends = () => {
             <h1 className="text-3xl font-bold">Friends</h1>
             <div className="w-full flex flex-wrap justify-center items-center">
               {friendList?.map((friend: FriendType) => (
-                <FriendListCard
-                  key={friend.user_id}
-                  name={friend.name}
-                  photoURL={
-                    friend.photo_url
-                      ? friend.photo_url
-                      : "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg"
-                  }
-                />
+                <FriendListCard key={friend.user_id} friend={friend} />
               ))}
             </div>
           </>

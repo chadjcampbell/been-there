@@ -22,6 +22,7 @@ import {
 } from "../../redux/features/friends/friendsSlice";
 import { findAllPosts } from "../../redux/features/posts/postService";
 import { SET_POSTS } from "../../redux/features/posts/postSlice";
+import DeleteModal from "../home/DeleteModal";
 
 type NavWrapperProps = {
   children: ReactNode;
@@ -213,6 +214,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
         </nav>
       </header>
       <main className="h-[calc(100vh-4rem)] flex justify-center w-full">
+        <DeleteModal />
         {children}
       </main>
     </>

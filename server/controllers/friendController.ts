@@ -209,7 +209,7 @@ export const deleteFriend = asyncHandler(
       res.status(400);
       throw new Error("Not authorized, please log in");
     }
-    const { id } = req.params;
+    const { id: friendId } = req.params;
     try {
       await db
         .delete(friends)
@@ -217,9 +217,12 @@ export const deleteFriend = asyncHandler(
           or(
             and(
               eq(friends.user_id_1, req.user.user_id),
-              eq(friends.user_id_2, id)
+              eq(friends.user_id_2, Number(friendId))
             ),
-            and(eq(), eq())
+            and(
+              eq(friends.user_id_2, req.user.user_id),
+              eq(friends.user_id_1, Number(friendId))
+            )
           )
         );
     } catch {

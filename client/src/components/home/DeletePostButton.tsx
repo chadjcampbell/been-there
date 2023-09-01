@@ -9,7 +9,7 @@ type DeletePostModalProps = {
 const DeletePostButton = ({ post }: DeletePostModalProps) => {
   const dispatch = useDispatch();
   const handleBtnClick = () => {
-    window.delete_post_modal.showModal();
+    window.main_modal.showModal();
     dispatch(SET_POST_ID_DELETE(post.post_id));
   };
   return (

@@ -15,6 +15,7 @@ export type UserFromDB = {
   registration_date?: Date;
 };
 export interface RequestUserAttached extends Request {
+  id?: number;
   user?: UserFromDB;
 }
 

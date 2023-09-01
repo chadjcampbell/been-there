@@ -3,7 +3,7 @@ import PostCard from "../components/home/PostCard";
 import { FriendType } from "./Friends";
 import { useSelector } from "react-redux";
 import { selectPosts } from "../redux/features/posts/postSlice";
-import DeletePostModal from "../components/home/DeletePostModal";
+import DeleteModal from "../components/home/DeleteModal";
 
 export type PostsResponseType = {
   content: string;
@@ -53,7 +53,6 @@ const Home = () => {
 
   return (
     <div>
-      <DeletePostModal />
       <section>
         <MakePost />
       </section>

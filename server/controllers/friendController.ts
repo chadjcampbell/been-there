@@ -201,3 +201,32 @@ export const rejectFriendRequest = [
     res.status(200).end();
   }),
 ];
+
+export const deleteFriend = asyncHandler(
+  async (req: RequestUserAttached, res) => {
+    // where: ilike(users.name, `%${req.params.id}%`),
+    if (!req.user) {
+      res.status(400);
+      throw new Error("Not authorized, please log in");
+    }
+    const { id } = req.params;
+    try {
+      await db
+        .delete(friends)
+        .where(
+          or(
+            and(
+              eq(friends.user_id_1, req.user.user_id),
+              eq(friends.user_id_2, id)
+            ),
+            and(eq(), eq())
+          )
+        );
+    } catch {
+      res.status(400);
+      throw new Error("Something went wrong");
+    }
+    res.status(200).send();
+    return;
+  }
+);

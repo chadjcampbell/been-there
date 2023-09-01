@@ -7,6 +7,7 @@ import {
   acceptFriendRequest,
   pendingFriends,
   rejectFriendRequest,
+  deleteFriend,
 } from "../controllers/friendController";
 import { protect } from "../middleware/authMiddleware";
 
@@ -16,3 +17,4 @@ router.post("/sendFriendRequest", protect, sendFriendRequest);
 router.post("/acceptFriendRequest", protect, acceptFriendRequest);
 router.post("/rejectFriendRequest", protect, rejectFriendRequest);
 router.get("/pendingFriends", protect, pendingFriends);
+router.delete("/deleteFriend/:id", protect, deleteFriend);

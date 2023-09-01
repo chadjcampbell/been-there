@@ -3,7 +3,6 @@ import PostCard from "../components/home/PostCard";
 import { FriendType } from "./Friends";
 import { useSelector } from "react-redux";
 import { selectPosts } from "../redux/features/posts/postSlice";
-import DeleteModal from "../components/home/DeleteModal";
 
 export type PostsResponseType = {
   content: string;
@@ -57,9 +56,13 @@ const Home = () => {
         <MakePost />
       </section>
       <section>
-        {posts.map((post) => (
-          <PostCard key={post.post_id} post={post} />
-        ))}
+        {posts.length > 0 ? (
+          posts.map((post) => <PostCard key={post.post_id} post={post} />)
+        ) : (
+          <h2 className="card-title flex justify-center items-center mt-16">
+            No posts yet, where have you been?
+          </h2>
+        )}
       </section>
       <div className="flex items-center justify-center py-24">
         Loading... (coming soon)

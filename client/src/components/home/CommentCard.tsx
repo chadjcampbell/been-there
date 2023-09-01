@@ -41,6 +41,17 @@ const CommentCard = ({ comment }: CommentCardProps) => {
             </div>
           </div>
           <div className="chat-bubble max-w-full chat-bubble-info bg-gray-100">
+            {comment.comment_photo_url && (
+              <figure className="flex flex-col ">
+                <div className="max-w-md m-4">
+                  <img
+                    className="rounded-xl object-contain"
+                    src={comment.comment_photo_url}
+                    alt="User comment photo"
+                  />
+                </div>
+              </figure>
+            )}
             {comment.content}
           </div>
         </div>

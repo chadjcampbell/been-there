@@ -8,6 +8,7 @@ import {
   likePost,
   makeComment,
   makePost,
+  deleteComment,
 } from "../controllers/postController";
 
 router.get("/findAllPosts", protect, findAllPosts);
@@ -16,3 +17,4 @@ router.post("/likePost", protect, likePost);
 router.delete("/deletePost", protect, deletePost);
 router.post("/makeComment", protect, makeComment);
 router.post("/likeComment", protect, likeComment);
+router.delete("/deleteComment", protect, deleteComment);

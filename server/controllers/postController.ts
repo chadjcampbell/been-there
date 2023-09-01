@@ -163,7 +163,6 @@ export const deletePost = asyncHandler(
       throw new Error("Not authorized, please log in");
     }
     const { postId } = req.body;
-    console.log(postId);
     try {
       await db.delete(posts).where(eq(posts.post_id, postId));
       res.status(201).send();
@@ -268,6 +267,25 @@ export const likeComment = asyncHandler(
       res
         .status(500)
         .json({ error: "An error occurred while liking the comment" });
+    }
+  }
+);
+
+export const deleteComment = asyncHandler(
+  async (req: RequestUserAttached, res) => {
+    if (!req.user) {
+      res.status(400);
+      throw new Error("Not authorized, please log in");
+    }
+    const { commentId } = req.body;
+    try {
+      await db.delete(comments).where(eq(comments.comment_id, commentId));
+      res.status(201).send();
+    } catch (error: any) {
+      console.error("Error deleting comment:", error.message);
+      res
+        .status(500)
+        .json({ error: "An error occurred while deleting the comment" });
     }
   }
 );

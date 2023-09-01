@@ -1,11 +1,12 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
-import { BsFillHeartFill } from "react-icons/bs";
-import { useSelector } from "react-redux";
+import { BsFillHeartFill, BsTrash } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../redux/features/auth/authSlice";
 import { likeComment } from "../../redux/features/posts/postService";
 import { CommentType, LikesType } from "../../routes/Home";
+import { SET_COMMENT_ID_DELETE } from "../../redux/features/posts/postSlice";
 
 type CommentCardProps = {
   comment: CommentType;
@@ -14,10 +15,11 @@ type CommentCardProps = {
 const CommentCard = ({ comment }: CommentCardProps) => {
   const user = useSelector(selectUser);
   const [userLiked, setUserLiked] = useState(
-    comment.likes.filter((like: LikesType) => like.user_id == user.userId)
+    comment?.likes?.filter((like: LikesType) => like.user_id == user.userId)
       .length
   );
-  const [numLikes, setNumLikes] = useState(comment.likes.length);
+  const [numLikes, setNumLikes] = useState(comment?.likes?.length);
+  const dispatch = useDispatch();
 
   const likeThisComment = async () => {
     try {
@@ -29,6 +31,11 @@ const CommentCard = ({ comment }: CommentCardProps) => {
     } catch (err: any) {
       console.error(err);
     }
+  };
+
+  const handleDeleteButton = () => {
+    window.main_modal.showModal();
+    dispatch(SET_COMMENT_ID_DELETE([comment.comment_id, comment.post_id]));
   };
 
   return (
@@ -55,25 +62,35 @@ const CommentCard = ({ comment }: CommentCardProps) => {
             {comment.content}
           </div>
         </div>
-        <button onClick={likeThisComment} className="btn btn-sm ml-2">
-          {userLiked ? (
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ rotate: 360, scale: 1.2 }}
-              transition={{
-                type: "spring",
-                stiffness: 260,
-                damping: 20,
-                duration: 1.5,
-              }}
+        <div className="flex flex-col">
+          {user.userId === comment.user_id && (
+            <button
+              onClick={handleDeleteButton}
+              className="btn btn-sm ml-2 mb-2 btn-error"
             >
-              <BsFillHeartFill size="12" color="red" />
-            </motion.div>
-          ) : (
-            <AiOutlineHeart />
+              <BsTrash size="12" />
+            </button>
           )}
-          {numLikes}
-        </button>
+          <button onClick={likeThisComment} className="btn btn-sm ml-2">
+            {userLiked ? (
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ rotate: 360, scale: 1.2 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 260,
+                  damping: 20,
+                  duration: 1.5,
+                }}
+              >
+                <BsFillHeartFill size="12" color="red" />
+              </motion.div>
+            ) : (
+              <AiOutlineHeart />
+            )}
+            {numLikes}
+          </button>
+        </div>
       </div>
     </div>
   );

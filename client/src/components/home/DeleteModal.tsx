@@ -1,13 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
+  SET_COMMENT_ID_DELETE,
   SET_POSTS,
   SET_POST_ID_DELETE,
+  selectCommentIdDelete,
   selectPostIdDelete,
   selectPosts,
 } from "../../redux/features/posts/postSlice";
 import { FormEvent } from "react";
 import toast from "react-hot-toast";
-import { deletePost } from "../../redux/features/posts/postService";
+import {
+  deleteComment,
+  deletePost,
+} from "../../redux/features/posts/postService";
 import { PostsResponseType } from "../../routes/Home";
 import {
   SET_FRIENDS_LIST,
@@ -28,8 +33,43 @@ const DeleteModal = () => {
   const dispatch = useDispatch();
   const postIdDelete = useSelector(selectPostIdDelete);
   const friendIdDelete = useSelector(selectFriendIdDelete);
+  const commentIdDelete = useSelector(selectCommentIdDelete);
   const posts = useSelector(selectPosts);
   const friends = useSelector(selectFriendsList);
+
+  function deletePostComment(
+    postsArray: PostsResponseType[],
+    postId: number,
+    commentId: number
+  ) {
+    // Find the index of the post with the specified post_id
+    const postIndex = postsArray.findIndex((post) => post.post_id === postId);
+
+    // If post_index is found, update its comments array
+    if (postIndex !== -1) {
+      const updatedComments =
+        postsArray[postIndex].comments.length > 0
+          ? postsArray[postIndex].comments.filter(
+              (comment) => comment.comment_id !== commentId
+            )
+          : [];
+      const updatedPost = {
+        ...postsArray[postIndex],
+        comments: updatedComments,
+      };
+
+      // Create a new array with the updated post and other posts unchanged
+      const updatedPostsArray = [
+        ...postsArray.slice(0, postIndex),
+        updatedPost,
+        ...postsArray.slice(postIndex + 1),
+      ];
+
+      return updatedPostsArray;
+    }
+
+    return postsArray; // If post_id is not found, return the original array
+  }
 
   const handleDelete = async (event: FormEvent) => {
     event.preventDefault();
@@ -64,6 +104,24 @@ const DeleteModal = () => {
         toast.error("Something went wrong");
       } finally {
         dispatch(SET_FRIEND_ID_DELETE(null));
+        window.main_modal.close();
+      }
+    }
+    if (commentIdDelete) {
+      try {
+        const result = await deleteComment({ commentId: commentIdDelete[0] });
+        if (result) {
+          toast.success("Comment deleted");
+          dispatch(
+            SET_POSTS(
+              deletePostComment(posts, commentIdDelete[1], commentIdDelete[0])
+            )
+          );
+        }
+      } catch {
+        toast.error("Something went wrong");
+      } finally {
+        dispatch(SET_COMMENT_ID_DELETE(null));
         window.main_modal.close();
       }
     }

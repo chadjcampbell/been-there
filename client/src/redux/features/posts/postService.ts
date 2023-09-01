@@ -114,3 +114,20 @@ export const likeComment = async (formData: CommentIdFormData) => {
     toast.error(message);
   }
 };
+
+export const deleteComment = async (formData: CommentIdFormData) => {
+  try {
+    const response = await axios.delete(API_URL + "deleteComment", {
+      data: formData,
+    });
+    if (response.status >= 200 && response.status < 300) {
+      return true;
+    }
+  } catch (error: any) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};

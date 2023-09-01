@@ -40,7 +40,7 @@ const CommentCard = ({ comment }: CommentCardProps) => {
 
   return (
     <div className="card-body">
-      <div className="flex justify-center items-center">
+      <div className="flex justify-start items-center">
         <div className="chat chat-start">
           <div className="chat-image avatar">
             <div className="w-10 rounded-full">
@@ -61,35 +61,35 @@ const CommentCard = ({ comment }: CommentCardProps) => {
             )}
             {comment.content}
           </div>
-        </div>
-        <div className="flex flex-col">
-          {user.userId === comment.user_id && (
-            <button
-              onClick={handleDeleteButton}
-              className="btn btn-sm ml-2 mb-2 btn-error"
-            >
-              <BsTrash size="12" />
+          <div className="chat-footer flex mt-2">
+            <button onClick={likeThisComment} className="btn btn-sm ml-2">
+              {userLiked ? (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ rotate: 360, scale: 1.2 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 260,
+                    damping: 20,
+                    duration: 1.5,
+                  }}
+                >
+                  <BsFillHeartFill size="12" color="red" />
+                </motion.div>
+              ) : (
+                <AiOutlineHeart />
+              )}
+              {numLikes}
             </button>
-          )}
-          <button onClick={likeThisComment} className="btn btn-sm ml-2">
-            {userLiked ? (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ rotate: 360, scale: 1.2 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 260,
-                  damping: 20,
-                  duration: 1.5,
-                }}
+            {user.userId === comment.user_id && (
+              <button
+                onClick={handleDeleteButton}
+                className="btn btn-sm ml-2 mb-2 btn-error"
               >
-                <BsFillHeartFill size="12" color="red" />
-              </motion.div>
-            ) : (
-              <AiOutlineHeart />
+                <BsTrash size="12" />
+              </button>
             )}
-            {numLikes}
-          </button>
+          </div>
         </div>
       </div>
     </div>

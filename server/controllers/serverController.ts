@@ -1,17 +1,9 @@
 require("dotenv").config();
-import session, { Session } from "express-session";
+import session from "express-session";
 const RedisStore = require("connect-redis").default;
 import { redisClient } from "../redis";
 import { NextFunction, RequestHandler, Request, Response } from "express";
 import { Socket } from "socket.io";
-
-declare module "http" {
-  interface IncomingMessage {
-    session: Session & {
-      authenticated: boolean;
-    };
-  }
-}
 
 const sessionMiddleware = session({
   secret: process.env.COOKIE_SECRET || "",

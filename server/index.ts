@@ -9,6 +9,7 @@ import { router as postRoute } from "./routes/postRoute";
 const app = express();
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorMiddleware";
+import { sessionMiddleware, wrap } from "./controllers/serverController";
 
 const port = process.env.PORT || 3000;
 const server = require("http").createServer(app);
@@ -38,6 +39,7 @@ app.use("/friends", friendRoute);
 app.use("/posts", postRoute);
 
 // socket.io connection
+io.use(wrap(sessionMiddleware));
 io.on("connect", (socket) => {
   console.log("connected");
 });

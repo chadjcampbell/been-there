@@ -164,6 +164,7 @@ export const deletePost = asyncHandler(
     }
     const { postId } = req.body;
     try {
+      await db.delete(comments).where(eq(comments.post_id, postId));
       await db.delete(posts).where(eq(posts.post_id, postId));
       res.status(201).send();
     } catch (error: any) {

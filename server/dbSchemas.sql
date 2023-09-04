@@ -43,7 +43,7 @@ CREATE TABLE posts (
     post_photo_url VARCHAR(255),
     post_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_location JSONB, 
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE comments (
@@ -54,8 +54,8 @@ CREATE TABLE comments (
     likes INT DEFAULT 0,
     comment_photo_url VARCHAR(255),
     comment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (post_id) REFERENCES Posts(post_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    FOREIGN KEY (post_id) REFERENCES posts(post_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE likes (
@@ -64,5 +64,16 @@ CREATE TABLE likes (
     target_id INT NOT NULL, -- ID of the liked post or comment
     target_type VARCHAR(10) NOT NULL, -- 'post' or 'comment'
     UNIQUE (user_id, target_id, target_type),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+CREATE TABLE chat_messages (
+    message_id SERIAL PRIMARY KEY,
+    sender_id INT NOT NULL,
+    receiver_id INT NOT NULL,
+    message_text TEXT NOT NULL,
+    message_photo_url VARCHAR(255),
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES users(user_id),
+    FOREIGN KEY (receiver_id) REFERENCES users(user_id)
 );

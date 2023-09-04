@@ -19,8 +19,7 @@ const sessionMiddleware = session({
   },
 });
 
-const wrap =
-  (middleware: RequestHandler) => (socket: Socket, next: NextFunction) =>
-    middleware(socket.request as Request, {} as Response, next as NextFunction);
+const wrap = (middleware: RequestHandler) => (socket: Socket, next: any) =>
+  middleware(socket.request as Request, {} as Response, next as NextFunction);
 
 export { sessionMiddleware, wrap };

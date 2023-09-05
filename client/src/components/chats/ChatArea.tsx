@@ -4,7 +4,7 @@ import {
   SendMessageData,
   sendMessage,
 } from "../../redux/features/chats/chatService";
-import { useRef, useState, FormEvent, ChangeEvent } from "react";
+import { useRef, useState, FormEvent, ChangeEvent, useEffect } from "react";
 import toast from "react-hot-toast";
 import { BsSendFill } from "react-icons/bs";
 import { MdAddAPhoto, MdCancel } from "react-icons/md";
@@ -100,9 +100,9 @@ const ChatArea = () => {
 
   return (
     <div className="flex flex-col border-r-2 overflow-y-auto h-[calc(100vh-8rem)] w-full justify-end">
-      <div className="w-full px-5 flex flex-col justify-between">
+      <div className="w-full px-5 flex flex-col justify-between overflow-y-auto">
         <ChatDisplay />
-        <div className="py-5">
+        <div className="py-5 sticky bottom-0 bg-white">
           {messageImage && (
             <div className="flex content-center justify-center max-h-36 aspect-square relative">
               <img

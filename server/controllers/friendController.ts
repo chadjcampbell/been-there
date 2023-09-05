@@ -204,7 +204,6 @@ export const rejectFriendRequest = [
 
 export const deleteFriend = asyncHandler(
   async (req: RequestUserAttached, res) => {
-    // where: ilike(users.name, `%${req.params.id}%`),
     if (!req.user) {
       res.status(400);
       throw new Error("Not authorized, please log in");

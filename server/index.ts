@@ -6,6 +6,7 @@ import cors from "cors";
 import { router as userRoute } from "./routes/userRoute";
 import { router as friendRoute } from "./routes/friendRoute";
 import { router as postRoute } from "./routes/postRoute";
+import { router as chatRoute } from "./routes/chatRoute";
 const app = express();
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorMiddleware";
@@ -37,6 +38,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/auth", userRoute);
 app.use("/friends", friendRoute);
 app.use("/posts", postRoute);
+app.use("/chats", chatRoute);
 
 // socket.io connection
 io.use(wrap(sessionMiddleware));

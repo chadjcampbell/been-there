@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "../redux/features/auth/authSlice";
 import friendsReducer from "../redux/features/friends/friendsSlice";
+import chatsReducer from "../redux/features/chats/chatSlice";
 import postsReducer from "../redux/features/posts/postSlice";
 import thunkMiddleware from "redux-thunk";
 import { useDispatch } from "react-redux";
@@ -10,6 +11,7 @@ export const store = configureStore({
     auth: authReducer,
     friends: friendsReducer,
     posts: postsReducer,
+    chats: chatsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(thunkMiddleware),

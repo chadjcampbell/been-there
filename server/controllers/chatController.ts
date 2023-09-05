@@ -41,7 +41,7 @@ export const findChat = asyncHandler(async (req: RequestUserAttached, res) => {
 
   if (!result) {
     res.status(400);
-    throw new Error("No posts found");
+    throw new Error("No chat found");
   }
   res.status(200).json(result);
   return;

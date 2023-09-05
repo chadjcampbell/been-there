@@ -101,7 +101,16 @@ const ChatArea = () => {
   return (
     <div className="flex flex-col border-r-2 overflow-y-auto h-[calc(100vh-8rem)] w-full justify-end">
       <div className="w-full px-5 flex flex-col justify-between overflow-y-auto">
-        <ChatDisplay />
+        {friendId ? (
+          <ChatDisplay />
+        ) : (
+          <div className="flex justify-center items-center h-[calc(100vh-8rem)]">
+            <h2 className="italic text-lg text-slate-800">
+              Select a chat to get started
+            </h2>
+          </div>
+        )}
+
         <div className="py-5 sticky bottom-0 bg-white">
           {messageImage && (
             <div className="flex content-center justify-center max-h-36 aspect-square relative">

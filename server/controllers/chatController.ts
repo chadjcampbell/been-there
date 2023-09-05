@@ -36,7 +36,7 @@ export const findChat = asyncHandler(async (req: RequestUserAttached, res) => {
         },
       },
     },
-    orderBy: (chat_messages, { desc }) => [desc(chat_messages.timestamp)],
+    orderBy: (chat_messages, { asc }) => [asc(chat_messages.timestamp)],
   });
 
   if (!result) {

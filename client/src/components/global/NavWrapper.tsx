@@ -53,12 +53,12 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
 
   const onLogoutHandler = async () => {
     setisLoggingOut(true);
+    navigate("/login");
     await logoutUser();
     dispatch(SET_LOGIN(false));
     dispatch(SET_FRIENDS_LIST([]));
     dispatch(SET_PENDING_FRIENDS([]));
     dispatch(SET_POSTS([]));
-    navigate("/login");
     setisLoggingOut(false);
   };
 

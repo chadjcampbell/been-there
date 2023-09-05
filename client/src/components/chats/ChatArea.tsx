@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-import { MyChatMessage, FriendChatMessage } from "./ChatMessage";
 import { selectChatId } from "../../redux/features/chats/chatSlice";
 import {
   SendMessageData,
@@ -8,7 +7,11 @@ import {
 import { useRef, useState, FormEvent, ChangeEvent } from "react";
 import toast from "react-hot-toast";
 import { BsSendFill } from "react-icons/bs";
-import { MdAddAPhoto } from "react-icons/md";
+import { MdAddAPhoto, MdCancel } from "react-icons/md";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
+import { GoSmiley } from "react-icons/go";
+import ChatDisplay from "./ChatDisplay";
 
 const ChatArea = () => {
   const friendId = useSelector(selectChatId);
@@ -17,6 +20,18 @@ const ChatArea = () => {
   const initialPostValues = { message: "", messagePhotoUrl: "" };
   const [message, setMessage] = useState(initialPostValues);
   const [messageImage, setMessageImage] = useState<File | null>(null);
+  const pickerRef = useRef<HTMLDetailsElement | null>(null);
+
+  const handleEmojiSelect = (event: { native: string }) => {
+    const newText = message.message + event.native;
+    setMessage({ ...message, message: newText });
+  };
+
+  const closeEmojiPicker = () => {
+    if (pickerRef.current) {
+      pickerRef.current.open = false;
+    }
+  };
 
   const handleInputChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -86,13 +101,23 @@ const ChatArea = () => {
   return (
     <div className="flex flex-col border-r-2 overflow-y-auto h-[calc(100vh-8rem)] w-full justify-end">
       <div className="w-full px-5 flex flex-col justify-between">
-        <div className="flex flex-col mt-5">
-          <MyChatMessage />
-          <FriendChatMessage />
-          <MyChatMessage />
-          <FriendChatMessage />
-        </div>
+        <ChatDisplay />
         <div className="py-5">
+          {messageImage && (
+            <div className="flex content-center justify-center max-h-36 aspect-square relative">
+              <img
+                src={URL.createObjectURL(messageImage)}
+                alt="Post image preview"
+                className=" m-4 rounded-xl shadow-sm"
+              />
+              <button onClick={() => setMessageImage(null)}>
+                <MdCancel
+                  size={24}
+                  className="absolute top-[-0.5rem] right-0 text-red-700"
+                />
+              </button>
+            </div>
+          )}
           <form
             onSubmit={handleSubmit}
             className="flex items-center justify-center"
@@ -104,6 +129,7 @@ const ChatArea = () => {
               required
               value={message.message}
               onChange={handleInputChange}
+              autoComplete="off"
               name="message"
             />
             <input
@@ -112,6 +138,24 @@ const ChatArea = () => {
               ref={hiddenFileInput}
               className="hidden" // Make the file input element invisible, because it's ugly
             />
+            <details
+              ref={pickerRef}
+              className="dropdown dropdown-top dropdown-end hidden md:block"
+            >
+              <summary className="m-1 btn btn-sm">
+                <GoSmiley />
+              </summary>
+              <div
+                tabIndex={0}
+                className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mr-10"
+              >
+                <Picker
+                  onClickOutside={closeEmojiPicker}
+                  data={data}
+                  onEmojiSelect={handleEmojiSelect}
+                />
+              </div>
+            </details>
             <button
               onClick={handlePicButton}
               type="button"

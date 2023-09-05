@@ -1,40 +1,56 @@
-const ChatMessage = () => {
-  return <h1>user</h1>;
+import { ChatMessageType } from "../../redux/features/chats/chatSlice";
+
+type ChatMessageProps = {
+  chat: ChatMessageType;
 };
 
-export default ChatMessage;
-
-const MyChatMessage = () => {
+const MyChatMessage = ({ chat }: ChatMessageProps) => {
   return (
     <div className="chat chat-end">
       <div className="chat-image avatar">
         <div className="w-10 rounded-full">
-          <img
-            src="https://source.unsplash.com/_7LbC5J-jw4/600x600"
-            alt="my profile pic"
-          />
+          <img src={chat.user1.photo_url} alt="my profile pic" />
         </div>
       </div>
       <div className="chat-bubble chat-bubble-secondary">
-        It was said that you would, destroy the Sith, not join them.
+        {chat.message_photo_url && (
+          <figure className="flex flex-col ">
+            <div className="max-w-md m-4">
+              <img
+                className="rounded-xl object-contain"
+                src={chat.message_photo_url}
+                alt="User post photo"
+              />
+            </div>
+          </figure>
+        )}
+        {chat.message_text}
       </div>
     </div>
   );
 };
 
-const FriendChatMessage = () => {
+const FriendChatMessage = ({ chat }: ChatMessageProps) => {
   return (
     <div className="chat chat-start">
       <div className="chat-image avatar">
         <div className="w-10 rounded-full">
-          <img
-            src="https://source.unsplash.com/_7LbC5J-jw4/600x600"
-            alt="friends profile pic"
-          />
+          <img src={chat.user1.photo_url} alt="friends profile pic" />
         </div>
       </div>
       <div className="chat-bubble chat-bubble-primary">
-        It was said that you would, destroy the Sith, not join them.
+        {chat.message_photo_url && (
+          <figure className="flex flex-col ">
+            <div className="max-w-md m-4">
+              <img
+                className="rounded-xl object-contain"
+                src={chat.message_photo_url}
+                alt="User post photo"
+              />
+            </div>
+          </figure>
+        )}
+        {chat.message_text}
       </div>
     </div>
   );

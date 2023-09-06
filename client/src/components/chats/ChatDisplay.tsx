@@ -9,6 +9,7 @@ import {
 import { memo, useEffect, useRef, useState } from "react";
 import { findChat } from "../../redux/features/chats/chatService";
 import { selectUser } from "../../redux/features/auth/authSlice";
+import { AnimatePresence, motion, spring } from "framer-motion";
 
 const ChatDisplay = memo(() => {
   const dispatch = useDispatch();
@@ -58,17 +59,30 @@ const ChatDisplay = memo(() => {
     </div>
   ) : (
     <div
-      className="flex flex-col mt-5 h-[calc(100vh-8rem)] overflow-y-auto scroll-smooth"
+      className="flex flex-col mt-5 h-[calc(100vh-8rem)] overflow-y-auto scroll-smooth pr-4"
       ref={chatContainerRef}
     >
       {chatArray.length > 0 ? (
-        chatArray.map((chat: ChatMessageType) =>
-          chat.sender_id === userId ? (
-            <MyChatMessage key={chat.message_id} chat={chat} />
-          ) : (
-            <FriendChatMessage key={chat.message_id} chat={chat} />
-          )
-        )
+        <AnimatePresence initial={false}>
+          {chatArray.map((chat: ChatMessageType) => (
+            <motion.div
+              key={chat.message_id}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 260,
+                damping: 20,
+              }}
+            >
+              {chat.sender_id === userId ? (
+                <MyChatMessage chat={chat} />
+              ) : (
+                <FriendChatMessage chat={chat} />
+              )}
+            </motion.div>
+          ))}
+        </AnimatePresence>
       ) : (
         <div className="flex justify-center items-center h-[calc(100vh-8rem)]">
           <h2 className="italic text-lg text-slate-800">No messages found</h2>

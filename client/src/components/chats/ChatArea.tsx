@@ -93,7 +93,6 @@ const ChatArea = () => {
 
       const newMessage = await sendMessage(formData);
       const newChatArray = [...chats, newMessage];
-      console.log(newMessage);
       dispatch(SET_CHAT_ARRAY(newChatArray));
       setMessage(initialChatValues);
       setMessageImage(null);

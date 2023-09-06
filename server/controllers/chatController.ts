@@ -3,6 +3,7 @@ import db from "../db";
 import { RequestUserAttached } from "../middleware/authMiddleware";
 import { chat_messages } from "../schema";
 import { body, validationResult } from "express-validator";
+import { eq } from "drizzle-orm";
 
 export const findChat = asyncHandler(async (req: RequestUserAttached, res) => {
   if (!req.user) {
@@ -69,14 +70,37 @@ export const sendMessage = [
     try {
       const { message, messagePhotoUrl, friendId } = req.body;
 
-      await db.insert(chat_messages).values({
-        sender_id: req.user.user_id,
-        receiver_id: friendId,
-        message_text: message,
-        message_photo_url: messagePhotoUrl ? messagePhotoUrl : "",
+      const result = await db
+        .insert(chat_messages)
+        .values({
+          sender_id: req.user.user_id,
+          receiver_id: friendId,
+          message_text: message,
+          message_photo_url: messagePhotoUrl ? messagePhotoUrl : "",
+        })
+        .returning();
+
+      const insertedMsgId = result[0].message_id;
+
+      const newMessage = await db.query.chat_messages.findFirst({
+        where: eq(chat_messages.message_id, insertedMsgId),
+        with: {
+          user1: {
+            columns: {
+              user_id: false,
+              passhash: false,
+            },
+          },
+          user2: {
+            columns: {
+              user_id: false,
+              passhash: false,
+            },
+          },
+        },
       });
 
-      res.status(201).end();
+      res.status(201).json(newMessage);
       return;
     } catch (error: any) {
       console.error("Error sending message:", error.message);

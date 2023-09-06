@@ -24,11 +24,15 @@ const chatsSlice = createSlice({
     SET_CHAT_ID(state, action) {
       state.chatId = action.payload;
     },
+    SET_CHAT_ARRAY(state, action) {
+      state.chatArray = action.payload;
+    },
   },
 });
 
-export const { SET_CHAT_ID } = chatsSlice.actions;
+export const { SET_CHAT_ID, SET_CHAT_ARRAY } = chatsSlice.actions;
 
 export const selectChatId = (state: any) => state.chats.chatId;
+export const selectChatArray = (state: any) => state.chats.chatArray;
 
 export default chatsSlice.reducer;

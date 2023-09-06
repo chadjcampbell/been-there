@@ -1,10 +1,15 @@
-import { useSelector } from "react-redux";
-import { selectChatId } from "../../redux/features/chats/chatSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  ChatMessageType,
+  SET_CHAT_ARRAY,
+  selectChatArray,
+  selectChatId,
+} from "../../redux/features/chats/chatSlice";
 import {
   SendMessageData,
   sendMessage,
 } from "../../redux/features/chats/chatService";
-import { useRef, useState, FormEvent, ChangeEvent, useEffect } from "react";
+import { useRef, useState, FormEvent, ChangeEvent } from "react";
 import toast from "react-hot-toast";
 import { BsSendFill } from "react-icons/bs";
 import { MdAddAPhoto, MdCancel } from "react-icons/md";
@@ -14,11 +19,13 @@ import { GoSmiley } from "react-icons/go";
 import ChatDisplay from "./ChatDisplay";
 
 const ChatArea = () => {
+  const chats = useSelector(selectChatArray);
+  const dispatch = useDispatch();
   const friendId = useSelector(selectChatId);
   const hiddenFileInput = useRef<HTMLInputElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const initialPostValues = { message: "", messagePhotoUrl: "" };
-  const [message, setMessage] = useState(initialPostValues);
+  const initialChatValues = { message: "", messagePhotoUrl: "" };
+  const [message, setMessage] = useState(initialChatValues);
   const [messageImage, setMessageImage] = useState<File | null>(null);
   const pickerRef = useRef<HTMLDetailsElement | null>(null);
 
@@ -85,10 +92,10 @@ const ChatArea = () => {
       };
 
       const newMessage = await sendMessage(formData);
-      if (newMessage) {
-        toast.success("Message sent");
-      }
-      setMessage(initialPostValues);
+      const newChatArray = [...chats, newMessage];
+      console.log(newMessage);
+      dispatch(SET_CHAT_ARRAY(newChatArray));
+      setMessage(initialChatValues);
       setMessageImage(null);
     } catch (error: any) {
       console.log(error);

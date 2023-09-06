@@ -27,7 +27,7 @@ export const sendMessage = async (formData: SendMessageData) => {
   try {
     const response = await axios.post(API_URL, formData);
     if (response.status >= 200 && response.status < 300) {
-      return true;
+      return response.data;
     }
   } catch (error: any) {
     const message =

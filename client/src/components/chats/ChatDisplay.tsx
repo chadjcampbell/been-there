@@ -1,7 +1,9 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MyChatMessage, FriendChatMessage } from "./ChatMessage";
 import {
   ChatMessageType,
+  SET_CHAT_ARRAY,
+  selectChatArray,
   selectChatId,
 } from "../../redux/features/chats/chatSlice";
 import { memo, useEffect, useRef, useState } from "react";
@@ -9,10 +11,11 @@ import { findChat } from "../../redux/features/chats/chatService";
 import { selectUser } from "../../redux/features/auth/authSlice";
 
 const ChatDisplay = memo(() => {
+  const dispatch = useDispatch();
+  const chatArray = useSelector(selectChatArray);
   const [isLoading, setIsLoading] = useState(true);
   const userId = useSelector(selectUser).userId;
   const chatId = useSelector(selectChatId);
-  const [chats, setChats] = useState([]);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -21,7 +24,7 @@ const ChatDisplay = memo(() => {
         setIsLoading(true);
         const result = await findChat(chatId);
         if (result) {
-          setChats(result);
+          dispatch(SET_CHAT_ARRAY(result));
           // Scroll to the bottom of the chat container after new messages are received
           if (chatContainerRef.current) {
             chatContainerRef.current.scrollTop =
@@ -47,7 +50,7 @@ const ChatDisplay = memo(() => {
     const delayScroll = setTimeout(scrollToBottom, 100);
     // Clear the timeout when the component unmounts or when chats change
     return () => clearTimeout(delayScroll);
-  }, [chats]);
+  }, [chatArray]);
 
   return isLoading ? (
     <div className="flex justify-center items-center h-[calc(100vh-8rem)]">
@@ -58,8 +61,8 @@ const ChatDisplay = memo(() => {
       className="flex flex-col mt-5 h-[calc(100vh-8rem)] overflow-y-auto scroll-smooth"
       ref={chatContainerRef}
     >
-      {chats.length > 0 ? (
-        chats.map((chat: ChatMessageType) =>
+      {chatArray.length > 0 ? (
+        chatArray.map((chat: ChatMessageType) =>
           chat.sender_id === userId ? (
             <MyChatMessage key={chat.message_id} chat={chat} />
           ) : (

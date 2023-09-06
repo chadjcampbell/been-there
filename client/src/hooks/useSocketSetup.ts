@@ -13,7 +13,7 @@ const useSocketSetup = () => {
     return () => {
       socket.off("connect_error");
     };
-  }, []);
+  }, [user]);
 };
 
 export default useSocketSetup;

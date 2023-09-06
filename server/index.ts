@@ -11,6 +11,7 @@ const app = express();
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorMiddleware";
 import { sessionMiddleware, wrap } from "./controllers/serverController";
+import { authorizeUser } from "./controllers/socketController";
 
 const port = process.env.PORT || 3000;
 const server = require("http").createServer(app);
@@ -41,9 +42,9 @@ app.use("/posts", postRoute);
 app.use("/chats", chatRoute);
 
 // socket.io connection
-io.use(wrap(sessionMiddleware));
-io.on("connect", (socket) => {
-  console.log("connected");
+io.use(authorizeUser);
+io.on("connection", (socket) => {
+  console.log(socket.id + "connected");
 });
 
 // error middleware

@@ -1,7 +1,7 @@
 import { Socket } from "socket.io";
 import { redisClient } from "../redis";
-import { NextFunction } from "express";
 import { Session } from "express-session";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 type UserType = {
   userid: number;
@@ -22,12 +22,17 @@ declare module "socket.io" {
   }
 }
 
-const authorizeUser = (socket: Socket, next: NextFunction) => {
-  if (!socket.request.session || !socket.request.session.user) {
-    next(new Error("Not authorized"));
+const authorizeUser = (socket: Socket, next: any) => {
+  const token = socket.handshake.headers.cookie?.substring(6);
+  // verify token
+  if (!token) {
+    throw new Error("Not authorized");
   }
-  socket.user = { ...socket.request.session.user };
-  redisClient.hset(`userid:${socket.user.name}`, "userid", socket.user.userid);
+  const verified = jwt.verify(
+    token,
+    String(process.env.JWT_SECRET)
+  ) as JwtPayload;
+  console.log(verified);
   next();
 };
 

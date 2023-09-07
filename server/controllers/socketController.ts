@@ -18,7 +18,7 @@ declare module "http" {
 
 declare module "socket.io" {
   interface Socket {
-    user?: UserType;
+    userId?: number;
   }
 }
 
@@ -33,18 +33,22 @@ const authorizeUser = (socket: Socket, next: any) => {
       token,
       String(process.env.JWT_SECRET)
     ) as JwtPayload;
-    console.log(verified);
+    socket.userId = verified.id;
+    console.log(socket.userId);
     next();
   }
 };
 
-const addFriend = async (
-  friendName: string,
-  cb: (arg0: { done: boolean; errorMsg: string }) => void
-) => {
-  const friendUserID = await redisClient.hget(`userid:${friendName}`, "userid");
-  cb({ done: false, errorMsg: "No users found" });
-  console.log(friendUserID);
+const setOnlineStatus = async (socket: Socket, next: any) => {
+  const userId = socket.userId;
+
+  // Set the user as online in Redis with a timeout of 5 minutes
+  redisClient.setex(`online:${userId}`, 300, "true", (err) => {
+    if (err) {
+      return next(new Error("Failed to set user as online in Redis"));
+    }
+    next();
+  });
 };
 
-export { authorizeUser, addFriend };
+export { authorizeUser, setOnlineStatus };

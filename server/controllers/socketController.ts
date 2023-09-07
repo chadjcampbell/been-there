@@ -26,14 +26,16 @@ const authorizeUser = (socket: Socket, next: any) => {
   const token = socket.handshake.headers.cookie?.substring(6);
   // verify token
   if (!token) {
-    throw new Error("Not authorized");
+    const err = new Error("Not authorized");
+    next(err);
+  } else {
+    const verified = jwt.verify(
+      token,
+      String(process.env.JWT_SECRET)
+    ) as JwtPayload;
+    console.log(verified);
+    next();
   }
-  const verified = jwt.verify(
-    token,
-    String(process.env.JWT_SECRET)
-  ) as JwtPayload;
-  console.log(verified);
-  next();
 };
 
 const addFriend = async (

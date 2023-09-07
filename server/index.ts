@@ -10,7 +10,6 @@ import { router as chatRoute } from "./routes/chatRoute";
 const app = express();
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorMiddleware";
-import { sessionMiddleware, wrap } from "./controllers/serverController";
 import { authorizeUser } from "./controllers/socketController";
 
 const port = process.env.PORT || 3000;
@@ -44,7 +43,7 @@ app.use("/chats", chatRoute);
 // socket.io connection
 io.use(authorizeUser);
 io.on("connection", (socket) => {
-  console.log(socket.id + "connected");
+  console.log(socket.id + " connected");
 });
 
 // error middleware

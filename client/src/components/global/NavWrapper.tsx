@@ -50,6 +50,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
   }, [isLoggedIn]);
 
   useAuthRedirect("/login");
+  useSocketSetup();
 
   const onLogoutHandler = async () => {
     setisLoggingOut(true);
@@ -61,8 +62,6 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
     dispatch(SET_POSTS([]));
     setisLoggingOut(false);
   };
-
-  useSocketSetup();
 
   // close the nav menu after a small animation
   const handleNavClick = () => {

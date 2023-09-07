@@ -6,13 +6,15 @@ import { selectUser } from "../redux/features/auth/authSlice";
 const useSocketSetup = () => {
   const user = useSelector(selectUser);
   useEffect(() => {
-    socket.connect();
-    socket.on("connect_error", () => {
-      console.log("Socket IO Error");
-    });
-    return () => {
-      socket.off("connect_error");
-    };
+    if (user) {
+      socket.connect();
+      socket.on("connect_error", () => {
+        console.log("Socket IO Error");
+      });
+      return () => {
+        socket.off("connect_error");
+      };
+    }
   }, [user]);
 };
 

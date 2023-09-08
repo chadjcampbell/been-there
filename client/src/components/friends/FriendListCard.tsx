@@ -2,14 +2,18 @@ import { BsChatDots } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { BsTrash } from "react-icons/bs";
 import { FriendType } from "../../routes/Friends";
-import { useDispatch } from "react-redux";
-import { SET_FRIEND_ID_DELETE } from "../../redux/features/friends/friendsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  SET_FRIEND_ID_DELETE,
+  selectOnlineFriends,
+} from "../../redux/features/friends/friendsSlice";
 
 type FriendListCardProps = {
   friend: FriendType;
 };
 
 const FriendListCard = ({ friend }: FriendListCardProps) => {
+  const onlineFriends: string[] = useSelector(selectOnlineFriends);
   const dispatch = useDispatch();
   const handleDeleteButton = () => {
     window.main_modal.showModal();
@@ -25,7 +29,13 @@ const FriendListCard = ({ friend }: FriendListCardProps) => {
         <BsTrash size="20" />
       </button>
       <div className="w-1/4">
-        <div className="avatar online">
+        <div
+          className={`avatar ${
+            onlineFriends.includes(friend.user_id.toString())
+              ? "online"
+              : "offline"
+          }`}
+        >
           <div className=" rounded-full mr-2">
             <img
               src={

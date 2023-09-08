@@ -3,6 +3,8 @@ import { FriendType } from "../../routes/Friends";
 import { sendFriendRequest } from "../../redux/features/friends/friendService";
 import { toast } from "react-hot-toast";
 import { Dispatch, SetStateAction } from "react";
+import { selectOnlineFriends } from "../../redux/features/friends/friendsSlice";
+import { useSelector } from "react-redux";
 
 type FoundFriendCardProps = {
   friend: FriendType;
@@ -10,6 +12,8 @@ type FoundFriendCardProps = {
 };
 
 const FoundFriendCard = ({ friend, setFoundFriends }: FoundFriendCardProps) => {
+  const onlineFriends: string[] = useSelector(selectOnlineFriends);
+
   const handleAddFriend = async () => {
     try {
       await sendFriendRequest(friend.user_id);
@@ -23,7 +27,13 @@ const FoundFriendCard = ({ friend, setFoundFriends }: FoundFriendCardProps) => {
   return (
     <div className="w-80 m-4 flex flex-row py-4 px-2 justify-center items-center border-2 rounded-xl ">
       <div className="w-1/4">
-        <div className="avatar online">
+        <div
+          className={`avatar ${
+            onlineFriends.includes(friend.user_id.toString())
+              ? "online"
+              : "offline"
+          }`}
+        >
           <div className=" rounded-full mr-2">
             <img src={friend.photo_url} alt="friend profile pic" />
           </div>

@@ -44,7 +44,7 @@ const setOnlineStatus = async (socket: Socket, next: any) => {
   const userId = socket.userId;
 
   // Set the user as online in Redis with a timeout of 5 minutes
-  redisClient.setex(`online:${userId}`, 300, "true", (err) => {
+  redisClient.set(`online:${userId}`, "true", (err) => {
     if (err) {
       return next(new Error("Failed to set user as online in Redis"));
     }

@@ -23,6 +23,7 @@ import {
 import { findAllPosts } from "../../redux/features/posts/postService";
 import { SET_POSTS } from "../../redux/features/posts/postSlice";
 import DeleteModal from "../home/DeleteModal";
+import { socket } from "../../socket";
 
 type NavWrapperProps = {
   children: ReactNode;
@@ -61,6 +62,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
     dispatch(SET_PENDING_FRIENDS([]));
     dispatch(SET_POSTS([]));
     setisLoggingOut(false);
+    socket.disconnect();
   };
 
   // close the nav menu after a small animation

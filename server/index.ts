@@ -50,12 +50,14 @@ io.use(authorizeUser);
 io.use(setOnlineStatus);
 io.on("connection", (socket) => {
   console.log(socket.id + " connected");
+  socket.on("disconnect", () => {
+    const userId = socket.userId;
+    // Remove the user from the online status in Redis
+    redisClient.del(`online:${userId}`);
+    console.log(userId + " disconnected");
+  });
 });
-io.on("disconnect", (socket) => {
-  const userId = socket.userId;
-  // Remove the user from the online status in Redis
-  redisClient.del(`online:${userId}`);
-});
+
 setInterval(sendOnlineUsers, 5000);
 
 // error middleware

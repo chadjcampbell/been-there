@@ -9,6 +9,7 @@ import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectFriendsList,
+  selectOnlineFriends,
   selectPendingFriends,
   SET_FRIENDS_LIST,
   SET_PENDING_FRIENDS,
@@ -24,6 +25,7 @@ const PendingFriendCard = ({ friend }: FoundFriendCardProps) => {
   const dispatch = useDispatch();
   const currentFriends = useSelector(selectFriendsList);
   const currentPending = useSelector(selectPendingFriends);
+  const onlineFriends: string[] = useSelector(selectOnlineFriends);
 
   const handleAcceptFriend = async () => {
     try {
@@ -62,7 +64,13 @@ const PendingFriendCard = ({ friend }: FoundFriendCardProps) => {
   return (
     <div className="w-80 m-4 flex flex-row py-4 px-2 justify-center items-center border-2 rounded-xl ">
       <div className="w-1/4">
-        <div className="avatar online">
+        <div
+          className={`avatar ${
+            onlineFriends.includes(friend.user_id.toString())
+              ? "online"
+              : "offline"
+          }`}
+        >
           <div className=" rounded-full mr-2">
             <img src={friend.photo_url} alt="friend profile pic" />
           </div>

@@ -10,13 +10,17 @@ import { router as chatRoute } from "./routes/chatRoute";
 const app = express();
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorMiddleware";
-import { authorizeUser, setOnlineStatus } from "./controllers/socketController";
+import {
+  authorizeUser,
+  sendOnlineUsers,
+  setOnlineStatus,
+} from "./controllers/socketController";
 import { redisClient } from "./redis";
 
 const port = process.env.PORT || 3000;
 const server = require("http").createServer(app);
 
-const io = new Server(server, {
+export const io = new Server(server, {
   cors: {
     origin: process.env.FRONTEND_URL,
     credentials: true,
@@ -49,10 +53,10 @@ io.on("connection", (socket) => {
 });
 io.on("disconnect", (socket) => {
   const userId = socket.userId;
-
   // Remove the user from the online status in Redis
   redisClient.del(`online:${userId}`);
 });
+setInterval(sendOnlineUsers, 5000);
 
 // error middleware
 app.use(errorHandler);

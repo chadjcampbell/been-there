@@ -2,6 +2,7 @@ import { Socket } from "socket.io";
 import { redisClient } from "../redis";
 import { Session } from "express-session";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { io } from "..";
 
 type UserType = {
   userid: number;
@@ -51,4 +52,19 @@ const setOnlineStatus = async (socket: Socket, next: any) => {
   });
 };
 
-export { authorizeUser, setOnlineStatus };
+const sendOnlineUsers = () => {
+  // Use the keys Redis command to fetch all keys matching the pattern 'online:*'
+  redisClient.keys("online:*", (err, onlineUserKeys) => {
+    if (err) {
+      console.error("Error fetching online users from Redis:", err);
+      return;
+    }
+    // Extract the user IDs from the keys
+    const onlineUserIds = onlineUserKeys?.map((key) => key.split(":")[1]);
+    // Emit the online user list to all connected clients
+    console.log(onlineUserIds);
+    io.emit("onlineUsers", onlineUserIds);
+  });
+};
+
+export { authorizeUser, setOnlineStatus, sendOnlineUsers };

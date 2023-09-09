@@ -9,7 +9,8 @@ import {
 import { memo, useEffect, useRef, useState } from "react";
 import { findChat } from "../../redux/features/chats/chatService";
 import { selectUser } from "../../redux/features/auth/authSlice";
-import { AnimatePresence, motion, spring } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { socket } from "../../socket";
 
 const ChatDisplay = memo(() => {
   const dispatch = useDispatch();
@@ -18,6 +19,15 @@ const ChatDisplay = memo(() => {
   const userId = useSelector(selectUser).userId;
   const chatId = useSelector(selectChatId);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    socket.on("newMessage", (newMessage: ChatMessageType) => {
+      if (newMessage.receiver_id == userId) {
+        const newChatArray = [...chatArray, newMessage];
+        dispatch(SET_CHAT_ARRAY(newChatArray));
+      }
+    });
+  }, [socket, chatArray]);
 
   useEffect(() => {
     const getChats = async () => {

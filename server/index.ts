@@ -57,6 +57,9 @@ io.on("connection", (socket) => {
     console.log(userId + " disconnected");
     sendOnlineUsers();
   });
+  socket.on("message", (data) => {
+    io.emit("newMessage", data.newMessage);
+  });
 });
 
 // error middleware

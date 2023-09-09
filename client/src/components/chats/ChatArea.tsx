@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
-  ChatMessageType,
   SET_CHAT_ARRAY,
   selectChatArray,
   selectChatId,
@@ -17,6 +16,7 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { GoSmiley } from "react-icons/go";
 import ChatDisplay from "./ChatDisplay";
+import { socket } from "../../socket";
 
 const ChatArea = () => {
   const chats = useSelector(selectChatArray);
@@ -92,6 +92,10 @@ const ChatArea = () => {
       };
 
       const newMessage = await sendMessage(formData);
+      // send message to socket
+      socket.emit("message", {
+        newMessage,
+      });
       const newChatArray = [...chats, newMessage];
       dispatch(SET_CHAT_ARRAY(newChatArray));
       setMessage(initialChatValues);

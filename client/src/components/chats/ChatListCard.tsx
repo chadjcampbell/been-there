@@ -5,13 +5,15 @@ import { selectOnlineFriends } from "../../redux/features/friends/friendsSlice";
 
 type ChatListCardProps = {
   friend: FriendType;
+  drawerRef: React.MutableRefObject<HTMLInputElement | null>;
 };
 
-const ChatListCard = ({ friend }: ChatListCardProps) => {
+const ChatListCard = ({ friend, drawerRef }: ChatListCardProps) => {
   const onlineFriends: string[] = useSelector(selectOnlineFriends);
   const dispatch = useDispatch();
 
   const setChatId = () => {
+    drawerRef.current?.click();
     dispatch(SET_CHAT_ID(friend.user_id));
   };
   return (

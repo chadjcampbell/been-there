@@ -6,7 +6,7 @@ import {
   selectFriendsList,
 } from "../redux/features/friends/friendsSlice";
 import { FriendType } from "./Friends";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import {
   getPendingFriends,
@@ -19,6 +19,7 @@ const Chats = () => {
   const friendList = useSelector(selectFriendsList);
   const [loading, setLoading] = useState(!friendList.length);
   const dispatch = useDispatch();
+  const drawerRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,7 +43,12 @@ const Chats = () => {
   ) : (
     <div className="w-full">
       <div className="z-10 drawer lg:drawer-open h-full">
-        <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
+        <input
+          ref={drawerRef}
+          id="my-drawer-2"
+          type="checkbox"
+          className="drawer-toggle"
+        />
         <div className="drawer-content flex flex-col-reverse items-center justify-start">
           <ChatArea />
           <label
@@ -58,7 +64,11 @@ const Chats = () => {
             {/* Sidebar content here */}
             {friendList ? (
               friendList.map((friend: FriendType) => (
-                <ChatListCard key={friend.user_id} friend={friend} />
+                <ChatListCard
+                  key={friend.user_id}
+                  friend={friend}
+                  drawerRef={drawerRef}
+                />
               ))
             ) : (
               <p className="text-xl">No chats yet</p>

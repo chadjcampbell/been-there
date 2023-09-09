@@ -55,10 +55,9 @@ io.on("connection", (socket) => {
     // Remove the user from the online status in Redis
     redisClient.del(`online:${userId}`);
     console.log(userId + " disconnected");
+    sendOnlineUsers();
   });
 });
-
-setInterval(sendOnlineUsers, 5000);
 
 // error middleware
 app.use(errorHandler);

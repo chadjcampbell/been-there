@@ -48,6 +48,7 @@ const setOnlineStatus = async (socket: Socket, next: any) => {
     if (err) {
       return next(new Error("Failed to set user as online in Redis"));
     }
+    sendOnlineUsers();
     next();
   });
 };

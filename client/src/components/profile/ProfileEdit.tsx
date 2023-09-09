@@ -27,7 +27,19 @@ export const ProfileEdit = ({ user, setUpdateMode }: ProfileEditProps) => {
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      setProfileImage(event.target.files[0]);
+      const selectedFile = event.target.files[0];
+
+      if (selectedFile.type.startsWith("image/")) {
+        const fileSize = selectedFile.size;
+        const maxSizeInBytes = 1024 * 1024; // 1MB max file size
+        if (fileSize <= maxSizeInBytes) {
+          setProfileImage(selectedFile);
+        } else {
+          toast.error("Image size limit is 1MB");
+        }
+      } else {
+        toast.error("Please select an image file.");
+      }
     }
   };
 

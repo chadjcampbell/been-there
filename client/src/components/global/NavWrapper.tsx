@@ -108,6 +108,15 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
                     onClick={handleNavClick}
                     className="px-1 text-lg text-secondary"
                   >
+                    <Link to="/">
+                      <AiTwotoneHome />
+                      News Feed
+                    </Link>
+                  </li>
+                  <li
+                    onClick={handleNavClick}
+                    className="px-1 text-lg text-secondary"
+                  >
                     <Link to="/map">
                       <BsGlobeAmericas />
                       Map
@@ -145,7 +154,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
 
               <Link
                 to="/"
-                className="btn btn-ghost normal-case text-xl text-secondary"
+                className="btn btn-ghost normal-case text-xl text-secondary lg:hidden"
               >
                 <AiTwotoneHome />
                 Been There
@@ -153,25 +162,31 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
             </div>
             <div className="navbar-center hidden lg:flex ">
               <ul className="menu menu-horizontal px-1">
-                <li className="px-10 text-lg text-secondary">
+                <li className="px-1 text-lg text-secondary">
+                  <Link to="/">
+                    <AiTwotoneHome />
+                    News Feed
+                  </Link>
+                </li>
+                <li className="px-1 text-lg text-secondary">
                   <Link to="/map">
                     <BsGlobeAmericas />
                     Map
                   </Link>
                 </li>
-                <li className="px-10 text-lg text-secondary">
+                <li className="px-1 text-lg text-secondary">
                   <Link to="/friends">
                     <FaUserFriends />
                     Friends
                   </Link>
                 </li>
-                <li className="px-10 text-lg text-secondary">
+                <li className="px-1 text-lg text-secondary">
                   <Link to="/chats">
                     <BsChatDots />
                     Chats
                   </Link>
                 </li>
-                <li className="px-10 text-lg text-secondary">
+                <li className="px-1 text-lg text-secondary">
                   <Link to="/profile">
                     <CgProfile />
                     Profile

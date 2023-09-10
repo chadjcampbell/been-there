@@ -7,6 +7,8 @@ import {
   SET_FRIEND_ID_DELETE,
   selectOnlineFriends,
 } from "../../redux/features/friends/friendsSlice";
+import { SET_CHAT_ID } from "../../redux/features/chats/chatSlice";
+import { useNavigate } from "react-router-dom";
 
 type FriendListCardProps = {
   friend: FriendType;
@@ -15,9 +17,16 @@ type FriendListCardProps = {
 const FriendListCard = ({ friend }: FriendListCardProps) => {
   const onlineFriends: string[] = useSelector(selectOnlineFriends);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleDeleteButton = () => {
     window.main_modal.showModal();
     dispatch(SET_FRIEND_ID_DELETE(friend.user_id));
+  };
+
+  const handleChatClick = () => {
+    dispatch(SET_CHAT_ID(friend.user_id));
+    navigate("/chats");
   };
 
   return (
@@ -50,7 +59,7 @@ const FriendListCard = ({ friend }: FriendListCardProps) => {
       </div>
       <div className="w-full">
         <div className="text-lg font-semibold">{friend.name}</div>
-        <button className="btn btn-sm bg-blue-200">
+        <button onClick={handleChatClick} className="btn btn-sm bg-blue-200">
           <BsChatDots />
           Chat
         </button>

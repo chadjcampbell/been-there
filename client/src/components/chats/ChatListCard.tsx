@@ -1,6 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { FriendType } from "../../routes/Friends";
-import { SET_CHAT_ID } from "../../redux/features/chats/chatSlice";
+import {
+  SET_CHAT_ID,
+  selectChatId,
+} from "../../redux/features/chats/chatSlice";
 import { selectOnlineFriends } from "../../redux/features/friends/friendsSlice";
 
 type ChatListCardProps = {
@@ -9,6 +12,7 @@ type ChatListCardProps = {
 };
 
 const ChatListCard = ({ friend, drawerRef }: ChatListCardProps) => {
+  const activeChat = useSelector(selectChatId);
   const onlineFriends: string[] = useSelector(selectOnlineFriends);
   const dispatch = useDispatch();
 
@@ -19,7 +23,9 @@ const ChatListCard = ({ friend, drawerRef }: ChatListCardProps) => {
   return (
     <button
       onClick={setChatId}
-      className="flex flex-row py-4 px-2 justify-center items-center border-b-2"
+      className={`flex flex-row py-4 px-2 justify-center items-center border-b-2 rounded-lg mb-2 ${
+        activeChat === friend.user_id ? "btn-primary" : "btn-ghost"
+      }`}
     >
       <div className="w-1/4">
         <div

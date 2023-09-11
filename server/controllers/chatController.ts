@@ -4,6 +4,8 @@ import { RequestUserAttached } from "../middleware/authMiddleware";
 import { chat_messages } from "../schema";
 import { body, validationResult } from "express-validator";
 import { eq } from "drizzle-orm";
+import { notifications } from "../schema/notifications";
+import { io } from "..";
 
 export const findChat = asyncHandler(async (req: RequestUserAttached, res) => {
   if (!req.user) {
@@ -101,6 +103,16 @@ export const sendMessage = [
       });
 
       res.status(201).json(newMessage);
+      const notificationArr = await db
+        .insert(notifications)
+        .values({
+          user_id: friendId,
+          type: "chat_message",
+          content: `New message from ${req.user.name}`,
+          is_read: false,
+        })
+        .returning();
+      io.emit("notification", notificationArr[0]);
       return;
     } catch (error: any) {
       console.error("Error sending message:", error.message);

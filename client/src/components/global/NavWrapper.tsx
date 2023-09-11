@@ -25,6 +25,9 @@ import { SET_POSTS } from "../../redux/features/posts/postSlice";
 import DeleteModal from "../home/DeleteModal";
 import { socket } from "../../socket";
 import { ScrollToTopButton } from "./ScrollToTopButton";
+import NotificationButton from "./NotificationButton";
+import { SET_NOTIFICATIONS } from "../../redux/features/notifications/notificationSlice";
+import { getNotifications } from "../../redux/features/notifications/notificationService";
 
 type NavWrapperProps = {
   children: ReactNode;
@@ -64,6 +67,8 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
         dispatch(SET_USER(userData));
         const postsData = await findAllPosts();
         dispatch(SET_POSTS(postsData));
+        const notificationData = await getNotifications();
+        dispatch(SET_NOTIFICATIONS(notificationData));
       } finally {
         setLoading(false);
       }
@@ -217,26 +222,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
               </ul>
             </div>
             <div className="navbar-end">
-              <button className="btn btn-ghost btn-circle mr-4">
-                <div className="indicator">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                    />
-                  </svg>
-                  {/* this span badge color will be for notifications */}
-                  <span className="badge badge-xs badge-gray indicator-item"></span>
-                </div>
-              </button>
+              <NotificationButton />
               <button
                 onClick={onLogoutHandler}
                 className="btn text-white bg-primary"

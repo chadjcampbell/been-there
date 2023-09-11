@@ -7,6 +7,7 @@ import { router as userRoute } from "./routes/userRoute";
 import { router as friendRoute } from "./routes/friendRoute";
 import { router as postRoute } from "./routes/postRoute";
 import { router as chatRoute } from "./routes/chatRoute";
+import { router as notificationRoute } from "./routes/notificationRoute";
 const app = express();
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorMiddleware";
@@ -44,6 +45,7 @@ app.use("/auth", userRoute);
 app.use("/friends", friendRoute);
 app.use("/posts", postRoute);
 app.use("/chats", chatRoute);
+app.use("/notification", notificationRoute);
 
 // socket.io connection
 io.use(authorizeUser);

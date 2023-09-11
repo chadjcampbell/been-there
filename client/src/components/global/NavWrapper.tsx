@@ -24,6 +24,7 @@ import { findAllPosts } from "../../redux/features/posts/postService";
 import { SET_POSTS } from "../../redux/features/posts/postSlice";
 import DeleteModal from "../home/DeleteModal";
 import { socket } from "../../socket";
+import { ScrollToTopButton } from "./ScrollToTopButton";
 
 type NavWrapperProps = {
   children: ReactNode;
@@ -35,6 +36,26 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [navbarVisible, setNavbarVisible] = useState(true);
+
+  // Add a scroll event listener to hide/show the navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrolled = window.scrollY;
+      if (scrolled > 100) {
+        setNavbarVisible(false);
+      } else {
+        setNavbarVisible(true);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    // Remove the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const setUserState = async () => {
@@ -80,6 +101,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
   ) : (
     <>
       <header>
+        {!navbarVisible && <ScrollToTopButton />}
         <nav>
           <div className="navbar bg-gray-100">
             <div className="navbar-start">

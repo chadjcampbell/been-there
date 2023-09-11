@@ -217,7 +217,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
               </ul>
             </div>
             <div className="navbar-end">
-              <button className="btn btn-ghost btn-circle">
+              <button className="btn btn-ghost btn-circle mr-4">
                 <div className="indicator">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

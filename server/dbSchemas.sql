@@ -77,3 +77,12 @@ CREATE TABLE chat_messages (
     FOREIGN KEY (sender_id) REFERENCES users(user_id),
     FOREIGN KEY (receiver_id) REFERENCES users(user_id)
 );
+
+CREATE TABLE notifications (
+    notification_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    type VARCHAR(20) NOT NULL, -- 'chat_message', 'friend_request', 'friend_request_accepted'
+    content TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

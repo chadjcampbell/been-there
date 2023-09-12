@@ -16,3 +16,18 @@ export const getNotifications = async () => {
     toast.error(message);
   }
 };
+
+export const removeNotification = async (id: number) => {
+  try {
+    const response = await axios.delete(API_URL + "/" + id);
+    if (response.statusText == "OK") {
+      return true;
+    }
+  } catch (error: any) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};

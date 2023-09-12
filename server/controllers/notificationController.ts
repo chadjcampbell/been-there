@@ -16,9 +16,30 @@ export const getAllNotifications = asyncHandler(
         eq(notifications.is_read, false)
       ),
       orderBy: (notifications, { desc }) => [desc(notifications.created_at)],
+      limit: 10,
     });
     console.log(data);
     res.status(200).json(data);
+    return;
+  }
+);
+
+export const removeNotification = asyncHandler(
+  async (req: RequestUserAttached, res) => {
+    if (!req.user) {
+      res.status(400);
+      throw new Error("Not authorized, please log in");
+    }
+    const { id } = req.params;
+    try {
+      await db
+        .delete(notifications)
+        .where(eq(notifications.notification_id, Number(id)));
+    } catch {
+      res.status(400);
+      throw new Error("Something went wrong");
+    }
+    res.status(200).send();
     return;
   }
 );

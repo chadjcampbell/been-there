@@ -3,7 +3,7 @@ import db from "../db";
 import { RequestUserAttached } from "../middleware/authMiddleware";
 import { chat_messages } from "../schema";
 import { body, validationResult } from "express-validator";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { notifications } from "../schema/notifications";
 import { io } from "..";
 
@@ -103,6 +103,23 @@ export const sendMessage = [
       });
 
       res.status(201).json(newMessage);
+      const notificationExists = await db.query.notifications.findFirst({
+        where: and(
+          eq(notifications.user_id, friendId),
+          eq(notifications.content, `New message from ${req.user.name}`),
+          eq(notifications.is_read, false)
+        ),
+      });
+      if (notificationExists) {
+        await db
+          .delete(notifications)
+          .where(
+            eq(
+              notifications.notification_id,
+              notificationExists.notification_id
+            )
+          );
+      }
       const notificationArr = await db
         .insert(notifications)
         .values({

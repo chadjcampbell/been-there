@@ -30,6 +30,6 @@ export const { SET_NOTIFICATIONS, ADD_NOTIFICATION } =
   notificationSlice.actions;
 
 export const selectNotifications = (state: any) =>
-  state.notification.notifications;
+  state.notifications.notifications;
 
 export default notificationSlice.reducer;

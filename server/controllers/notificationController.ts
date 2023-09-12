@@ -1,8 +1,7 @@
-import { and, eq, ilike, ne, or } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import asyncHandler from "express-async-handler";
-import { body, validationResult } from "express-validator";
 import db from "../db";
-import { friend_requests, friends, notifications, users } from "../schema";
+import { notifications } from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
 
 export const getAllNotifications = asyncHandler(
@@ -12,7 +11,10 @@ export const getAllNotifications = asyncHandler(
       throw new Error("Not authorized, please log in");
     }
     const data = await db.query.notifications.findMany({
-      where: eq(notifications.user_id, req.user.user_id),
+      where: and(
+        eq(notifications.user_id, req.user.user_id),
+        eq(notifications.is_read, false)
+      ),
       orderBy: (notifications, { desc }) => [desc(notifications.created_at)],
     });
     console.log(data);

@@ -10,12 +10,14 @@ import { SET_CHAT_ID } from "../../redux/features/chats/chatSlice";
 import { useNavigate } from "react-router-dom";
 import { selectFriendsList } from "../../redux/features/friends/friendsSlice";
 import { findFriendId } from "../../utils/findFriendId";
+import { useEffect, useRef } from "react";
 
 const NotificationButton = () => {
   const notifications = useSelector(selectNotifications);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const friends = useSelector(selectFriendsList);
+  const dropdownRef = useRef<HTMLDetailsElement | null>(null);
 
   const handleRemove = async (id: number) => {
     await removeNotification(id);
@@ -26,15 +28,31 @@ const NotificationButton = () => {
   };
 
   const handleNotifyClick = (n: NotificationType) => {
+    dropdownRef.current!.open = false;
     if (n.type === "chat_message") {
       const friendId = findFriendId(friends, n.content);
       dispatch(SET_CHAT_ID(friendId));
-      navigate("/chats");
+      setTimeout(() => {
+        navigate("/chats");
+      }, 250);
     }
   };
 
+  // Event listener to close the dropdown when clicking outside of it
+  const handleOutsideClick = (e) => {
+    if (!e.target.closest(".dropdown") && notifications.length > 0) {
+      dropdownRef.current!.open = false;
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("click", handleOutsideClick);
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, []);
+
   return notifications.length > 0 ? (
-    <details className="dropdown dropdown-end">
+    <details ref={dropdownRef} className="dropdown dropdown-end dropdown-open">
       <summary className="btn btn-ghost btn-circle mr-4">
         <div className="indicator">
           <motion.svg

@@ -21,7 +21,15 @@ const notificationSlice = createSlice({
       state.notifications = action.payload;
     },
     ADD_NOTIFICATION(state, action) {
-      state.notifications.push(action.payload);
+      const notificationExists = state.notifications.findIndex(
+        (n) => n.content == action.payload.content
+      );
+      if (notificationExists === -1) {
+        state.notifications.unshift(action.payload);
+      } else {
+        state.notifications.splice(notificationExists, 1);
+        state.notifications.unshift(action.payload);
+      }
     },
   },
 });

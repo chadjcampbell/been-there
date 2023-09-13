@@ -6,10 +6,16 @@ import {
 } from "../../redux/features/notifications/notificationSlice";
 import { AnimatePresence, motion } from "framer-motion";
 import { removeNotification } from "../../redux/features/notifications/notificationService";
+import { SET_CHAT_ID } from "../../redux/features/chats/chatSlice";
+import { useNavigate } from "react-router-dom";
+import { selectFriendsList } from "../../redux/features/friends/friendsSlice";
+import { findFriendId } from "../../utils/findFriendId";
 
 const NotificationButton = () => {
   const notifications = useSelector(selectNotifications);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const friends = useSelector(selectFriendsList);
 
   const handleRemove = async (id: number) => {
     await removeNotification(id);
@@ -17,6 +23,14 @@ const NotificationButton = () => {
       (n: NotificationType) => n.notification_id !== id
     );
     dispatch(SET_NOTIFICATIONS(newNotifications));
+  };
+
+  const handleNotifyClick = (n: NotificationType) => {
+    if (n.type === "chat_message") {
+      const friendId = findFriendId(friends, n.content);
+      dispatch(SET_CHAT_ID(friendId));
+      navigate("/chats");
+    }
   };
 
   return notifications.length > 0 ? (
@@ -65,7 +79,12 @@ const NotificationButton = () => {
               layout={"size"}
             >
               <div className="p-2 m-2 flex items-center justify-center">
-                <p className="flex-1 mr-2">{n.content}</p>
+                <button
+                  onClick={() => handleNotifyClick(n)}
+                  className="btn btn-ghost flex-1 mr-2"
+                >
+                  {n.content}
+                </button>
                 <button
                   onClick={() => handleRemove(n.notification_id)}
                   className="btn btn-circle btn-sm btn-outline"

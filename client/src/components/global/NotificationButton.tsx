@@ -8,9 +8,16 @@ import { AnimatePresence, motion } from "framer-motion";
 import { removeNotification } from "../../redux/features/notifications/notificationService";
 import { SET_CHAT_ID } from "../../redux/features/chats/chatSlice";
 import { useNavigate } from "react-router-dom";
-import { selectFriendsList } from "../../redux/features/friends/friendsSlice";
+import {
+  SET_PENDING_FRIENDS,
+  selectFriendsList,
+} from "../../redux/features/friends/friendsSlice";
 import { findFriendId } from "../../utils/findFriendId";
 import { useEffect, useRef } from "react";
+import {
+  findAllFriends,
+  getPendingFriends,
+} from "../../redux/features/friends/friendService";
 
 const NotificationButton = () => {
   const notifications = useSelector(selectNotifications);
@@ -27,7 +34,7 @@ const NotificationButton = () => {
     dispatch(SET_NOTIFICATIONS(newNotifications));
   };
 
-  const handleNotifyClick = (n: NotificationType) => {
+  const handleNotifyClick = async (n: NotificationType) => {
     dropdownRef.current!.open = false;
     if (n.type === "chat_message") {
       const friendId = findFriendId(friends, n.content);
@@ -36,11 +43,22 @@ const NotificationButton = () => {
         navigate("/chats");
       }, 250);
     }
+    if (n.type === "friend_request") {
+      const newPendingFriends = await getPendingFriends();
+      dispatch(SET_PENDING_FRIENDS(newPendingFriends));
+      setTimeout(() => {
+        navigate("/friends");
+      }, 250);
+    }
   };
 
   // Event listener to close the dropdown when clicking outside of it
-  const handleOutsideClick = (e) => {
-    if (!e.target.closest(".dropdown") && notifications.length > 0) {
+  const handleOutsideClick = (e: MouseEvent) => {
+    if (
+      !e.target ||
+      !(e.target instanceof Element) ||
+      (!e.target.closest(".dropdown") && notifications.length > 0)
+    ) {
       dropdownRef.current!.open = false;
     }
   };

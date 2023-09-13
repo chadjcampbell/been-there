@@ -2,8 +2,9 @@ import { and, eq, ilike, ne, or } from "drizzle-orm";
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
 import db from "../db";
-import { friend_requests, friends, users } from "../schema";
+import { friend_requests, friends, notifications, users } from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
+import { io } from "..";
 
 export const findAllFriends = asyncHandler(
   async (req: RequestUserAttached, res) => {
@@ -101,7 +102,32 @@ export const sendFriendRequest = [
       receiver_id: friend.user_id,
       status: "pending",
     });
-    res.status(200).end();
+    res.status(200).send();
+    const notificationExists = await db.query.notifications.findFirst({
+      where: and(
+        eq(notifications.user_id, friendId),
+        eq(notifications.content, `Friend request from ${req.user.name}`),
+        eq(notifications.is_read, false)
+      ),
+    });
+    if (notificationExists) {
+      await db
+        .delete(notifications)
+        .where(
+          eq(notifications.notification_id, notificationExists.notification_id)
+        );
+    }
+    const notificationArr = await db
+      .insert(notifications)
+      .values({
+        user_id: friendId,
+        type: "friend_request",
+        content: `Friend request from ${req.user.name}`,
+        is_read: false,
+      })
+      .returning();
+    io.emit("notification", notificationArr[0]);
+    return;
   }),
 ];
 

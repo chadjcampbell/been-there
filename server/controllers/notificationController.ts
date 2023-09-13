@@ -18,7 +18,6 @@ export const getAllNotifications = asyncHandler(
       orderBy: (notifications, { desc }) => [desc(notifications.created_at)],
       limit: 10,
     });
-    console.log(data);
     res.status(200).json(data);
     return;
   }

@@ -15,7 +15,7 @@ export const notifications = pgTable("notifications", {
   user_id: integer("user_id")
     .notNull()
     .references(() => users.user_id),
-  type: varchar("type", { length: 20 }).notNull(), // 'chat_message', 'friend_request', 'friend_request_accepted'
+  type: varchar("type", { length: 25 }).notNull(), // 'chat_message', 'friend_request', 'friend_request_accepted'
   content: text("content").notNull(),
   is_read: boolean("is_read").default(false),
   created_at: timestamp("created_at").notNull().defaultNow(),

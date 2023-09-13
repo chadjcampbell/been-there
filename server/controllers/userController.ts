@@ -34,7 +34,6 @@ export const registerUser = [
     const errors = validationResult(req);
     // there are errors
     if (!errors.isEmpty()) {
-      console.log(req.body);
       res.status(400);
       throw new Error(errors.array()[0].msg);
     } else {

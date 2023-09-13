@@ -31,6 +31,8 @@ const useSocketSetup = () => {
         socket.off("connect");
         socket.off("connect_error");
         socket.off("onlineUsers");
+        socket.off("notification");
+        socket.disconnect();
       };
     }
   }, [user]);

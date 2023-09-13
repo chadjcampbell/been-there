@@ -9,6 +9,7 @@ import { removeNotification } from "../../redux/features/notifications/notificat
 import { SET_CHAT_ID } from "../../redux/features/chats/chatSlice";
 import { useNavigate } from "react-router-dom";
 import {
+  SET_FRIENDS_LIST,
   SET_PENDING_FRIENDS,
   selectFriendsList,
 } from "../../redux/features/friends/friendsSlice";
@@ -46,6 +47,13 @@ const NotificationButton = () => {
     if (n.type === "friend_request") {
       const newPendingFriends = await getPendingFriends();
       dispatch(SET_PENDING_FRIENDS(newPendingFriends));
+      setTimeout(() => {
+        navigate("/friends");
+      }, 250);
+    }
+    if (n.type === "friend_request_accepted") {
+      const newFriends = await findAllFriends();
+      dispatch(SET_FRIENDS_LIST(newFriends));
       setTimeout(() => {
         navigate("/friends");
       }, 250);

@@ -189,7 +189,32 @@ export const acceptFriendRequest = [
       res.status(400);
       throw new Error("Error accepting friend request");
     }
-    res.status(200).end();
+    res.status(200).send();
+    const notificationExists = await db.query.notifications.findFirst({
+      where: and(
+        eq(notifications.user_id, friendId),
+        eq(notifications.content, `Friend request accepted ${req.user.name}`),
+        eq(notifications.is_read, false)
+      ),
+    });
+    if (notificationExists) {
+      await db
+        .delete(notifications)
+        .where(
+          eq(notifications.notification_id, notificationExists.notification_id)
+        );
+    }
+    const notificationArr = await db
+      .insert(notifications)
+      .values({
+        user_id: friendId,
+        type: "friend_request_accepted",
+        content: `Friend request accepted ${req.user.name}`,
+        is_read: false,
+      })
+      .returning();
+    io.emit("notification", notificationArr[0]);
+    return;
   }),
 ];
 

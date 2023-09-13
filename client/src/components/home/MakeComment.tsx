@@ -195,7 +195,7 @@ export const MakeComment = ({ post }: MakeCommentProps) => {
               <summary className="m-1 btn btn-sm">
                 <GoSmiley />
               </summary>
-              <div className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+              <div className="p-2 shadow menu dropdown-content z-[998] bg-base-100 rounded-box w-52">
                 <Picker
                   onClickOutside={closeEmojiPicker}
                   data={data}

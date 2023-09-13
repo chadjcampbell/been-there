@@ -6,7 +6,14 @@ import crypto from "crypto";
 import { sendEmail } from "../utils/sendEmail";
 import db from "../db";
 import { and, eq, gt } from "drizzle-orm";
-import { friend_requests, friends, tokens, users } from "../schema";
+import {
+  chat_messages,
+  friend_requests,
+  friends,
+  notifications,
+  tokens,
+  users,
+} from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
 
 const generateToken = (id: string) => {
@@ -89,6 +96,26 @@ export const registerUser = [
             receiver_id: user.user_id,
             status: "pending",
           });
+          await db.insert(notifications).values({
+            user_id: user.user_id,
+            type: "chat_message",
+            content: `New message from Chad Campbell`,
+            is_read: false,
+          });
+          await db.insert(notifications).values({
+            user_id: user.user_id,
+            type: "friend_request",
+            content: `Friend request from Demo User`,
+            is_read: false,
+          });
+          await db.insert(chat_messages).values({
+            sender_id: 1,
+            receiver_id: user.user_id,
+            message_text:
+              "Hello! Thanks for checking out my app. If you have any questions, you can find me on GitHub, LinkedIn, or reach me directly at chadjcampbell@gmail.com 😀",
+            message_photo_url: "",
+          });
+          res.end();
         } else {
           res.status(400);
           throw new Error("Invalid user data");

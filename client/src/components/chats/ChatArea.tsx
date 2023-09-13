@@ -178,7 +178,7 @@ const ChatArea = () => {
               </summary>
               <div
                 tabIndex={0}
-                className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mr-10"
+                className="dropdown-content z-[998] menu p-2 shadow bg-base-100 rounded-box w-52 mr-10"
               >
                 <Picker
                   onClickOutside={closeEmojiPicker}

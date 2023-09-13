@@ -42,7 +42,7 @@ const NotificationButton = () => {
       dispatch(SET_CHAT_ID(friendId));
       setTimeout(() => {
         navigate("/chats");
-      }, 250);
+      }, 500);
     }
     if (n.type === "friend_request") {
       const newPendingFriends = await getPendingFriends();

@@ -61,6 +61,11 @@ export const findAllPosts = asyncHandler(
   }
 );
 
+interface GeocodingComponent {
+  types: string[];
+  long_name: string;
+}
+
 export const makePost = [
   // validate and sanitize fields
   body("content")
@@ -83,11 +88,31 @@ export const makePost = [
       throw new Error("Not authorized, please log in");
     }
     try {
-      const { content, postPhotoUrl } = req.body;
-      const ipAddress = req.ip;
+      const { content, postPhotoUrl, latitude, longitude } = req.body;
 
-      const response = await axios.get(`http://ipinfo.io/${ipAddress}/json`);
-      const userLocation = response.data;
+      // get location info from google location services
+      const response = await axios.get(
+        "https://maps.googleapis.com/maps/api/geocode/json",
+        {
+          params: {
+            latlng: `${latitude},${longitude}`,
+            key: process.env.GOOGLE_API,
+          },
+        }
+      );
+      const data = response.data;
+      console.log(data);
+      // Extract relevant location information
+      const locationInfo = data.results[0].address_components;
+      const city = locationInfo.find((component: GeocodingComponent) =>
+        component.types.includes("locality")
+      ).long_name;
+      const state = locationInfo.find((component: GeocodingComponent) =>
+        component.types.includes("administrative_area_level_1")
+      ).long_name;
+      const country = locationInfo.find((component: GeocodingComponent) =>
+        component.types.includes("country")
+      ).long_name;
 
       const result = await db
         .insert(posts)
@@ -95,7 +120,7 @@ export const makePost = [
           user_id: req.user.user_id,
           content: content,
           post_photo_url: postPhotoUrl ? postPhotoUrl : "",
-          user_location: userLocation,
+          user_location: { city, state, country },
         })
         .returning({ postId: posts.post_id });
 

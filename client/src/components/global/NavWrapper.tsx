@@ -71,6 +71,10 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
         dispatch(SET_NOTIFICATIONS(notificationData));
       } finally {
         setLoading(false);
+        if ("geolocation" in navigator) {
+          //trigger a location allowed popup
+          navigator.geolocation.getCurrentPosition(() => null);
+        }
       }
     };
     isLoggedIn && setUserState();

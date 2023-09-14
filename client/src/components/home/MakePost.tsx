@@ -91,10 +91,21 @@ export const MakePost = () => {
         imageURL = imageData.url.toString();
       }
 
+      let latitude = 0;
+      let longitude = 0;
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          latitude = position.coords.latitude;
+          longitude = position.coords.longitude;
+        });
+      }
+
       // send all data to backend
       const formData: PostFormData = {
         content: post.content,
         postPhotoUrl: imageURL,
+        latitude,
+        longitude,
       };
       const newPost = await makeNewPost(formData);
       const newPostArray = [newPost, ...currentPosts];

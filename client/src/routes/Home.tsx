@@ -35,16 +35,9 @@ export type CommentType = {
 };
 
 export type UserLocation = {
-  ip: string;
-  hostname: string;
   city: string;
-  region: string;
+  state: string;
   country: string;
-  loc: string;
-  org: string;
-  postal: string;
-  timezone: string;
-  readme: string;
 };
 
 const Home = () => {

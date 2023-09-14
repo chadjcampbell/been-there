@@ -23,9 +23,13 @@ export const PostCard = ({ post }: PostCardProps) => {
   const [numLikes, setNumLikes] = useState(post.likes.length);
 
   const userLocInfo = () => {
-    if (post.user_location.region && post.user_location.country) {
+    if (
+      post.user_location.city &&
+      post.user_location.state &&
+      post.user_location.country
+    ) {
       const flag = getFlagEmoji(post.user_location.country);
-      return `${flag} ${post.user_location.region}, ${post.user_location.country}`;
+      return `${flag} ${post.user_location.city}, ${post.user_location.state}, ${post.user_location.country}`;
     } else {
       return "💀 Kno, Where";
     }

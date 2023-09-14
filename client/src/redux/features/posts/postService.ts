@@ -20,6 +20,8 @@ export const findAllPosts = async () => {
 export type PostFormData = {
   content: string;
   postPhotoUrl?: string;
+  latitude?: number;
+  longitude?: number;
 };
 
 export const makeNewPost = async (formData: PostFormData) => {

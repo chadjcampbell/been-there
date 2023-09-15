@@ -71,6 +71,10 @@ export const sendFriendRequest = [
     }
     // check if user exists
     const { friendId } = req.body;
+    if (friendId == req.user.user_id) {
+      res.status(400);
+      throw new Error("You're already your own friend, hopefully 🙃");
+    }
     const friend = await db.query.users.findFirst({
       where: eq(users.user_id, friendId),
     });

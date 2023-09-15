@@ -53,11 +53,11 @@ export const MakeComment = ({ post }: MakeCommentProps) => {
 
       if (selectedFile.type.startsWith("image/")) {
         const fileSize = selectedFile.size;
-        const maxSizeInBytes = 1024 * 1024; // 1MB max file size
+        const maxSizeInBytes = 5120 * 5120; // 1MB max file size
         if (fileSize <= maxSizeInBytes) {
           setCommentImage(selectedFile);
         } else {
-          toast.error("Image size limit is 1MB");
+          toast.error("Image size limit is 5MB");
         }
       } else {
         toast.error("Please select an image file.");
@@ -121,7 +121,7 @@ export const MakeComment = ({ post }: MakeCommentProps) => {
           { method: "post", body: image }
         );
         const imageData = await response.json();
-        imageURL = imageData.url.toString();
+        imageURL = imageData.secure_url.toString();
       }
 
       // send all data to backend

@@ -101,7 +101,6 @@ export const makePost = [
         }
       );
       const data = response.data;
-      console.log(data);
       // Extract relevant location information
       const locationInfo = data.results[0].address_components;
       const city = locationInfo.find((component: GeocodingComponent) =>

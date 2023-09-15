@@ -112,7 +112,7 @@ export const makePost = [
       ).long_name;
       const country = locationInfo.find((component: GeocodingComponent) =>
         component.types.includes("country")
-      ).long_name;
+      ).short_name;
 
       const result = await db
         .insert(posts)
@@ -120,7 +120,7 @@ export const makePost = [
           user_id: req.user.user_id,
           content: content,
           post_photo_url: postPhotoUrl ? postPhotoUrl : "",
-          user_location: { city, state, country },
+          user_location: { city, state, country, latitude, longitude },
         })
         .returning({ postId: posts.post_id });
 
@@ -144,9 +144,8 @@ export const makePost = [
       });
     } catch (error: any) {
       console.error("Error creating post:", error.message);
-      res
-        .status(500)
-        .json({ error: "An error occurred while creating the post" });
+      res.status(500);
+      throw new Error("An error occurred while creating the post");
     }
   }),
 ];

@@ -91,27 +91,27 @@ export const MakePost = () => {
         imageURL = imageData.url.toString();
       }
 
-      let latitude = 0;
-      let longitude = 0;
+      // send all data to backend
+
       if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-          latitude = position.coords.latitude;
-          longitude = position.coords.longitude;
+        navigator.geolocation.getCurrentPosition(async function (position) {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          const formData: PostFormData = {
+            content: post.content,
+            postPhotoUrl: imageURL,
+            latitude,
+            longitude,
+          };
+          const newPost = await makeNewPost(formData);
+          if (newPost) {
+            const newPostArray = [newPost, ...currentPosts];
+            dispatch(SET_POSTS(newPostArray));
+            setPost(initialPostValues);
+            setPostImage(null);
+          }
         });
       }
-
-      // send all data to backend
-      const formData: PostFormData = {
-        content: post.content,
-        postPhotoUrl: imageURL,
-        latitude,
-        longitude,
-      };
-      const newPost = await makeNewPost(formData);
-      const newPostArray = [newPost, ...currentPosts];
-      dispatch(SET_POSTS(newPostArray));
-      setPost(initialPostValues);
-      setPostImage(null);
     } catch (error: any) {
       console.log(error);
       toast.error(error.message);

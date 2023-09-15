@@ -85,6 +85,7 @@ export const PostCard = ({ post }: PostCardProps) => {
           </div>
           <h2 className="card-title">{post.user.name}</h2>
           <p>{post.content}</p>
+          {!post.post_photo_url && <p>{userLocInfo()}</p>}
           <div className="card-actions justify-between mt-4">
             <button onClick={likeThisPost} className="badge btn">
               {userLiked ? (

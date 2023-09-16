@@ -1,50 +1,89 @@
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
-import { useState, useCallback, memo } from "react";
+const GOOGLE_API = import.meta.env.VITE_GOOGLE_API;
+import {
+  GoogleMap,
+  useJsApiLoader,
+  Marker,
+  InfoWindow,
+} from "@react-google-maps/api";
+import { useRef, useState, useCallback } from "react";
+import { useSelector } from "react-redux";
+import { selectPosts } from "../redux/features/posts/postSlice";
+import { PostsResponseType } from "./Home";
+import PostCard from "../components/home/PostCard";
 
-const containerStyle = {
-  width: "400px",
-  height: "400px",
-};
-
-const center = {
-  lat: -3.745,
-  lng: -38.523,
-};
-
-function Map() {
+export default function Map() {
+  const posts: PostsResponseType[] = useSelector(selectPosts);
+  const mapRef = useRef<any>(null);
+  const [selectedPost, setSelectedPost] = useState<
+    PostsResponseType | undefined | null
+  >(null);
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: "YOUR_API_KEY",
+    googleMapsApiKey: GOOGLE_API,
   });
 
-  const [map, setMap] = useState(null);
+  const center = {
+    lat: 40.031183,
+    lng: -81.58845610000003,
+  };
 
-  const onLoad = useCallback(function callback(map) {
-    // This is just an example of getting and using the map instance!!! don't just blindly copy!
-    const bounds = new window.google.maps.LatLngBounds(center);
-    map.fitBounds(bounds);
-
-    setMap(map);
-  }, []);
-
-  const onUnmount = useCallback(function callback(map) {
-    setMap(null);
-  }, []);
-
-  return isLoaded ? (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      center={center}
-      zoom={10}
-      onLoad={onLoad}
-      onUnmount={onUnmount}
-    >
-      {/* Child components, such as markers, info windows, etc. */}
-      <></>
-    </GoogleMap>
-  ) : (
-    <></>
+  const onLoad = useCallback(
+    (mapInstance: google.maps.Map) => {
+      const bounds = new google.maps.LatLngBounds();
+      posts.forEach((post: PostsResponseType) => {
+        if (post.user_location.latitude && post.user_location.longitude) {
+          bounds.extend(
+            new google.maps.LatLng(
+              post.user_location.latitude,
+              post.user_location.longitude
+            )
+          );
+        }
+      });
+      mapRef.current = mapInstance;
+      mapInstance.fitBounds(bounds);
+    },
+    [posts]
   );
+  const onClickMarker = (postId: number) => {
+    setSelectedPost(posts.find((post) => post.post_id === postId));
+  };
+  return isLoaded ? (
+    <>
+      <GoogleMap
+        mapContainerStyle={{ width: "100%", height: "100%" }}
+        center={center}
+        zoom={4}
+        onLoad={onLoad}
+      >
+        {posts.map(
+          (post) =>
+            post.user_location.latitude &&
+            post.user_location.longitude && (
+              <Marker
+                key={post.post_id}
+                onClick={() => onClickMarker(post.post_id)}
+                position={{
+                  lat: post.user_location.latitude,
+                  lng: post.user_location.longitude,
+                }}
+              />
+            )
+        )}
+        {selectedPost &&
+        selectedPost.user_location.latitude &&
+        selectedPost.user_location.longitude ? (
+          <InfoWindow
+            position={{
+              lat: selectedPost.user_location.latitude,
+              lng: selectedPost.user_location.longitude,
+            }}
+            onCloseClick={() => setSelectedPost(null)}
+          >
+            <PostCard post={selectedPost} />
+          </InfoWindow>
+        ) : null}
+      </GoogleMap>
+    </>
+  ) : null;
 }
-
-export default memo(Map);

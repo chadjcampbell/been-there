@@ -1,100 +1,8 @@
-/* const GOOGLE_API = import.meta.env.VITE_GOOGLE_API;
-import {
-  GoogleMap,
-  useJsApiLoader,
-  Marker,
-  InfoWindow,
-  useLoadScript,
-} from "@react-google-maps/api";
-import { useRef, useState, useCallback } from "react";
-import { useSelector } from "react-redux";
-import { selectPosts } from "../redux/features/posts/postSlice";
-import { PostsResponseType } from "./Home";
-import PostCard from "../components/home/PostCard";
-
-export default function Map() {
-  const posts: PostsResponseType[] = useSelector(selectPosts);
-  const mapRef = useRef<any>(null);
-  const [selectedPost, setSelectedPost] = useState<
-    PostsResponseType | undefined | null
-  >(null);
-  const { isLoaded } = useLoadScript({
-    id: "google-map-script",
-    googleMapsApiKey: GOOGLE_API,
-  });
-
-  const center = {
-    lat: 40.031183,
-    lng: -81.58845610000003,
-  };
-
-  const onLoad = useCallback(
-    (mapInstance: google.maps.Map) => {
-      const bounds = new google.maps.LatLngBounds();
-      posts.forEach((post: PostsResponseType) => {
-        if (post.user_location.latitude && post.user_location.longitude) {
-          bounds.extend(
-            new google.maps.LatLng(
-              post.user_location.latitude,
-              post.user_location.longitude
-            )
-          );
-        }
-      });
-      mapRef.current = mapInstance;
-      mapInstance.fitBounds(bounds);
-    },
-    [mapRef]
-  );
-  const onClickMarker = (postId: number) => {
-    setSelectedPost(posts.find((post) => post.post_id === postId));
-  };
-  return isLoaded ? (
-    <>
-      <GoogleMap
-        ref={mapRef}
-        mapContainerStyle={{ width: "100%", height: "100%" }}
-        center={center}
-        zoom={4}
-        onLoad={onLoad}
-      >
-        {posts.map(
-          (post) =>
-            post.user_location.latitude &&
-            post.user_location.longitude && (
-              <Marker
-                key={post.post_id}
-                onClick={() => onClickMarker(post.post_id)}
-                position={{
-                  lat: post.user_location.latitude,
-                  lng: post.user_location.longitude,
-                }}
-              />
-            )
-        )}
-        {selectedPost &&
-        selectedPost.user_location.latitude &&
-        selectedPost.user_location.longitude ? (
-          <InfoWindow
-            position={{
-              lat: selectedPost.user_location.latitude,
-              lng: selectedPost.user_location.longitude,
-            }}
-            onCloseClick={() => setSelectedPost(null)}
-          >
-            <PostCard post={selectedPost} />
-          </InfoWindow>
-        ) : null}
-      </GoogleMap>
-    </>
-  ) : null;
-} */
-
 const GOOGLE_API = import.meta.env.VITE_GOOGLE_API;
 import {
   GoogleMap,
   InfoWindow,
-  Marker,
+  MarkerF,
   useLoadScript,
 } from "@react-google-maps/api";
 import { useMemo, useState } from "react";
@@ -104,6 +12,7 @@ import { selectPosts } from "../redux/features/posts/postSlice";
 import { PostsResponseType } from "./Home";
 
 const Map = () => {
+  const [mapRef, setMapRef] = useState<google.maps.Map | null>(null);
   const posts: PostsResponseType[] = useSelector(selectPosts);
   const [selectedPost, setSelectedPost] = useState<
     PostsResponseType | undefined | null
@@ -113,6 +22,23 @@ const Map = () => {
     googleMapsApiKey: GOOGLE_API,
   });
 
+  const onLoad = (map: google.maps.Map) => {
+    setMapRef(map);
+    const bounds = new google.maps.LatLngBounds();
+    posts?.forEach((post) => {
+      if (
+        typeof post.user_location.latitude === "number" &&
+        typeof post.user_location.longitude === "number"
+      ) {
+        bounds.extend({
+          lat: post.user_location.latitude,
+          lng: post.user_location.longitude,
+        });
+      }
+    });
+    map.fitBounds(bounds);
+  };
+
   const center = useMemo(
     () => ({ lat: 40.031183, lng: -81.58845610000003 }),
     []
@@ -121,29 +47,39 @@ const Map = () => {
   const onClickMarker = (postId: number) => {
     setSelectedPost(posts.find((post) => post.post_id === postId));
   };
-
+  console.log(posts);
   return !isLoaded ? (
     <h1>Loading...</h1>
   ) : (
     <GoogleMap
-      mapContainerStyle={{ width: "100%", height: "100%" }}
+      onLoad={onLoad}
+      mapContainerStyle={{
+        width: "100%",
+        height: "100%",
+        isolation: "isolate",
+      }}
       center={center}
       zoom={5}
     >
-      {posts.map(
-        (post) =>
-          post.user_location.latitude &&
-          post.user_location.longitude && (
-            <Marker
+      {posts.map((post) => {
+        if (
+          typeof post.user_location.latitude === "number" &&
+          typeof post.user_location.longitude === "number"
+        ) {
+          const postPosition = {
+            lat: post.user_location.latitude,
+            lng: post.user_location.longitude,
+          };
+          console.log(postPosition);
+          return (
+            <MarkerF
               key={post.post_id}
               onClick={() => onClickMarker(post.post_id)}
-              position={{
-                lat: post.user_location.latitude,
-                lng: post.user_location.longitude,
-              }}
+              position={postPosition}
             />
-          )
-      )}
+          );
+        }
+      })}
       {selectedPost ? (
         <InfoWindow
           position={{

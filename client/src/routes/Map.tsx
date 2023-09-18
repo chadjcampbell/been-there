@@ -12,7 +12,6 @@ import { selectPosts } from "../redux/features/posts/postSlice";
 import { PostsResponseType } from "./Home";
 
 const Map = () => {
-  const [mapRef, setMapRef] = useState<google.maps.Map | null>(null);
   const posts: PostsResponseType[] = useSelector(selectPosts);
   const [selectedPost, setSelectedPost] = useState<
     PostsResponseType | undefined | null
@@ -23,7 +22,6 @@ const Map = () => {
   });
 
   const onLoad = (map: google.maps.Map) => {
-    setMapRef(map);
     const bounds = new google.maps.LatLngBounds();
     posts?.forEach((post) => {
       if (
@@ -59,7 +57,7 @@ const Map = () => {
         isolation: "isolate",
       }}
       center={center}
-      zoom={5}
+      zoom={2}
     >
       {posts.map((post) => {
         if (
@@ -76,7 +74,9 @@ const Map = () => {
               key={post.post_id}
               onClick={() => onClickMarker(post.post_id)}
               position={postPosition}
-            />
+            >
+              <img src={post.user.photo_url} alt={post.user.name} />
+            </MarkerF>
           );
         }
       })}

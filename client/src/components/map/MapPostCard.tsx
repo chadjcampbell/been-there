@@ -1,5 +1,4 @@
 import { AiOutlineHeart } from "react-icons/ai";
-import { FaRegCommentAlt } from "react-icons/fa";
 import { BsFillHeartFill } from "react-icons/bs";
 import { LikesType, PostsResponseType } from "../../routes/Home";
 import { likePost } from "../../redux/features/posts/postService";
@@ -13,7 +12,6 @@ type PostCardProps = {
 };
 
 export const MapPostCard = ({ post }: PostCardProps) => {
-  const [showComments, setShowComments] = useState(false);
   const user = useSelector(selectUser);
   const [userLiked, setUserLiked] = useState(
     post.likes.filter((like: LikesType) => like.user_id == user.userId).length

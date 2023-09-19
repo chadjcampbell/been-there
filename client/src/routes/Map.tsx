@@ -3,7 +3,7 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 import { useSelector } from "react-redux";
 import { selectPosts } from "../redux/features/posts/postSlice";
 import { PostsResponseType } from "./Home";
-import PostCard from "../components/home/PostCard";
+import MapPostCard from "../components/map/MapPostCard";
 
 const Map = () => {
   const posts: PostsResponseType[] = useSelector(selectPosts);
@@ -34,7 +34,7 @@ const Map = () => {
                 ]}
               >
                 <Popup>
-                  <PostCard post={post} />
+                  <MapPostCard post={post} />
                 </Popup>
               </Marker>
             );

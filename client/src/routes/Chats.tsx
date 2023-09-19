@@ -60,7 +60,7 @@ const Chats = () => {
         </div>
         <div className="drawer-side h-full">
           <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
-          <section className=" p-4 w-80 h-auto bg-base-200 text-base-content flex-nowrap">
+          <section className=" p-4 w-80 min-h-full h-auto bg-base-200 text-base-content flex-nowrap">
             {/* Sidebar content here */}
             {friendList ? (
               friendList.map((friend: FriendType) => (

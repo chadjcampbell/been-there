@@ -1,4 +1,4 @@
-const GOOGLE_API = import.meta.env.VITE_GOOGLE_API;
+/* const GOOGLE_API = import.meta.env.VITE_GOOGLE_API;
 import {
   GoogleMap,
   InfoWindow,
@@ -92,6 +92,31 @@ const Map = () => {
         </InfoWindow>
       ) : null}
     </GoogleMap>
+  );
+};
+
+export default Map; */
+
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+
+const Map = () => {
+  return (
+    <MapContainer
+      className="w-full h-full"
+      center={[51.505, -0.09]}
+      zoom={13}
+      scrollWheelZoom={false}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <Marker position={[51.505, -0.09]}>
+        <Popup>
+          A pretty CSS3 popup. <br /> Easily customizable.
+        </Popup>
+      </Marker>
+    </MapContainer>
   );
 };
 

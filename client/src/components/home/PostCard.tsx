@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/features/auth/authSlice";
 import DeletePostButton from "./DeletePostButton";
 import CommentsSection from "./CommentsSection";
+import ImageWrapper from "../global/ImageWrapper";
 
 type PostCardProps = {
   post: PostsResponseType;
@@ -68,11 +69,13 @@ export const PostCard = ({ post }: PostCardProps) => {
         {post.post_photo_url && (
           <figure className="flex flex-col ">
             <div className="max-w-md m-4">
-              <img
-                className="rounded-xl object-contain"
-                src={post.post_photo_url}
-                alt="User post photo"
-              />
+              <ImageWrapper>
+                <img
+                  className="rounded-xl object-contain"
+                  src={post.post_photo_url}
+                  alt="User post photo"
+                />
+              </ImageWrapper>
             </div>
             <figcaption>{userLocInfo()}</figcaption>
           </figure>

@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { getLoginStatus } from "./redux/features/auth/authService";
 import { SET_LOGIN } from "./redux/features/auth/authSlice";
 import { ErrorBoundary } from "react-error-boundary";
+import FullScreenImage from "./components/global/FullScreenImage";
 
 axios.defaults.withCredentials = true;
 
@@ -68,6 +69,14 @@ function App() {
             element={
               <NavWrapper>
                 <Profile />
+              </NavWrapper>
+            }
+          />
+          <Route
+            path="/fullscreen/:imageUrl"
+            element={
+              <NavWrapper>
+                <FullScreenImage />
               </NavWrapper>
             }
           />

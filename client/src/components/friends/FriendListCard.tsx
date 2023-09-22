@@ -9,6 +9,7 @@ import {
 } from "../../redux/features/friends/friendsSlice";
 import { SET_CHAT_ID } from "../../redux/features/chats/chatSlice";
 import { useNavigate } from "react-router-dom";
+import { stringToColor } from "../../utils/stringToColor";
 
 type FriendListCardProps = {
   friend: FriendType;
@@ -45,13 +46,11 @@ const FriendListCard = ({ friend }: FriendListCardProps) => {
               : "offline"
           }`}
         >
-          <div className=" rounded-full mr-2">
+          <div className="mr-2">
             <img
-              src={
-                friend.photo_url
-                  ? friend.photo_url
-                  : "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg"
-              }
+              className={`border-4 rounded-full`}
+              style={{ borderColor: stringToColor(friend.email) }}
+              src={friend.photo_url}
               alt="friend profile pic"
             />
           </div>

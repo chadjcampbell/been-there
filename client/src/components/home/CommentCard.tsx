@@ -7,6 +7,7 @@ import { selectUser } from "../../redux/features/auth/authSlice";
 import { likeComment } from "../../redux/features/posts/postService";
 import { CommentType, LikesType } from "../../routes/Home";
 import { SET_COMMENT_ID_DELETE } from "../../redux/features/posts/postSlice";
+import { stringToColor } from "../../utils/stringToColor";
 
 type CommentCardProps = {
   comment: CommentType;
@@ -43,8 +44,13 @@ const CommentCard = ({ comment }: CommentCardProps) => {
       <div className="flex justify-start items-center">
         <div className="chat chat-start">
           <div className="chat-image avatar">
-            <div className="w-10 rounded-full">
-              <img src={comment.user.photo_url} alt="friends profile pic" />
+            <div className="mr-2 w-14">
+              <img
+                className={`border-4 rounded-full`}
+                style={{ borderColor: stringToColor(comment.user.email) }}
+                src={comment.user.photo_url}
+                alt="friend profile pic"
+              />
             </div>
           </div>
           <div className="chat-bubble max-w-full chat-bubble-info bg-gray-100">

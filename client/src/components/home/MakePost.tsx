@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { SET_POSTS, selectPosts } from "../../redux/features/posts/postSlice";
+import { stringToColor } from "../../utils/stringToColor";
 
 export const MakePost = () => {
   const user = useSelector(selectUser);
@@ -133,8 +134,13 @@ export const MakePost = () => {
     <div className="card max-w-[600px] bg-base-100 shadow-xl m-4">
       <div className="card-body">
         <div className="avatar">
-          <div className="w-24 rounded-full">
-            <img src={user.photoUrl} />
+          <div className="mr-2 w-20">
+            <img
+              className={`border-4 rounded-full`}
+              style={{ borderColor: stringToColor(user.photoUrl) }}
+              src={user.photoUrl}
+              alt="friend profile pic"
+            />
           </div>
         </div>
         <h2 className="card-title">Hey, {user.name.split(" ")[0]}</h2>

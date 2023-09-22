@@ -1,6 +1,7 @@
 import { toast } from "react-hot-toast";
 import { UserType } from "../../redux/features/auth/authSlice";
 import { FiExternalLink } from "react-icons/fi";
+import { stringToColor } from "../../utils/stringToColor";
 
 type ProfileViewProps = {
   setUpdateMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -17,11 +18,12 @@ export const ProfileView = ({ user, setUpdateMode }: ProfileViewProps) => {
   };
   return (
     <div className="card-body flex-col lg:flex-row">
-      <div className="flex content-center justify-center max-h-96 aspect-square">
+      <div className="flex content-center justify-center max-h-80 aspect-square">
         <img
+          className="border-4 rounded-full"
+          style={{ borderColor: stringToColor(user.photoUrl) }}
           src={user.photoUrl}
-          alt={user.name}
-          className=" m-6 p-2 rounded-full shadow-sm"
+          alt="friend profile pic"
         />
       </div>
       <div>

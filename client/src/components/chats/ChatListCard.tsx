@@ -5,6 +5,7 @@ import {
   selectChatId,
 } from "../../redux/features/chats/chatSlice";
 import { selectOnlineFriends } from "../../redux/features/friends/friendsSlice";
+import { stringToColor } from "../../utils/stringToColor";
 
 type ChatListCardProps = {
   friend: FriendType;
@@ -35,8 +36,13 @@ const ChatListCard = ({ friend, drawerRef }: ChatListCardProps) => {
               : "offline"
           }`}
         >
-          <div className=" rounded-full mr-2">
-            <img src={friend.photo_url} alt="friend profile pic" />
+          <div className="mr-2">
+            <img
+              className={`border-4 rounded-full`}
+              style={{ borderColor: stringToColor(friend.email) }}
+              src={friend.photo_url}
+              alt="friend profile pic"
+            />
           </div>
         </div>
       </div>

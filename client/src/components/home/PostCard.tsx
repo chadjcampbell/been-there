@@ -10,6 +10,7 @@ import { selectUser } from "../../redux/features/auth/authSlice";
 import DeletePostButton from "./DeletePostButton";
 import CommentsSection from "./CommentsSection";
 import ImageWrapper from "../global/ImageWrapper";
+import { stringToColor } from "../../utils/stringToColor";
 
 type PostCardProps = {
   post: PostsResponseType;
@@ -82,8 +83,13 @@ export const PostCard = ({ post }: PostCardProps) => {
         )}
         <div className="card-body">
           <div className="avatar">
-            <div className="w-24 rounded-full">
-              <img src={post.user.photo_url} />
+            <div className="mr-2 w-20">
+              <img
+                className={`border-4 rounded-full`}
+                style={{ borderColor: stringToColor(post.user.email) }}
+                src={post.user.photo_url}
+                alt="friend profile pic"
+              />
             </div>
           </div>
           <h2 className="card-title">{post.user.name}</h2>

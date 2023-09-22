@@ -13,6 +13,7 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { SET_POSTS, selectPosts } from "../../redux/features/posts/postSlice";
 import { CommentType, PostsResponseType } from "../../routes/Home";
+import { stringToColor } from "../../utils/stringToColor";
 
 type MakeCommentProps = {
   post: PostsResponseType;
@@ -162,9 +163,14 @@ export const MakeComment = ({ post }: MakeCommentProps) => {
         )}
         <form onSubmit={submitPost}>
           <div className="flex items-center">
-            <div className="avatar">
-              <div className="w-12 mr-4 rounded-full">
-                <img src={user.photoUrl} />
+            <div className="chat-image avatar">
+              <div className="mr-2 w-14">
+                <img
+                  className={`border-4 rounded-full`}
+                  style={{ borderColor: stringToColor(user.photoUrl) }}
+                  src={user.photoUrl}
+                  alt="friend profile pic"
+                />
               </div>
             </div>
             <textarea

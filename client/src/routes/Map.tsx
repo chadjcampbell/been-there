@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { selectPosts } from "../redux/features/posts/postSlice";
 import { PostsResponseType } from "./Home";
 import MapPostCard from "../components/map/MapPostCard";
+import { stringToColor } from "../utils/stringToColor";
 
 const Map = () => {
   const posts: PostsResponseType[] = useSelector(selectPosts);
@@ -45,7 +46,10 @@ const Map = () => {
             typeof post.user_location.latitude === "number" &&
             typeof post.user_location.longitude === "number"
           ) {
-            const customIcon = createCustomIcon(post.user.photo_url, "red");
+            const customIcon = createCustomIcon(
+              post.user.photo_url,
+              stringToColor(post.user.email)
+            );
             return (
               <Marker
                 key={post.post_id}

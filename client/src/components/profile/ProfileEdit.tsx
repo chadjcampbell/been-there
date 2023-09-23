@@ -95,14 +95,18 @@ export const ProfileEdit = ({ user, setUpdateMode }: ProfileEditProps) => {
     <span className="loading loading-spinner text-secondary loading-lg"></span>
   ) : (
     <div className="card-body flex-col lg:flex-row">
-      <div className="avatar flex content-center justify-center max-h-80 aspect-square">
-        <img
-          src={profileImage ? URL.createObjectURL(profileImage) : user.photoUrl}
-          alt={user.name}
-          className=" m-6 p-2 rounded-full shadow-sm"
-        />
+      <div className="avatar flex justify-center items-center">
+        <div className="max-h-80">
+          <img
+            src={
+              profileImage ? URL.createObjectURL(profileImage) : user.photoUrl
+            }
+            alt={user.name}
+            className="rounded-full shadow-sm"
+          />
+        </div>
       </div>
-      <form onSubmit={saveProfile}>
+      <form className="m-4" onSubmit={saveProfile}>
         <input
           value={profile.name}
           name="name"

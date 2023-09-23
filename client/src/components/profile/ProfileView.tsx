@@ -18,20 +18,22 @@ export const ProfileView = ({ user, setUpdateMode }: ProfileViewProps) => {
   };
   return (
     <div className="card-body flex-col lg:flex-row">
-      <div className="avatar flex content-center justify-center max-h-80 aspect-square">
-        <img
-          className="border-4 rounded-full"
-          style={{ borderColor: stringToColor(user.email) }}
-          src={user.photoUrl}
-          alt="friend profile pic"
-        />
+      <div className="avatar flex justify-center items-center">
+        <div className="max-h-80">
+          <img
+            className="border-4 rounded-full"
+            style={{ borderColor: stringToColor(user.email) }}
+            src={user.photoUrl}
+            alt="friend profile pic"
+          />
+        </div>
       </div>
-      <div>
+      <div className="m-4">
         <h1 className="text-2xl font-bold">{user.name}</h1>
         <p className="py-6 text-xs">
           Member since: {new Date(user.registrationDate).toLocaleDateString()}
         </p>
-        <p className="py-6">{user.bio}</p>
+        <p className="py-6 whitespace-pre-line">{user.bio}</p>
         <div className="flex flex-col justify-center items-start">
           {user.userId == 2 && (
             <a

@@ -20,7 +20,6 @@ type FriendProfileData = {
 const FriendProfile = () => {
   const { friendId } = useParams();
   const [friend, setFriend] = useState<FriendProfileData | null>(null);
-  console.log(friend);
   useEffect(() => {
     const friendData = async (friendId: string) => {
       const data = await getFriend(friendId);
@@ -33,21 +32,23 @@ const FriendProfile = () => {
     <section>
       <div className="card w-auto  flex-row content-center justify-center bg-base-100 shadow-xl m-8">
         <div className="card-body flex-col lg:flex-row">
-          <div className="avatar flex content-center justify-center max-h-80 aspect-square">
-            <img
-              className="border-4 rounded-full"
-              style={{ borderColor: stringToColor(friend.email) }}
-              src={friend.photo_url}
-              alt="friend profile pic"
-            />
+          <div className="avatar flex justify-center items-center">
+            <div className="max-h-80">
+              <img
+                className="border-4 rounded-full"
+                style={{ borderColor: stringToColor(friend.email) }}
+                src={friend.photo_url}
+                alt="friend profile pic"
+              />
+            </div>
           </div>
-          <div>
+          <div className="m-4">
             <h1 className="text-2xl font-bold">{friend.name}</h1>
             <p className="py-6 text-xs">
               Member since:{" "}
               {new Date(friend.registration_date).toLocaleDateString()}
             </p>
-            <p className="py-6">{friend.bio}</p>
+            <p className="py-6 whitespace-pre-line">{friend.bio}</p>
             <div className="flex flex-col justify-center items-start">
               {friend.user_id == 2 && (
                 <a

@@ -2,7 +2,7 @@ const Error = () => {
   return (
     <div className="p-4 bg-secondary-content relative flex flex-col justify-center min-h-screen">
       <div className="w-full p-6 m-auto bg-white rounded-md shadow-md lg:max-w-lg">
-        <img src="./moon-pin.webp" />
+        <img src="/moon-pin.webp" />
         <h1 className="py-3 text-3xl font-semibold text-center text-primary">
           Uh oh! Error 404
         </h1>

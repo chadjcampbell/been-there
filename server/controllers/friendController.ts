@@ -2,7 +2,14 @@ import { and, eq, ilike, ne, or } from "drizzle-orm";
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
 import db from "../db";
-import { friend_requests, friends, notifications, users } from "../schema";
+import {
+  friend_requests,
+  friends,
+  likes,
+  notifications,
+  posts,
+  users,
+} from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
 import { io } from "..";
 
@@ -291,3 +298,50 @@ export const deleteFriend = asyncHandler(
     return;
   }
 );
+
+export const getFriend = asyncHandler(async (req: RequestUserAttached, res) => {
+  if (!req.user) {
+    res.status(400);
+    throw new Error("Not authorized, please log in");
+  }
+  const { friendId } = req.params;
+  try {
+    const data = await db.query.users.findFirst({
+      where: eq(users.user_id, Number(friendId)),
+      columns: {
+        passhash: false,
+      },
+      with: {
+        posts: {
+          with: {
+            comments: {
+              with: {
+                likes: {
+                  where: eq(likes.target_type, "comment"),
+                },
+                user: {
+                  columns: {
+                    passhash: false,
+                  },
+                },
+              },
+            },
+            likes: {
+              where: eq(likes.target_type, "post"),
+            },
+            user: {
+              columns: {
+                passhash: false,
+              },
+            },
+          },
+        },
+      },
+    });
+    res.status(200).json(data);
+    return;
+  } catch {
+    res.status(400);
+    throw new Error("Something went wrong");
+  }
+});

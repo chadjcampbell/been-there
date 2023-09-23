@@ -95,7 +95,7 @@ export const ProfileEdit = ({ user, setUpdateMode }: ProfileEditProps) => {
     <span className="loading loading-spinner text-secondary loading-lg"></span>
   ) : (
     <div className="card-body flex-col lg:flex-row">
-      <div className="flex content-center justify-center max-h-96 aspect-square ">
+      <div className="avatar flex content-center justify-center max-h-80 aspect-square">
         <img
           src={profileImage ? URL.createObjectURL(profileImage) : user.photoUrl}
           alt={user.name}

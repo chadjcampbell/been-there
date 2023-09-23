@@ -8,7 +8,7 @@ import {
   selectOnlineFriends,
 } from "../../redux/features/friends/friendsSlice";
 import { SET_CHAT_ID } from "../../redux/features/chats/chatSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { stringToColor } from "../../utils/stringToColor";
 
 type FriendListCardProps = {
@@ -62,10 +62,12 @@ const FriendListCard = ({ friend }: FriendListCardProps) => {
           <BsChatDots />
           Chat
         </button>
-        <button className="btn btn-sm ml-2 bg-purple-200">
-          <CgProfile />
-          Profile
-        </button>
+        <Link to={`/profile/${friend.user_id}`}>
+          <button className="btn btn-sm ml-2 bg-purple-200">
+            <CgProfile />
+            Profile
+          </button>
+        </Link>
       </div>
     </div>
   );

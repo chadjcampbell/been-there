@@ -18,7 +18,7 @@ export const ProfileView = ({ user, setUpdateMode }: ProfileViewProps) => {
   };
   return (
     <div className="card-body flex-col lg:flex-row">
-      <div className="flex content-center justify-center max-h-80 aspect-square">
+      <div className="avatar flex content-center justify-center max-h-80 aspect-square">
         <img
           className="border-4 rounded-full"
           style={{ borderColor: stringToColor(user.email) }}

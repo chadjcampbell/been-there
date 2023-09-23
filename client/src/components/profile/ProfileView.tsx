@@ -21,7 +21,7 @@ export const ProfileView = ({ user, setUpdateMode }: ProfileViewProps) => {
       <div className="flex content-center justify-center max-h-80 aspect-square">
         <img
           className="border-4 rounded-full"
-          style={{ borderColor: stringToColor(user.photoUrl) }}
+          style={{ borderColor: stringToColor(user.email) }}
           src={user.photoUrl}
           alt="friend profile pic"
         />

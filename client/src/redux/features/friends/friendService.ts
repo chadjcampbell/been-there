@@ -30,6 +30,19 @@ export const findNewFriend = async (friendName: string) => {
   }
 };
 
+export const getFriend = async (friendId: string) => {
+  try {
+    const response = await axios.get(API_URL + friendId);
+    return response.data;
+  } catch (error: any) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};
+
 export const sendFriendRequest = async (friendId: number) => {
   try {
     const response = await axios.post(API_URL + "sendFriendRequest", {

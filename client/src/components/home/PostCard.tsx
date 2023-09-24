@@ -11,6 +11,7 @@ import DeletePostButton from "./DeletePostButton";
 import CommentsSection from "./CommentsSection";
 import ImageWrapper from "../global/ImageWrapper";
 import { stringToColor } from "../../utils/stringToColor";
+import { Link } from "react-router-dom";
 
 type PostCardProps = {
   post: PostsResponseType;
@@ -82,17 +83,19 @@ export const PostCard = ({ post }: PostCardProps) => {
           </figure>
         )}
         <div className="card-body">
-          <div className="avatar">
-            <div className="mr-2 w-20">
-              <img
-                className={`border-4 rounded-full`}
-                style={{ borderColor: stringToColor(post.user.email) }}
-                src={post.user.photo_url}
-                alt="friend profile pic"
-              />
+          <Link to={`/profile/${post.user_id}`}>
+            <div className="avatar">
+              <div className="mr-2 w-20">
+                <img
+                  className={`border-4 rounded-full`}
+                  style={{ borderColor: stringToColor(post.user.email) }}
+                  src={post.user.photo_url}
+                  alt="friend profile pic"
+                />
+              </div>
             </div>
-          </div>
-          <h2 className="card-title">{post.user.name}</h2>
+            <h2 className="card-title">{post.user.name}</h2>
+          </Link>
           <p>{post.content}</p>
           {!post.post_photo_url && <p>{userLocInfo()}</p>}
           <div className="card-actions justify-between mt-4">

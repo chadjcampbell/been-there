@@ -241,7 +241,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
           </div>
         </nav>
       </header>
-      <main className="h-[calc(100vh-5rem)] flex justify-center w-full">
+      <main className="min-h-[calc(100vh-5rem)] flex justify-center w-full">
         <DeleteModal />
         {children}
       </main>

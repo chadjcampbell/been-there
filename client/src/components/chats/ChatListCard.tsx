@@ -22,34 +22,36 @@ const ChatListCard = ({ friend, drawerRef }: ChatListCardProps) => {
     dispatch(SET_CHAT_ID(friend.user_id));
   };
   return (
-    <button
-      onClick={setChatId}
-      className={`flex flex-row py-4 px-2 justify-center items-center border-b-2 rounded-lg mb-2 ${
-        activeChat === friend.user_id ? "btn-primary" : "btn-ghost"
-      }`}
-    >
-      <div className="w-1/4">
-        <div
-          className={`avatar ${
-            onlineFriends.includes(friend.user_id.toString())
-              ? "online"
-              : "offline"
-          }`}
-        >
-          <div className="mr-2">
-            <img
-              className={`border-4 rounded-full`}
-              style={{ borderColor: stringToColor(friend.email) }}
-              src={friend.photo_url}
-              alt="friend profile pic"
-            />
+    <li>
+      <button
+        onClick={setChatId}
+        className={`flex flex-row py-4 px-2 justify-center items-center border-b-2 rounded-lg mb-2 ${
+          activeChat === friend.user_id ? "btn-primary" : "btn-ghost"
+        }`}
+      >
+        <div className="w-1/4">
+          <div
+            className={`avatar ${
+              onlineFriends.includes(friend.user_id.toString())
+                ? "online"
+                : "offline"
+            }`}
+          >
+            <div className="mr-2">
+              <img
+                className={`border-4 rounded-full`}
+                style={{ borderColor: stringToColor(friend.email) }}
+                src={friend.photo_url}
+                alt="friend profile pic"
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div className="w-full">
-        <div className="text-lg font-semibold">{friend.name}</div>
-      </div>
-    </button>
+        <div className="w-full">
+          <div className="text-lg font-semibold">{friend.name}</div>
+        </div>
+      </button>
+    </li>
   );
 };
 

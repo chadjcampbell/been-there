@@ -7,6 +7,8 @@ import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/features/auth/authSlice";
 import { stringToColor } from "../../utils/stringToColor";
+import { Link } from "react-router-dom";
+import ImageWrapper from "../global/ImageWrapper";
 
 type PostCardProps = {
   post: PostsResponseType;
@@ -64,26 +66,30 @@ export const MapPostCard = ({ post }: PostCardProps) => {
       {post.post_photo_url && (
         <figure className="flex flex-col ">
           <div className="max-w-md m-4">
-            <img
-              className="rounded-xl object-contain"
-              src={post.post_photo_url}
-              alt="User post photo"
-            />
+            <ImageWrapper>
+              <img
+                className="rounded-xl object-contain"
+                src={post.post_photo_url}
+                alt="User post photo"
+              />{" "}
+            </ImageWrapper>
           </div>
           <figcaption>{userLocInfo()}</figcaption>
         </figure>
       )}
       <div className="card-body">
-        <div className="avatar">
-          <div className="mr-2 w-20">
-            <img
-              className={`border-4 rounded-full`}
-              style={{ borderColor: stringToColor(post.user.email) }}
-              src={post.user.photo_url}
-              alt="friend profile pic"
-            />
+        <Link to={`/profile/${post.user_id}`}>
+          <div className="avatar">
+            <div className="mr-2 w-20">
+              <img
+                className={`border-4 rounded-full`}
+                style={{ borderColor: stringToColor(post.user.email) }}
+                src={post.user.photo_url}
+                alt="friend profile pic"
+              />
+            </div>
           </div>
-        </div>
+        </Link>
         <h2 className="card-title">{post.user.name}</h2>
         <p className="text-[16px]">{post.content}</p>
         {!post.post_photo_url && <p>{userLocInfo()}</p>}

@@ -41,40 +41,38 @@ const Chats = () => {
   return loading ? (
     <Loading />
   ) : (
-    <div className="w-full">
-      <div className="z-10 drawer lg:drawer-open h-full">
-        <input
-          ref={drawerRef}
-          id="my-drawer-2"
-          type="checkbox"
-          className="drawer-toggle"
-        />
-        <div className="drawer-content flex flex-col-reverse items-center justify-start">
-          <ChatArea />
-          <label
-            htmlFor="my-drawer-2"
-            className="btn btn-secondary mt-2 drawer-button lg:hidden"
-          >
-            Open Chats
-          </label>
-        </div>
-        <div className="drawer-side h-full">
-          <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
-          <section className=" p-4 w-80 min-h-full h-auto bg-base-200 text-base-content flex-nowrap">
-            {/* Sidebar content here */}
-            {friendList ? (
-              friendList.map((friend: FriendType) => (
-                <ChatListCard
-                  key={friend.user_id}
-                  friend={friend}
-                  drawerRef={drawerRef}
-                />
-              ))
-            ) : (
-              <p className="text-xl">No chats yet</p>
-            )}
-          </section>
-        </div>
+    <div className="drawer lg:drawer-open z-10">
+      <input
+        ref={drawerRef}
+        id="my-drawer-2"
+        type="checkbox"
+        className="drawer-toggle"
+      />
+      <div className="drawer-content flex flex-col justify-center items-center">
+        <label
+          htmlFor="my-drawer-2"
+          className="jus btn btn-secondary mt-2 drawer-button lg:hidden"
+        >
+          Open Chats
+        </label>
+        <ChatArea />
+      </div>
+      <div className="drawer-side">
+        <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
+        <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
+          {/* Sidebar content here */}
+          {friendList ? (
+            friendList.map((friend: FriendType) => (
+              <ChatListCard
+                key={friend.user_id}
+                friend={friend}
+                drawerRef={drawerRef}
+              />
+            ))
+          ) : (
+            <p className="text-xl">No chats yet</p>
+          )}
+        </ul>
       </div>
     </div>
   );

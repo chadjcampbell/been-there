@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, ScrollRestoration, useNavigate } from "react-router-dom";
 import { AiTwotoneHome } from "react-icons/ai";
 import { BsGlobeAmericas } from "react-icons/bs";
 import { FaUserFriends } from "react-icons/fa";
@@ -109,6 +109,7 @@ const NavWrapper = () => {
     <Loading />
   ) : (
     <>
+      <ScrollRestoration />
       <header>
         {!navbarVisible && <ScrollToTopButton />}
         <nav>

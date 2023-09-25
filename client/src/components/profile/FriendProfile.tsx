@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { getFriend } from "../../redux/features/friends/friendService";
 import Loading from "../global/Loading";
 import { FiExternalLink } from "react-icons/fi";
+import ImageWrapper from "../global/ImageWrapper";
 
 type FriendProfileData = {
   bio: string;
@@ -34,12 +35,14 @@ const FriendProfile = () => {
         <div className="card-body flex-col lg:flex-row">
           <div className="avatar flex justify-center items-center">
             <div className="max-h-80">
-              <img
-                className="border-4 rounded-full"
-                style={{ borderColor: stringToColor(friend.email) }}
-                src={friend.photo_url}
-                alt="friend profile pic"
-              />
+              <ImageWrapper>
+                <img
+                  className="border-4 rounded-full"
+                  style={{ borderColor: stringToColor(friend.email) }}
+                  src={friend.photo_url}
+                  alt="friend profile pic"
+                />
+              </ImageWrapper>
             </div>
           </div>
           <div className="m-4">

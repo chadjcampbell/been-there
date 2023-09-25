@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NavWrapper from "./components/global/NavWrapper";
 import Home from "./routes/Home";
 import Map from "./routes/Map";
@@ -29,71 +29,57 @@ function App() {
     loginStatus();
   }, [dispatch]);
 
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      errorElement: <Error />,
+      element: <NavWrapper />,
+      children: [
+        {
+          path: "",
+          element: <Home />,
+        },
+        {
+          path: "map",
+          element: <Map />,
+        },
+        {
+          path: "friends",
+          element: <Friends />,
+        },
+        {
+          path: "chats",
+          element: <Chats />,
+        },
+        {
+          path: "profile",
+          element: <Profile />,
+        },
+        {
+          path: "profile/:friendId",
+          element: <FriendProfile />,
+        },
+        {
+          path: "/fullscreen/:imageUrl",
+          element: <FullScreenImage />,
+        },
+      ],
+    },
+    {
+      path: "/login",
+      errorElement: <Error />,
+      element: <Login />,
+    },
+    {
+      path: "/register",
+      errorElement: <Error />,
+      element: <Register />,
+    },
+  ]);
+
   return (
     <ErrorBoundary FallbackComponent={Error}>
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <NavWrapper>
-                <Home />
-              </NavWrapper>
-            }
-          />
-          <Route
-            path="/map"
-            element={
-              <NavWrapper>
-                <Map />
-              </NavWrapper>
-            }
-          />
-          <Route
-            path="/friends"
-            element={
-              <NavWrapper>
-                <Friends />
-              </NavWrapper>
-            }
-          />
-          <Route
-            path="/chats"
-            element={
-              <NavWrapper>
-                <Chats />
-              </NavWrapper>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <NavWrapper>
-                <Profile />
-              </NavWrapper>
-            }
-          />
-          <Route
-            path="/profile/:friendId"
-            element={
-              <NavWrapper>
-                <FriendProfile />
-              </NavWrapper>
-            }
-          />
-          <Route
-            path="/fullscreen/:imageUrl"
-            element={
-              <NavWrapper>
-                <FullScreenImage />
-              </NavWrapper>
-            }
-          />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="*" element={<Error />} />
-        </Routes>
-      </BrowserRouter>
+      <RouterProvider router={router} />
     </ErrorBoundary>
   );
 }

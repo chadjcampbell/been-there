@@ -1,5 +1,5 @@
-import { ReactNode, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { AiTwotoneHome } from "react-icons/ai";
 import { BsGlobeAmericas } from "react-icons/bs";
 import { FaUserFriends } from "react-icons/fa";
@@ -29,11 +29,11 @@ import NotificationButton from "./NotificationButton";
 import { SET_NOTIFICATIONS } from "../../redux/features/notifications/notificationSlice";
 import { getNotifications } from "../../redux/features/notifications/notificationService";
 
-type NavWrapperProps = {
+/* type NavWrapperProps = {
   children: ReactNode;
-};
+}; */
 
-const NavWrapper = ({ children }: NavWrapperProps) => {
+const NavWrapper = () => {
   const [isLoggingOut, setisLoggingOut] = useState(false);
   const [loading, setLoading] = useState(true);
   const isLoggedIn = useSelector(selectIsLoggedIn);
@@ -243,7 +243,7 @@ const NavWrapper = ({ children }: NavWrapperProps) => {
       </header>
       <main className="min-h-[calc(100vh-5rem)] flex justify-center w-full">
         <DeleteModal />
-        {children}
+        <Outlet />
       </main>
     </>
   );

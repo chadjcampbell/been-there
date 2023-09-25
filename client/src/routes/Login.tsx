@@ -65,8 +65,6 @@ const Login = () => {
   }, [guestBool, nameIndex, passIndex]);
 
   const handleGuestLogin = () => {
-    setEmail("");
-    setPassword("");
     setGuestBool(true);
   };
 
@@ -106,7 +104,10 @@ const Login = () => {
               <input
                 disabled
                 className=" w-full input input-bordered input-primary"
-                value={email}
+                value={email || ""}
+                id="email"
+                autoComplete="email"
+                onChange={() => ""}
               />
             ) : (
               <input
@@ -141,7 +142,10 @@ const Login = () => {
                 disabled
                 type="password"
                 className=" w-full input input-bordered input-primary"
-                value={password}
+                value={password || ""}
+                id="password"
+                autoComplete="current-password"
+                onChange={() => ""}
               />
             ) : (
               <input

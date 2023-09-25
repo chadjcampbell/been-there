@@ -137,7 +137,7 @@ export const MakePost = () => {
           <div className="mr-2 w-20">
             <img
               className={`border-4 rounded-full`}
-              style={{ borderColor: stringToColor(user.photoUrl) }}
+              style={{ borderColor: stringToColor(user.email) }}
               src={user.photoUrl}
               alt="friend profile pic"
             />

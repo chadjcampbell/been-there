@@ -8,6 +8,7 @@ import { likeComment } from "../../redux/features/posts/postService";
 import { CommentType, LikesType } from "../../routes/Home";
 import { SET_COMMENT_ID_DELETE } from "../../redux/features/posts/postSlice";
 import { stringToColor } from "../../utils/stringToColor";
+import { Link } from "react-router-dom";
 
 type CommentCardProps = {
   comment: CommentType;
@@ -45,12 +46,14 @@ const CommentCard = ({ comment }: CommentCardProps) => {
         <div className="chat chat-start">
           <div className="chat-image avatar">
             <div className="mr-2 w-14">
-              <img
-                className={`border-4 rounded-full`}
-                style={{ borderColor: stringToColor(comment.user.email) }}
-                src={comment.user.photo_url}
-                alt="friend profile pic"
-              />
+              <Link to={`/profile/${comment.user.user_id}`}>
+                <img
+                  className={`border-4 rounded-full`}
+                  style={{ borderColor: stringToColor(comment.user.email) }}
+                  src={comment.user.photo_url}
+                  alt="friend profile pic"
+                />
+              </Link>
             </div>
           </div>
           <div className="chat-bubble max-w-full chat-bubble-info bg-gray-100">

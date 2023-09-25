@@ -167,7 +167,7 @@ export const MakeComment = ({ post }: MakeCommentProps) => {
               <div className="mr-2 w-14">
                 <img
                   className={`border-4 rounded-full`}
-                  style={{ borderColor: stringToColor(user.photoUrl) }}
+                  style={{ borderColor: stringToColor(user.email) }}
                   src={user.photoUrl}
                   alt="friend profile pic"
                 />

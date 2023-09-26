@@ -194,31 +194,31 @@ const NavWrapper = () => {
             </div>
             <div className="navbar-center hidden lg:flex ">
               <ul className="menu menu-horizontal px-1">
-                <li className="px-1 text-lg text-secondary">
+                <li className="px-1 text-lg text-secondary-focus">
                   <Link to="/">
                     <AiTwotoneHome />
                     News Feed
                   </Link>
                 </li>
-                <li className="px-1 text-lg text-secondary">
+                <li className="px-1 text-lg text-secondary-focus">
                   <Link to="/map">
                     <BsGlobeAmericas />
                     Map
                   </Link>
                 </li>
-                <li className="px-1 text-lg text-secondary">
+                <li className="px-1 text-lg text-secondary-focus">
                   <Link to="/friends">
                     <FaUserFriends />
                     Friends
                   </Link>
                 </li>
-                <li className="px-1 text-lg text-secondary">
+                <li className="px-1 text-lg text-secondary-focus">
                   <Link to="/chats">
                     <BsChatDots />
                     Chats
                   </Link>
                 </li>
-                <li className="px-1 text-lg text-secondary">
+                <li className="px-1 text-lg text-secondary-focus">
                   <Link to="/profile">
                     <CgProfile />
                     Profile

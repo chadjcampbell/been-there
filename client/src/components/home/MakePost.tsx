@@ -194,7 +194,10 @@ export const MakePost = () => {
             >
               <MdAddAPhoto size="1.5rem" title="Add Picture to post" />
             </button>
-            <button type="submit" className="badge btn btn-secondary">
+            <button
+              type="submit"
+              className="badge btn bg-secondary-focus text-white"
+            >
               {isLoading ? (
                 <span className="loading loading-spinner text-white loading-lg"></span>
               ) : (

@@ -1,16 +1,17 @@
 import { useEffect } from "react";
 import { socket } from "../socket";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "../redux/features/auth/authSlice";
+import { selectIsLoggedIn, selectUser } from "../redux/features/auth/authSlice";
 import { SET_ONLINE_FRIENDS } from "../redux/features/friends/friendsSlice";
 import { ADD_NOTIFICATION } from "../redux/features/notifications/notificationSlice";
 
 const useSocketSetup = () => {
   const user = useSelector(selectUser);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (user) {
+    if (user && isLoggedIn) {
       socket.connect();
       socket.on("connect", () => {
         //console.log("Socket IO Connected");

@@ -14,7 +14,11 @@ const DeletePostButton = ({ post }: DeletePostModalProps) => {
   };
   return (
     <>
-      <button className="btn btn-error mb-4" onClick={handleBtnClick}>
+      <button
+        aria-label="delete post"
+        className="btn btn-error mb-4"
+        onClick={handleBtnClick}
+      >
         <BsTrash />
       </button>
     </>

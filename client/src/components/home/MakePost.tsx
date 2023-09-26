@@ -13,6 +13,8 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { SET_POSTS, selectPosts } from "../../redux/features/posts/postSlice";
 import { stringToColor } from "../../utils/stringToColor";
+import { AdvancedImage, responsive } from "@cloudinary/react";
+import { getCloudinaryImage } from "../../utils/cloudinary";
 
 export const MakePost = () => {
   const user = useSelector(selectUser);
@@ -49,11 +51,11 @@ export const MakePost = () => {
 
       if (selectedFile.type.startsWith("image/")) {
         const fileSize = selectedFile.size;
-        const maxSizeInBytes = 5120 * 5120; // 1MB max file size
+        const maxSizeInBytes = 10240000; // 10MB max file size
         if (fileSize <= maxSizeInBytes) {
           setPostImage(selectedFile);
         } else {
-          toast.error("Image size limit is 5MB");
+          toast.error("Image size limit is 10MB");
         }
       } else {
         toast.error("Please select an image file.");
@@ -135,11 +137,12 @@ export const MakePost = () => {
       <div className="card-body">
         <div className="avatar">
           <div className="mr-2 w-20">
-            <img
-              className={`border-4 rounded-full`}
+            <AdvancedImage
+              className="border-4 rounded-full"
               style={{ borderColor: stringToColor(user.email) }}
-              src={user.photoUrl}
-              alt="friend profile pic"
+              cldImg={getCloudinaryImage(user.photoUrl)}
+              alt="user profile pic"
+              plugins={[responsive({ steps: 200 })]}
             />
           </div>
         </div>

@@ -12,6 +12,8 @@ import CommentsSection from "./CommentsSection";
 import ImageWrapper from "../global/ImageWrapper";
 import { stringToColor } from "../../utils/stringToColor";
 import { Link } from "react-router-dom";
+import { AdvancedImage, responsive } from "@cloudinary/react";
+import { getCloudinaryImage } from "../../utils/cloudinary";
 
 type PostCardProps = {
   post: PostsResponseType;
@@ -72,10 +74,13 @@ export const PostCard = ({ post }: PostCardProps) => {
           <figure className="flex flex-col ">
             <div className="max-w-md m-4">
               <ImageWrapper>
-                <img
-                  className="rounded-xl object-contain"
-                  src={post.post_photo_url}
+                <AdvancedImage
+                  className="rounded-xl object-contain w-full"
+                  width="640"
+                  height="360"
+                  cldImg={getCloudinaryImage(post.post_photo_url)}
                   alt="User post photo"
+                  plugins={[responsive({ steps: 200 })]}
                 />
               </ImageWrapper>
             </div>
@@ -86,11 +91,12 @@ export const PostCard = ({ post }: PostCardProps) => {
           <Link to={`/profile/${post.user_id}`}>
             <div className="avatar">
               <div className="mr-2 w-20">
-                <img
-                  className={`border-4 rounded-full`}
+                <AdvancedImage
+                  className="border-4 rounded-full"
                   style={{ borderColor: stringToColor(post.user.email) }}
-                  src={post.user.photo_url}
+                  cldImg={getCloudinaryImage(post.user.photo_url)}
                   alt="friend profile pic"
+                  plugins={[responsive({ steps: 200 })]}
                 />
               </div>
             </div>

@@ -53,11 +53,11 @@ const ChatArea = () => {
 
       if (selectedFile.type.startsWith("image/")) {
         const fileSize = selectedFile.size;
-        const maxSizeInBytes = 5120 * 5120; // 1MB max file size
+        const maxSizeInBytes = 10240000; // 10MB max file size
         if (fileSize <= maxSizeInBytes) {
           setMessageImage(selectedFile);
         } else {
-          toast.error("Image size limit is 5MB");
+          toast.error("Image size limit is 10MB");
         }
       } else {
         toast.error("Please select an image file.");

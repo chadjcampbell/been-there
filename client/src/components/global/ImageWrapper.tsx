@@ -18,8 +18,6 @@ const ImageWrapper: React.FC<ImageWrapperProps> = ({ children }) => {
     }
     if (React.isValidElement(child) && child.type === AdvancedImage) {
       const imgElement = child as ReactElement<any>;
-      console.log(imgElement);
-
       imageUrl = getCloudinaryImage(imgElement.props.cldImg.publicID).toURL();
     }
     return null;

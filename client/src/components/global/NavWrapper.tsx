@@ -75,13 +75,13 @@ const NavWrapper = () => {
           //trigger a location allowed popup
           navigator.geolocation.getCurrentPosition(() => null);
         }
+        useSocketSetup();
       }
     };
     isLoggedIn && setUserState();
   }, [isLoggedIn]);
 
   useAuthRedirect("/login");
-  useSocketSetup();
 
   const onLogoutHandler = async () => {
     setisLoggingOut(true);

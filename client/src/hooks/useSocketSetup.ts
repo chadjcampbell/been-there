@@ -13,7 +13,7 @@ const useSocketSetup = () => {
     if (user) {
       socket.connect();
       socket.on("connect", () => {
-        console.log("Socket IO Connected");
+        //console.log("Socket IO Connected");
       });
       socket.on("connect_error", () => {
         console.log("Socket IO Error");

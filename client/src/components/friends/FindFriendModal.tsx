@@ -69,6 +69,7 @@ const FindFriendModal = () => {
               required
               onChange={handleInputChange}
               value={friendName}
+              id="friendName"
               type="text"
               placeholder="Name..."
               className="input input-bordered input-primary w-full max-w-xs"

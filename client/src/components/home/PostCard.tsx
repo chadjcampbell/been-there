@@ -12,8 +12,6 @@ import CommentsSection from "./CommentsSection";
 import ImageWrapper from "../global/ImageWrapper";
 import { stringToColor } from "../../utils/stringToColor";
 import { Link } from "react-router-dom";
-import { AdvancedImage, responsive } from "@cloudinary/react";
-import { getCloudinaryImage } from "../../utils/cloudinary";
 
 type PostCardProps = {
   post: PostsResponseType;

@@ -7,7 +7,6 @@ import {
   friends,
   likes,
   notifications,
-  posts,
   users,
 } from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
@@ -335,6 +334,7 @@ export const getFriend = asyncHandler(async (req: RequestUserAttached, res) => {
               },
             },
           },
+          orderBy: (posts, { desc }) => [desc(posts.post_date)],
         },
       },
     });

@@ -74,13 +74,10 @@ export const PostCard = ({ post }: PostCardProps) => {
           <figure className="flex flex-col ">
             <div className="max-w-md m-4">
               <ImageWrapper>
-                <AdvancedImage
-                  className="rounded-xl object-contain w-full"
-                  width="640"
-                  height="360"
-                  cldImg={getCloudinaryImage(post.post_photo_url)}
+                <img
+                  className="rounded-xl object-contain"
+                  src={post.post_photo_url}
                   alt="User post photo"
-                  plugins={[responsive({ steps: 200 })]}
                 />
               </ImageWrapper>
             </div>
@@ -91,12 +88,11 @@ export const PostCard = ({ post }: PostCardProps) => {
           <Link to={`/profile/${post.user_id}`}>
             <div className="avatar">
               <div className="mr-2 w-20">
-                <AdvancedImage
+                <img
                   className="border-4 rounded-full"
                   style={{ borderColor: stringToColor(post.user.email) }}
-                  cldImg={getCloudinaryImage(post.user.photo_url)}
+                  src={post.user.photo_url}
                   alt="friend profile pic"
-                  plugins={[responsive({ steps: 200 })]}
                 />
               </div>
             </div>

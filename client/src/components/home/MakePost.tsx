@@ -13,8 +13,6 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { SET_POSTS, selectPosts } from "../../redux/features/posts/postSlice";
 import { stringToColor } from "../../utils/stringToColor";
-import { AdvancedImage, responsive } from "@cloudinary/react";
-import { getCloudinaryImage } from "../../utils/cloudinary";
 
 export const MakePost = () => {
   const user = useSelector(selectUser);
@@ -137,12 +135,11 @@ export const MakePost = () => {
       <div className="card-body">
         <div className="avatar">
           <div className="mr-2 w-20">
-            <AdvancedImage
-              className="border-4 rounded-full"
+            <img
+              className={`border-4 rounded-full`}
               style={{ borderColor: stringToColor(user.email) }}
-              cldImg={getCloudinaryImage(user.photoUrl)}
+              src={user.photoUrl}
               alt="user profile pic"
-              plugins={[responsive({ steps: 200 })]}
             />
           </div>
         </div>

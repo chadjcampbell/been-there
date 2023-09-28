@@ -75,6 +75,19 @@ const NavWrapper = () => {
           //trigger a location allowed popup
           navigator.geolocation.getCurrentPosition(() => null);
         }
+        //register service worker for PWA
+        if ("serviceWorker" in navigator) {
+          window.addEventListener("load", () => {
+            navigator.serviceWorker
+              .register("/service-worker.ts")
+              .then(() => {
+                // console.log('Service Worker registered with scope:', registration.scope);
+              })
+              .catch((error) => {
+                console.error("Service Worker registration failed:", error);
+              });
+          });
+        }
       }
     };
     isLoggedIn && setUserState();

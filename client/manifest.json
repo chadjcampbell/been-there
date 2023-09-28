@@ -4,7 +4,7 @@
     "icons": [
       {
         "src": "/globe-pins.webp",
-        "type": "image/svg+xml",
+        "type": "image/webp",
         "sizes": "512x512"
       }
     ],

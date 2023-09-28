@@ -78,7 +78,11 @@ const NotificationButton = () => {
   }, []);
 
   return notifications.length > 0 ? (
-    <details ref={dropdownRef} className="dropdown dropdown-end dropdown-open">
+    <details
+      aria-label="open notifications"
+      ref={dropdownRef}
+      className="dropdown dropdown-end dropdown-open"
+    >
       <summary className="btn btn-ghost btn-circle mr-4">
         <div className="indicator">
           <motion.svg
@@ -155,7 +159,11 @@ const NotificationButton = () => {
       </ul>
     </details>
   ) : (
-    <button className="btn btn-ghost btn-circle mr-4">
+    <button
+      id="notifications"
+      name="notifications"
+      className="btn btn-ghost btn-circle mr-4"
+    >
       <div className="indicator">
         <svg
           xmlns="http://www.w3.org/2000/svg"

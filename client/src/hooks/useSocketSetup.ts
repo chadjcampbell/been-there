@@ -11,7 +11,7 @@ const useSocketSetup = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (user && isLoggedIn) {
+    if (isLoggedIn) {
       socket.connect();
       socket.on("connect", () => {
         //console.log("Socket IO Connected");

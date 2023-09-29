@@ -46,7 +46,7 @@ const Register = () => {
   return (
     <div className="p-4 bg-secondary-content relative flex flex-col justify-center min-h-screen">
       <div className="w-full p-6 m-auto bg-white rounded-md shadow-md lg:max-w-lg">
-        <img src="./globe-pins.webp" />
+        <img src="./globe-pins.webp" alt="globe with pins" />
         <h1 className="py-3 text-3xl font-semibold text-center text-primary">
           Sign up and share pics and tips from your travels
         </h1>

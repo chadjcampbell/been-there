@@ -86,3 +86,11 @@ CREATE TABLE notifications (
     is_read BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE subscriptions (
+  subscription_id SERIAL PRIMARY KEY,
+  endpoint TEXT NOT NULL,
+  expiration_time BIGINT NOT NULL,
+  p256dh TEXT NOT NULL,
+  auth TEXT NOT NULL
+);

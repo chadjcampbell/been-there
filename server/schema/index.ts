@@ -7,3 +7,4 @@ export * from "./comments";
 export * from "./likes";
 export * from "./chatMessages";
 export * from "./notifications";
+export * from "./subscriptions";

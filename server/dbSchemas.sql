@@ -88,9 +88,7 @@ CREATE TABLE notifications (
 );
 
 CREATE TABLE subscriptions (
-  subscription_id SERIAL PRIMARY KEY,
   endpoint TEXT NOT NULL,
-  expiration_time BIGINT NOT NULL,
-  p256dh TEXT NOT NULL,
-  auth TEXT NOT NULL
+  expiration_time INT,
+  keys JSONB
 );

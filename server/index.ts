@@ -17,6 +17,8 @@ import {
   setOnlineStatus,
 } from "./controllers/socketController";
 import { redisClient } from "./redis";
+import { subscriptions } from "./schema";
+import db from "./db";
 
 const port = process.env.PORT || 3000;
 const server = require("http").createServer(app);
@@ -46,6 +48,14 @@ app.use("/friends", friendRoute);
 app.use("/posts", postRoute);
 app.use("/chats", chatRoute);
 app.use("/notification", notificationRoute);
+
+// web-push subscription route
+app.post("/subscribe", async (req, res, next) => {
+  const newSubscription = await db
+    .insert(subscriptions)
+    .values({ ...req.body });
+  //.....
+});
 
 // socket.io connection
 io.use(authorizeUser);

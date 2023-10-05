@@ -5,12 +5,14 @@ export const VAPID_PUBLIC = import.meta.env.VITE_VAPID_PUBLIC;
 
 async function regSw() {
   if ("serviceWorker" in navigator) {
-    let url = FRONTEND_URL + "/sw.js";
-    const reg = await navigator.serviceWorker.register(url, { scope: "/" });
-    console.log("service config is", { reg });
+    const reg = navigator.serviceWorker.register(
+      import.meta.env.MODE === "production"
+        ? "/service-worker.js"
+        : "/dev-sw.js?dev-sw",
+      { type: import.meta.env.MODE === "production" ? "classic" : "module" }
+    );
     return reg;
   }
-  throw Error("serviceworker not supported");
 }
 
 async function subscribe(serviceWorkerReg: ServiceWorkerRegistration) {

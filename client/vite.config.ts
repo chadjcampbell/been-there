@@ -10,13 +10,14 @@ export default defineConfig({
       registerType: "autoUpdate",
       devOptions: {
         enabled: true,
+        type: "module",
       },
-      injectRegister: "auto",
+      injectRegister: null,
       strategies: "injectManifest",
       srcDir: "src",
       filename: "sw.ts",
       workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
+        globPatterns: ["**/*.{ts,js,css,html,ico,png,svg}"],
       },
       includeAssets: [
         "globe-connected.ico",
@@ -24,6 +25,7 @@ export default defineConfig({
         "pwa-192x192.png",
         "pwa-512x512.png",
       ],
+      manifestFilename: "manifest.webmanifest",
       manifest: {
         name: "Been There",
         short_name: "Been There",

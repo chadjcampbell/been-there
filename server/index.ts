@@ -49,14 +49,6 @@ app.use("/posts", postRoute);
 app.use("/chats", chatRoute);
 app.use("/notification", notificationRoute);
 
-// web-push subscription route
-app.post("/subscribe", async (req, res, next) => {
-  const newSubscription = await db
-    .insert(subscriptions)
-    .values({ ...req.body });
-  //.....
-});
-
 // socket.io connection
 io.use(authorizeUser);
 io.use(setOnlineStatus);

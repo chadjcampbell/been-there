@@ -1,4 +1,5 @@
 import axios from "axios";
+import { BACKEND_URL } from "../redux/features/auth/authService";
 
 export const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
 export const VAPID_PUBLIC = import.meta.env.VITE_VAPID_PUBLIC;
@@ -15,15 +16,18 @@ async function regSw() {
   }
 }
 
-async function subscribe(serviceWorkerReg: ServiceWorkerRegistration) {
-  let subscription = await serviceWorkerReg.pushManager.getSubscription();
-  console.log({ subscription });
-  if (subscription === null) {
-    subscription = await serviceWorkerReg.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: VAPID_PUBLIC,
-    });
-    axios.post("/subscribe", subscription);
+async function subscribe(
+  serviceWorkerReg: ServiceWorkerRegistration | undefined
+) {
+  if (serviceWorkerReg) {
+    let subscription = await serviceWorkerReg.pushManager.getSubscription();
+    if (subscription === null) {
+      subscription = await serviceWorkerReg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: VAPID_PUBLIC,
+      });
+      axios.post(BACKEND_URL + "/notification/subscribe", subscription);
+    }
   }
 }
 

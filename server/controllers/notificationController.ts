@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import asyncHandler from "express-async-handler";
 import db from "../db";
-import { notifications } from "../schema";
+import { notifications, subscriptions } from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
 
 export const getAllNotifications = asyncHandler(
@@ -42,3 +42,21 @@ export const removeNotification = asyncHandler(
     return;
   }
 );
+
+export const subscribe = asyncHandler(async (req: RequestUserAttached, res) => {
+  if (!req.user) {
+    res.status(400);
+    throw new Error("Not authorized, please log in");
+  }
+  try {
+    const newSubscription = await db
+      .insert(subscriptions)
+      .values({ ...req.body });
+    //.....
+    res.status(201).send();
+  } catch {
+    res.status(400);
+    throw new Error("Something went wrong");
+  }
+  return;
+});

@@ -48,10 +48,13 @@ export const subscribe = asyncHandler(async (req: RequestUserAttached, res) => {
     res.status(400);
     throw new Error("Not authorized, please log in");
   }
+  const { endpoint, keys } = req.body;
+  const p256dh = keys.p256dh;
+  const auth = keys.auth;
   try {
     const newSubscription = await db
       .insert(subscriptions)
-      .values({ ...req.body });
+      .values({ user_id: req.user.user_id, endpoint, p256dh, auth });
     //.....
     res.status(201).send();
   } catch {

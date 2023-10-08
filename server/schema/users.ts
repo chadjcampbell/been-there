@@ -5,6 +5,7 @@ import { comments } from "./comments";
 import { friends } from "./friends";
 import { friend_requests } from "./friendRequests";
 import { likes } from "./likes";
+import { subscriptions } from "./subscriptions";
 
 export const users = pgTable("users", {
   user_id: serial("user_id").primaryKey(),
@@ -30,6 +31,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   friends: many(friends),
   friend_requests: many(friend_requests),
   likes: many(likes),
+  subscriptions: many(subscriptions),
 }));
 
 export type User = InferModel<typeof users>; // return type when queried

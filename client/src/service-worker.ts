@@ -11,7 +11,6 @@ const onPush = async (event: PushEvent) => {
     self.registration.showNotification(title, {
       body: description,
       icon: image,
-      badge: "./maskable_icon_x72.png",
     })
   );
 };

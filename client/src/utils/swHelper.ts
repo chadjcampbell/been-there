@@ -8,8 +8,8 @@ async function regSw() {
   if ("serviceWorker" in navigator) {
     const reg = navigator.serviceWorker.register(
       import.meta.env.MODE === "production"
-        ? "/service-worker.js"
-        : "/dev-sw.js?dev-sw",
+        ? "./service-worker.js"
+        : "./dev-sw.js?dev-sw",
       { type: import.meta.env.MODE === "production" ? "classic" : "module" }
     );
     return reg;

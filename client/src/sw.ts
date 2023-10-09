@@ -7,7 +7,6 @@ precacheAndRoute(self.__WB_MANIFEST);
 const onPush = async (event: PushEvent) => {
   const message = await event.data?.json();
   let { title, description, image } = message;
-  console.log({ message });
   event.waitUntil(
     self.registration.showNotification(title, {
       body: description,

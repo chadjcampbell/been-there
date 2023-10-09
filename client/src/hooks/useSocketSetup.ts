@@ -26,6 +26,8 @@ const useSocketSetup = () => {
       socket.on("notification", (notification) => {
         if (user.userId === notification.user_id) {
           dispatch(ADD_NOTIFICATION(notification));
+          const audio = new Audio("./notification.mp3");
+          audio.play();
         }
       });
       return () => {

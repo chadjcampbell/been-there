@@ -4,9 +4,17 @@ import { clientsClaim } from "workbox-core";
 declare let self: ServiceWorkerGlobalScope;
 precacheAndRoute(self.__WB_MANIFEST);
 
-function onPush() {
-  return;
-}
+const onPush = async (event: PushEvent) => {
+  const message = await event.data?.json();
+  let { title, description, image } = message;
+  console.log({ message });
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body: description,
+      icon: image,
+    })
+  );
+};
 
 function onNotificationClick() {
   return;

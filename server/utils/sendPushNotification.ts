@@ -13,7 +13,7 @@ export const sendPushNotification = async (notification: Notifications) => {
     if (userSubscriptions.length) {
       const options = {
         vapidDetails: {
-          subject: "chadjcampbell@gmail.com",
+          subject: "mailto:chadjcampbell@gmail.com",
           publicKey: process.env.VAPID_PUBLIC as string,
           privateKey: process.env.VAPID_PRIVATE as string,
         },

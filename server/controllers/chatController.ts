@@ -131,7 +131,7 @@ export const sendMessage = [
         })
         .returning();
       io.emit("notification", notificationArr[0]);
-      sendPushNotification(notificationArr[0]);
+      await sendPushNotification(notificationArr[0]);
       return;
     } catch (error: any) {
       console.error("Error sending message:", error.message);

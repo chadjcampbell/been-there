@@ -17,8 +17,6 @@ import {
   setOnlineStatus,
 } from "./controllers/socketController";
 import { redisClient } from "./redis";
-import { subscriptions } from "./schema";
-import db from "./db";
 
 const port = process.env.PORT || 3000;
 const server = require("http").createServer(app);

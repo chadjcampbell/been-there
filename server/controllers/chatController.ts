@@ -6,6 +6,7 @@ import { body, validationResult } from "express-validator";
 import { and, eq } from "drizzle-orm";
 import { notifications } from "../schema/notifications";
 import { io } from "..";
+import { sendPushNotification } from "../utils/sendPushNotification";
 
 export const findChat = asyncHandler(async (req: RequestUserAttached, res) => {
   if (!req.user) {
@@ -130,6 +131,7 @@ export const sendMessage = [
         })
         .returning();
       io.emit("notification", notificationArr[0]);
+      sendPushNotification(notificationArr[0]);
       return;
     } catch (error: any) {
       console.error("Error sending message:", error.message);

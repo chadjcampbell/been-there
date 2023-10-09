@@ -15,7 +15,7 @@ export default defineConfig({
       injectRegister: null,
       strategies: "injectManifest",
       srcDir: "src",
-      filename: "sw.ts",
+      filename: "service-worker.ts",
       workbox: {
         globPatterns: ["**/*.{ts,js,css,html,ico,png,svg}"],
       },

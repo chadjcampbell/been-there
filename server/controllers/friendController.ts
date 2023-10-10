@@ -11,6 +11,7 @@ import {
 } from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
 import { io } from "..";
+import { sendPushNotification } from "../utils/sendPushNotification";
 
 export const findAllFriends = asyncHandler(
   async (req: RequestUserAttached, res) => {
@@ -137,6 +138,7 @@ export const sendFriendRequest = [
       })
       .returning();
     io.emit("notification", notificationArr[0]);
+    await sendPushNotification(notificationArr[0]);
     return;
   }),
 ];
@@ -219,11 +221,12 @@ export const acceptFriendRequest = [
       .values({
         user_id: friendId,
         type: "friend_request_accepted",
-        content: `Friend request accepted ${req.user.name}`,
+        content: `${req.user.name} is now your friend`,
         is_read: false,
       })
       .returning();
     io.emit("notification", notificationArr[0]);
+    await sendPushNotification(notificationArr[0]);
     return;
   }),
 ];

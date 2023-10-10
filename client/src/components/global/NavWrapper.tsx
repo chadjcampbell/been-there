@@ -71,7 +71,6 @@ const NavWrapper = () => {
         const notificationData = await getNotifications();
         dispatch(SET_NOTIFICATIONS(notificationData));
       } finally {
-        setLoading(false);
         if ("geolocation" in navigator) {
           //trigger a location allowed popup
           navigator.geolocation.getCurrentPosition(() => null);
@@ -86,10 +85,25 @@ const NavWrapper = () => {
           }
         }
         await registerAndSubscribe();
+        setLoading(false);
       }
     };
     isLoggedIn && setUserState();
   }, [isLoggedIn]);
+
+  useEffect(() => {
+    function setView() {
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.controller?.postMessage({ pageHidden: false });
+      }
+    }
+    !loading && setView();
+    return () => {
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.controller?.postMessage({ pageHidden: true });
+      }
+    };
+  }, []);
 
   useAuthRedirect("/login");
   useSocketSetup();

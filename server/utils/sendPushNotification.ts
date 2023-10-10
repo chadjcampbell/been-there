@@ -23,15 +23,19 @@ export const sendPushNotification = async (notification: Notifications) => {
           auth: sub.auth,
         },
       };
-      await webpush.sendNotification(
-        subInfo,
-        JSON.stringify({
-          title: "Been There",
-          description: notification.content,
-          image: "./globe-pins.webp",
-        }),
-        options
-      );
+      try {
+        await webpush.sendNotification(
+          subInfo,
+          JSON.stringify({
+            title: "Been There",
+            description: notification.content,
+            image: "./globe-pins.webp",
+          }),
+          options
+        );
+      } catch {
+        console.log(sub.id);
+      }
     });
   }
 };

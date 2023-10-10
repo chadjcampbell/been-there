@@ -4,15 +4,19 @@ import { clientsClaim } from "workbox-core";
 declare let self: ServiceWorkerGlobalScope;
 precacheAndRoute(self.__WB_MANIFEST);
 
+let inView = false;
+
 const onPush = async (event: PushEvent) => {
-  const message = await event.data?.json();
-  let { title, description, image } = message;
-  event.waitUntil(
-    self.registration.showNotification(title, {
-      body: description,
-      icon: image,
-    })
-  );
+  if (!inView) {
+    const message = await event.data?.json();
+    let { title, description, image } = message;
+    event.waitUntil(
+      self.registration.showNotification(title, {
+        body: description,
+        icon: image,
+      })
+    );
+  }
 };
 
 const onNotificationClick = (event: NotificationEvent) => {
@@ -22,5 +26,12 @@ const onNotificationClick = (event: NotificationEvent) => {
 
 self.skipWaiting();
 clientsClaim();
+self.addEventListener("message", (event) => {
+  if (event.data.pageHidden) {
+    inView = true;
+  } else {
+    inView = false;
+  }
+});
 self.addEventListener("push", onPush);
 self.addEventListener("notificationclick", onNotificationClick);

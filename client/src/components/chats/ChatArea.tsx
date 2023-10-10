@@ -157,7 +157,7 @@ const ChatArea = () => {
               className="w-full bg-gray-300 py-5 px-3 rounded-xl mr-3"
               type="text"
               placeholder="type your message here..."
-              required
+              required={messageImage ? false : true}
               value={message.message}
               onChange={handleInputChange}
               autoComplete="off"

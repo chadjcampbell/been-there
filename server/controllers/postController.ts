@@ -51,7 +51,7 @@ export const findAllPosts = asyncHandler(
         },
       },
       orderBy: (posts, { desc }) => [desc(posts.post_date)],
-      limit: 5,
+      limit: 10,
       offset: Number(offset),
     });
 

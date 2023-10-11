@@ -2,13 +2,8 @@ import MakePost from "../components/home/MakePost";
 import PostCard from "../components/home/PostCard";
 import { FriendType } from "./Friends";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  SET_OFFSET,
-  SET_POSTS,
-  selectOffset,
-  selectPosts,
-} from "../redux/features/posts/postSlice";
-import { useEffect, useRef } from "react";
+import { SET_POSTS, selectPosts } from "../redux/features/posts/postSlice";
+import { useEffect, useRef, useState } from "react";
 import { findAllPosts } from "../redux/features/posts/postService";
 
 export type PostsResponseType = {
@@ -52,7 +47,7 @@ export type UserLocation = {
 const Home = () => {
   const posts: PostsResponseType[] | [] = useSelector(selectPosts);
   const dispatch = useDispatch();
-  const offset = useSelector(selectOffset);
+  const [offset, setOffset] = useState(0);
   const bottom = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -63,31 +58,30 @@ const Home = () => {
       } catch (err) {
         console.log(err);
       } finally {
+        const observer = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting) {
+            async function fetchMorePosts() {
+              console.log(offset);
+              setOffset((prev) => prev + 10);
+              const newPosts: PostsResponseType[] = await findAllPosts(offset);
+              if (!newPosts.length) {
+                bottom.current && observer.unobserve(bottom.current);
+                return;
+              }
+              console.log(newPosts);
+              dispatch(SET_POSTS(newPosts));
+            }
+            fetchMorePosts();
+          }
+        });
+
+        if (bottom.current) {
+          observer.observe(bottom.current);
+        }
       }
     };
     setPosts();
   }, []);
-
-  const observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting) {
-      async function fetchMorePosts() {
-        console.log(offset);
-        const newPosts: PostsResponseType[] = await findAllPosts(offset + 5);
-        dispatch(SET_OFFSET(offset + 5));
-        const allPosts = [...posts, ...newPosts];
-        console.log(allPosts);
-        dispatch(SET_POSTS(allPosts));
-        if (newPosts.length < 5) {
-          bottom.current && observer.unobserve(bottom.current);
-        }
-      }
-      fetchMorePosts();
-    }
-  });
-
-  if (bottom.current) {
-    observer.observe(bottom.current);
-  }
 
   return (
     <div>

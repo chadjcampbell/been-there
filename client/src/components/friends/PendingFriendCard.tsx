@@ -14,8 +14,6 @@ import {
   SET_FRIENDS_LIST,
   SET_PENDING_FRIENDS,
 } from "../../redux/features/friends/friendsSlice";
-import { findAllPosts } from "../../redux/features/posts/postService";
-import { SET_POSTS } from "../../redux/features/posts/postSlice";
 
 type FoundFriendCardProps = {
   friend: FriendType;
@@ -38,8 +36,6 @@ const PendingFriendCard = ({ friend }: FoundFriendCardProps) => {
           )
         )
       );
-      const postsData = await findAllPosts();
-      dispatch(SET_POSTS(postsData));
     } catch (err) {
       console.log(err);
       toast.error("Something went wrong");

@@ -20,7 +20,6 @@ import {
   SET_FRIENDS_LIST,
   SET_PENDING_FRIENDS,
 } from "../../redux/features/friends/friendsSlice";
-import { findAllPosts } from "../../redux/features/posts/postService";
 import { SET_POSTS } from "../../redux/features/posts/postSlice";
 import DeleteModal from "../home/DeleteModal";
 import { socket } from "../../socket";
@@ -29,10 +28,6 @@ import NotificationButton from "./NotificationButton";
 import { SET_NOTIFICATIONS } from "../../redux/features/notifications/notificationSlice";
 import { getNotifications } from "../../redux/features/notifications/notificationService";
 import { regSw, subscribe } from "../../utils/swHelper";
-
-/* type NavWrapperProps = {
-  children: ReactNode;
-}; */
 
 const NavWrapper = () => {
   const [isLoggingOut, setisLoggingOut] = useState(false);
@@ -66,8 +61,6 @@ const NavWrapper = () => {
       try {
         const userData = await getUser();
         dispatch(SET_USER(userData));
-        const postsData = await findAllPosts();
-        dispatch(SET_POSTS(postsData));
         const notificationData = await getNotifications();
         dispatch(SET_NOTIFICATIONS(notificationData));
       } finally {

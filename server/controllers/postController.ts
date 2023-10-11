@@ -12,6 +12,7 @@ export const findAllPosts = asyncHandler(
       res.status(400);
       throw new Error("Not authorized, please log in");
     }
+    const { offset } = req.params;
 
     const friendArray = await db.query.friends.findMany({
       where: or(
@@ -51,6 +52,7 @@ export const findAllPosts = asyncHandler(
       },
       orderBy: (posts, { desc }) => [desc(posts.post_date)],
       limit: 5,
+      offset: Number(offset),
     });
 
     if (!result) {

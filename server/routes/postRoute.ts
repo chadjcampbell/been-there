@@ -11,7 +11,7 @@ import {
   deleteComment,
 } from "../controllers/postController";
 
-router.get("/findAllPosts", protect, findAllPosts);
+router.get("/findAllPosts/:offset", protect, findAllPosts);
 router.post("/makePost", protect, makePost);
 router.post("/likePost", protect, likePost);
 router.delete("/deletePost", protect, deletePost);

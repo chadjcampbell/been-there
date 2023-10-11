@@ -1,8 +1,15 @@
 import MakePost from "../components/home/MakePost";
 import PostCard from "../components/home/PostCard";
 import { FriendType } from "./Friends";
-import { useSelector } from "react-redux";
-import { selectPosts } from "../redux/features/posts/postSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  SET_OFFSET,
+  SET_POSTS,
+  selectOffset,
+  selectPosts,
+} from "../redux/features/posts/postSlice";
+import { useEffect, useRef } from "react";
+import { findAllPosts } from "../redux/features/posts/postService";
 
 export type PostsResponseType = {
   content: string;
@@ -44,6 +51,43 @@ export type UserLocation = {
 
 const Home = () => {
   const posts: PostsResponseType[] | [] = useSelector(selectPosts);
+  const dispatch = useDispatch();
+  const offset = useSelector(selectOffset);
+  const bottom = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const setPosts = async () => {
+      try {
+        const postsData = await findAllPosts(offset);
+        dispatch(SET_POSTS(postsData));
+      } catch (err) {
+        console.log(err);
+      } finally {
+      }
+    };
+    setPosts();
+  }, []);
+
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      async function fetchMorePosts() {
+        console.log(offset);
+        const newPosts: PostsResponseType[] = await findAllPosts(offset + 5);
+        dispatch(SET_OFFSET(offset + 5));
+        const allPosts = [...posts, ...newPosts];
+        console.log(allPosts);
+        dispatch(SET_POSTS(allPosts));
+        if (newPosts.length < 5) {
+          bottom.current && observer.unobserve(bottom.current);
+        }
+      }
+      fetchMorePosts();
+    }
+  });
+
+  if (bottom.current) {
+    observer.observe(bottom.current);
+  }
 
   return (
     <div>
@@ -59,8 +103,11 @@ const Home = () => {
           </h2>
         )}
       </section>
-      <div className="flex items-center justify-center py-24">
-        Loading... (coming soon)
+      <div className="flex items-center justify-center my-40">
+        <div
+          ref={bottom}
+          className="loading loading-spinner loading-lg text-secondary"
+        ></div>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ const initialState = {
   posts: [],
   postIdDelete: null,
   commentIdDelete: null,
+  offset: 0,
 };
 
 const postsSlice = createSlice({
@@ -26,6 +27,7 @@ export const { SET_POSTS, SET_POST_ID_DELETE, SET_COMMENT_ID_DELETE } =
   postsSlice.actions;
 
 export const selectPosts = (state: any) => state.posts.posts;
+export const selectOffset = (state: any) => state.posts.offset;
 export const selectPostIdDelete = (state: any) => state.posts.postIdDelete;
 export const selectCommentIdDelete = (state: any) =>
   state.posts.commentIdDelete;

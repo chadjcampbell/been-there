@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  posts: [],
+  posts: [] as any[],
   postIdDelete: null,
   commentIdDelete: null,
 };
@@ -11,7 +11,7 @@ const postsSlice = createSlice({
   initialState,
   reducers: {
     SET_POSTS(state, action) {
-      state.posts = action.payload;
+      state.posts = [...state.posts, ...action.payload];
     },
     SET_POST_ID_DELETE(state, action) {
       state.postIdDelete = action.payload;

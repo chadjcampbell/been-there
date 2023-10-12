@@ -49,6 +49,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const [offset, setOffset] = useState(0);
   const observerTarget = useRef<HTMLDivElement | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const setPosts = async () => {
@@ -57,6 +58,8 @@ const Home = () => {
         dispatch(SET_POSTS(postsData));
       } catch (err) {
         console.log(err);
+      } finally {
+        setLoading(false);
       }
     };
     setPosts();
@@ -84,7 +87,7 @@ const Home = () => {
 
             dispatch(SET_POSTS(newPosts));
           }
-          fetchMorePosts();
+          !loading && fetchMorePosts();
         }
       },
       { threshold: 0.5 }
@@ -99,7 +102,7 @@ const Home = () => {
         observer.unobserve(observerTarget.current);
       }
     };
-  }, [observerTarget]);
+  }, [observerTarget, loading]);
 
   return (
     <div>

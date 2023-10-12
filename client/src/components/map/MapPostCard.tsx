@@ -68,6 +68,7 @@ export const MapPostCard = ({ post }: PostCardProps) => {
           <div className="max-w-md m-4">
             <ImageWrapper>
               <img
+                loading="lazy"
                 className="rounded-xl object-contain"
                 src={post.post_photo_url}
                 alt="User post photo"

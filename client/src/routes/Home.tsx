@@ -47,8 +47,7 @@ export type UserLocation = {
 const Home = () => {
   const posts: PostsResponseType[] | [] = useSelector(selectPosts);
   const dispatch = useDispatch();
-  const [offset, setOffset] = useState(0);
-  const offsetRef = useRef(offset);
+  const offsetRef = useRef(0);
   const observerTarget = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -56,7 +55,6 @@ const Home = () => {
       try {
         const postsData = await findAllPosts(0);
         dispatch(SET_POSTS(postsData));
-        setOffset(5); // Set offset to 5 after the initial fetch
       } catch (err) {
         console.log(err);
       }

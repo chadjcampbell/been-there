@@ -49,6 +49,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const offsetRef = useRef(0);
   const observerTarget = useRef<HTMLDivElement | null>(null);
+  const [endOfPosts, setEndOfPosts] = useState(false);
 
   useEffect(() => {
     const fetchInitialPosts = async () => {
@@ -75,6 +76,7 @@ const Home = () => {
             } else {
               if (observerTarget.current) {
                 observer.unobserve(observerTarget.current);
+                setEndOfPosts(true);
               }
             }
           }
@@ -110,10 +112,14 @@ const Home = () => {
         )}
       </section>
       <div className="flex items-center justify-center my-40">
-        <div
-          ref={observerTarget}
-          className="loading loading-spinner loading-lg text-secondary"
-        ></div>
+        {endOfPosts ? (
+          <div>No more posts</div>
+        ) : (
+          <div
+            ref={observerTarget}
+            className="loading loading-spinner loading-lg text-secondary"
+          ></div>
+        )}
       </div>
     </div>
   );

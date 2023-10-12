@@ -48,40 +48,58 @@ const Home = () => {
   const posts: PostsResponseType[] | [] = useSelector(selectPosts);
   const dispatch = useDispatch();
   const [offset, setOffset] = useState(0);
-  const bottom = useRef<HTMLDivElement | null>(null);
+  const observerTarget = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const setPosts = async () => {
       try {
-        const postsData = await findAllPosts(offset);
+        const postsData = await findAllPosts(0);
         dispatch(SET_POSTS(postsData));
       } catch (err) {
         console.log(err);
-      } finally {
-        const observer = new IntersectionObserver((entries) => {
-          if (entries[0].isIntersecting) {
-            async function fetchMorePosts() {
-              console.log(offset);
-              setOffset((prev) => prev + 10);
-              const newPosts: PostsResponseType[] = await findAllPosts(offset);
-              if (!newPosts.length) {
-                bottom.current && observer.unobserve(bottom.current);
-                return;
-              }
-              console.log(newPosts);
-              dispatch(SET_POSTS(newPosts));
-            }
-            fetchMorePosts();
-          }
-        });
-
-        if (bottom.current) {
-          observer.observe(bottom.current);
-        }
       }
     };
     setPosts();
   }, []);
+
+  const offsetRef = useRef(offset);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          async function fetchMorePosts() {
+            const newOffset = offsetRef.current + 5; // Use the current value from the ref
+            console.log(newOffset);
+            setOffset(newOffset);
+            offsetRef.current = newOffset; // Update the ref
+            const newPosts: PostsResponseType[] = await findAllPosts(newOffset);
+
+            if (!newPosts.length) {
+              if (observerTarget.current) {
+                observer.unobserve(observerTarget.current);
+              }
+              return;
+            }
+
+            dispatch(SET_POSTS(newPosts));
+          }
+          fetchMorePosts();
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => {
+      if (observerTarget.current) {
+        observer.unobserve(observerTarget.current);
+      }
+    };
+  }, [observerTarget]);
 
   return (
     <div>
@@ -99,7 +117,7 @@ const Home = () => {
       </section>
       <div className="flex items-center justify-center my-40">
         <div
-          ref={bottom}
+          ref={observerTarget}
           className="loading loading-spinner loading-lg text-secondary"
         ></div>
       </div>

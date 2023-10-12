@@ -27,6 +27,7 @@ export const findAllPosts = asyncHandler(
       friendIdSet.add(friendship.user_id_2);
     }
     const filteredFriendIds: number[] = Array.from(friendIdSet);
+    console.log(offset);
 
     const result = await db.query.posts.findMany({
       where: inArray(posts.user_id, filteredFriendIds),

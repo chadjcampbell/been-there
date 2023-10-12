@@ -48,46 +48,39 @@ const Home = () => {
   const posts: PostsResponseType[] | [] = useSelector(selectPosts);
   const dispatch = useDispatch();
   const [offset, setOffset] = useState(0);
+  const offsetRef = useRef(offset);
   const observerTarget = useRef<HTMLDivElement | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const setPosts = async () => {
+    const fetchInitialPosts = async () => {
       try {
         const postsData = await findAllPosts(0);
         dispatch(SET_POSTS(postsData));
+        setOffset(5); // Set offset to 5 after the initial fetch
       } catch (err) {
         console.log(err);
-      } finally {
-        setLoading(false);
       }
     };
-    setPosts();
+    fetchInitialPosts();
   }, []);
-
-  const offsetRef = useRef(offset);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
           async function fetchMorePosts() {
-            const newOffset = offsetRef.current + 5; // Use the current value from the ref
-            console.log(newOffset);
-            setOffset(newOffset);
-            offsetRef.current = newOffset; // Update the ref
+            const newOffset = offsetRef.current + 5;
+            offsetRef.current = newOffset;
             const newPosts: PostsResponseType[] = await findAllPosts(newOffset);
-
-            if (!newPosts.length) {
+            if (newPosts.length) {
+              dispatch(SET_POSTS(newPosts));
+            } else {
               if (observerTarget.current) {
                 observer.unobserve(observerTarget.current);
               }
-              return;
             }
-
-            dispatch(SET_POSTS(newPosts));
           }
-          !loading && fetchMorePosts();
+          fetchMorePosts();
         }
       },
       { threshold: 0.5 }
@@ -102,7 +95,7 @@ const Home = () => {
         observer.unobserve(observerTarget.current);
       }
     };
-  }, [observerTarget, loading]);
+  }, [observerTarget]);
 
   return (
     <div>

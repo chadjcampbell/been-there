@@ -1,22 +1,34 @@
 import { useSelector } from "react-redux";
 import { selectUser } from "../redux/features/auth/authSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProfileEdit } from "../components/profile/ProfileEdit";
 import { ProfileView } from "../components/profile/ProfileView";
-import { selectPosts } from "../redux/features/posts/postSlice";
 import { PostsResponseType } from "./Home";
 import PostCard from "../components/home/PostCard";
+import { getFriend } from "../redux/features/friends/friendService";
+import Loading from "../components/global/Loading";
 
 const Profile = () => {
   const user = useSelector(selectUser);
-  const posts = useSelector(selectPosts);
+  const [posts, setPosts] = useState([]);
   const [updateMode, setUpdateMode] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const usersPosts = posts.filter(
-    (post: PostsResponseType) => post.user_id === user.userId
-  );
+  useEffect(() => {
+    const userPostData = async (userId: string) => {
+      try {
+        const data = await getFriend(userId);
+        setPosts(data.posts);
+      } finally {
+        setLoading(false);
+      }
+    };
+    userPostData(user.userId.toString());
+  }, []);
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <section>
       <div className="card w-auto  flex-row content-center justify-center bg-base-100 shadow-xl m-8">
         {updateMode ? (
@@ -26,13 +38,13 @@ const Profile = () => {
         )}
       </div>
       <div className="p-8 my-12 flex content-center justify-center">
-        {usersPosts.length == 0 ? (
+        {posts.length == 0 ? (
           <h2 className="text-3xl font-bold">
             No posts yet. Where have you been?
           </h2>
         ) : (
           <section>
-            {usersPosts.map((post: PostsResponseType) => (
+            {posts.map((post: PostsResponseType) => (
               <PostCard key={post.post_id} post={post} />
             ))}
           </section>

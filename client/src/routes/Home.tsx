@@ -50,6 +50,7 @@ const Home = () => {
   const offsetRef = useRef(0);
   const observerTarget = useRef<HTMLDivElement | null>(null);
   const [endOfPosts, setEndOfPosts] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchInitialPosts = async () => {
@@ -58,67 +59,82 @@ const Home = () => {
         dispatch(SET_POSTS(postsData));
       } catch (err) {
         console.log(err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchInitialPosts();
   }, []);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          async function fetchMorePosts() {
-            const newOffset = offsetRef.current + 5;
-            offsetRef.current = newOffset;
-            const newPosts: PostsResponseType[] = await findAllPosts(newOffset);
-            if (newPosts.length) {
-              dispatch(SET_POSTS(newPosts));
-            } else {
-              if (observerTarget.current) {
-                observer.unobserve(observerTarget.current);
-                setEndOfPosts(true);
+    if (!loading) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            async function fetchMorePosts() {
+              const newOffset = offsetRef.current + 5;
+              offsetRef.current = newOffset;
+              const newPosts: PostsResponseType[] = await findAllPosts(
+                newOffset
+              );
+              if (newPosts.length) {
+                dispatch(SET_POSTS(newPosts));
+              } else {
+                if (observerTarget.current) {
+                  observer.unobserve(observerTarget.current);
+                  setEndOfPosts(true);
+                }
               }
             }
+            !loading && fetchMorePosts();
           }
-          fetchMorePosts();
-        }
-      },
-      { threshold: 0.5 }
-    );
+        },
+        { threshold: 0.5 }
+      );
 
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
-    }
-
-    return () => {
       if (observerTarget.current) {
-        observer.unobserve(observerTarget.current);
+        observer.observe(observerTarget.current);
       }
-    };
-  }, [observerTarget]);
+
+      return () => {
+        if (observerTarget.current) {
+          observer.unobserve(observerTarget.current);
+        }
+      };
+    }
+  }, [loading]);
 
   return (
     <div>
       <section>
         <MakePost />
       </section>
-      <section>
-        {posts.length > 0 ? (
-          posts.map((post) => <PostCard key={post.post_id} post={post} />)
-        ) : (
-          <h2 className="card-title flex justify-center items-center mt-16">
-            No posts yet, where have you been?
-          </h2>
-        )}
-      </section>
+      {loading ? (
+        <div className="flex items-center justify-center my-40">
+          <div className="loading loading-spinner loading-lg text-secondary"></div>
+        </div>
+      ) : (
+        <section>
+          {posts.length > 0 ? (
+            posts.map((post) => <PostCard key={post.post_id} post={post} />)
+          ) : (
+            <h2 className="card-title flex justify-center items-center mt-16">
+              No posts yet, where have you been?
+            </h2>
+          )}
+        </section>
+      )}
+
       <div className="flex items-center justify-center my-40">
         {endOfPosts ? (
           <div>No more posts</div>
         ) : (
-          <div
-            ref={observerTarget}
-            className="loading loading-spinner loading-lg text-secondary"
-          ></div>
+          !loading && (
+            <div
+              ref={observerTarget}
+              className="loading loading-spinner loading-lg text-secondary"
+            ></div>
+          )
         )}
       </div>
     </div>

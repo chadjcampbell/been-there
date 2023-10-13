@@ -37,7 +37,7 @@ const NavWrapper = () => {
   const navigate = useNavigate();
   const [navbarVisible, setNavbarVisible] = useState(true);
 
-  // Add a scroll event listener to hide/show the navbar
+  // Add a scroll event listener to hide/show the "back to top" button
   useEffect(() => {
     const handleScroll = () => {
       const scrolled = window.scrollY;

@@ -1,14 +1,25 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import Leaflet from "leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
-import { useSelector } from "react-redux";
-import { selectPosts } from "../redux/features/posts/postSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { SET_POSTS, selectPosts } from "../redux/features/posts/postSlice";
 import { PostsResponseType } from "./Home";
 import MapPostCard from "../components/map/MapPostCard";
 import { stringToColor } from "../utils/stringToColor";
+import { useEffect } from "react";
+import { findAllPosts } from "../redux/features/posts/postService";
 
 const Map = () => {
   const posts: PostsResponseType[] = useSelector(selectPosts);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    async function fetchPosts() {
+      const data = await findAllPosts(-1);
+      dispatch(SET_POSTS(data));
+    }
+    fetchPosts();
+  }, []);
 
   const createCustomIcon = (profilePictureUrl: string, color: string) => {
     const iconHtml = `

@@ -1,8 +1,6 @@
 import MakePost from "../components/home/MakePost";
 import PostCard from "../components/home/PostCard";
 import { FriendType } from "./Friends";
-// import { useDispatch, useSelector } from "react-redux";
-// import { selectPosts } from "../redux/features/posts/postSlice";
 import { useCallback, useRef, useState } from "react";
 import usePosts from "../hooks/usePosts";
 import toast from "react-hot-toast";
@@ -46,9 +44,6 @@ export type UserLocation = {
 };
 
 const Home = () => {
-  // Let's try infinite scroll without RTK
-  // const posts: PostsResponseType[] | [] = useSelector(selectPosts);
-  // const dispatch = useDispatch();
   const [offset, setOffset] = useState(0);
   const { isLoading, isError, error, results, hasNextPage } = usePosts(offset);
 
@@ -60,7 +55,6 @@ const Home = () => {
 
       intObserver.current = new IntersectionObserver((posts) => {
         if (posts[0].isIntersecting && hasNextPage) {
-          console.log("We are near the last post!");
           setOffset((prev) => prev + 5);
         }
       });

@@ -12,7 +12,7 @@ export const findAllPosts = asyncHandler(
       res.status(400);
       throw new Error("Not authorized, please log in");
     }
-    const { offset } = req.params;
+    let { offset } = req.params;
 
     const friendArray = await db.query.friends.findMany({
       where: or(
@@ -27,7 +27,10 @@ export const findAllPosts = asyncHandler(
       friendIdSet.add(friendship.user_id_2);
     }
     const filteredFriendIds: number[] = Array.from(friendIdSet);
-    console.log(offset);
+
+    // if offSet is passed as -1, get all posts without limit or offset
+    const limit = Number(offset) == -1 ? 0 : 5;
+    const newOffset = Number(offset) == -1 ? 0 : Number(offset);
 
     const result = await db.query.posts.findMany({
       where: inArray(posts.user_id, filteredFriendIds),
@@ -52,8 +55,8 @@ export const findAllPosts = asyncHandler(
         },
       },
       orderBy: (posts, { desc }) => [desc(posts.post_date)],
-      limit: 5,
-      offset: Number(offset),
+      limit: limit,
+      offset: newOffset,
     });
 
     if (!result) {

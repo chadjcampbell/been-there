@@ -7,7 +7,7 @@ const usePosts = (offset = 0) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState<any>({});
-  const [hasNextPage, setHasNextPage] = useState(false);
+  const [hasNextPage, setHasNextPage] = useState(true);
 
   useEffect(() => {
     setIsLoading(true);
@@ -16,7 +16,6 @@ const usePosts = (offset = 0) => {
 
     findAllPosts(offset)
       .then((data: PostsResponseType[]) => {
-        console.log(data);
         setResults((prev) => [...prev, ...data]);
         setHasNextPage(Boolean(data.length));
         setIsLoading(false);

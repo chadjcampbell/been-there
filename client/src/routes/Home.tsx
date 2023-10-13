@@ -1,10 +1,11 @@
 import MakePost from "../components/home/MakePost";
 import PostCard from "../components/home/PostCard";
 import { FriendType } from "./Friends";
-import { useDispatch, useSelector } from "react-redux";
-import { SET_POSTS, selectPosts } from "../redux/features/posts/postSlice";
-import { useEffect, useRef, useState } from "react";
-import { findAllPosts } from "../redux/features/posts/postService";
+// import { useDispatch, useSelector } from "react-redux";
+// import { selectPosts } from "../redux/features/posts/postSlice";
+import { useCallback, useRef, useState } from "react";
+import usePosts from "../hooks/usePosts";
+import toast from "react-hot-toast";
 
 export type PostsResponseType = {
   content: string;
@@ -45,96 +46,49 @@ export type UserLocation = {
 };
 
 const Home = () => {
-  const posts: PostsResponseType[] | [] = useSelector(selectPosts);
-  const dispatch = useDispatch();
-  const offsetRef = useRef(0);
-  const observerTarget = useRef<HTMLDivElement | null>(null);
-  const [endOfPosts, setEndOfPosts] = useState(false);
-  const [loading, setLoading] = useState(true);
+  // Let's try infinite scroll without RTK
+  // const posts: PostsResponseType[] | [] = useSelector(selectPosts);
+  // const dispatch = useDispatch();
+  const [offset, setOffset] = useState(0);
+  const { isLoading, isError, error, results, hasNextPage } = usePosts(offset);
 
-  useEffect(() => {
-    const fetchInitialPosts = async () => {
-      try {
-        const postsData = await findAllPosts(0);
-        dispatch(SET_POSTS(postsData));
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchInitialPosts();
-  }, []);
+  const intObserver = useRef<any>(null);
+  const lastPostRef = useCallback(
+    (post: HTMLDivElement) => {
+      if (isLoading) return;
+      if (intObserver.current) intObserver.current.disconnect();
 
-  useEffect(() => {
-    if (!loading) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting) {
-            async function fetchMorePosts() {
-              const newOffset = offsetRef.current + 5;
-              offsetRef.current = newOffset;
-              const newPosts: PostsResponseType[] = await findAllPosts(
-                newOffset
-              );
-              if (newPosts.length) {
-                dispatch(SET_POSTS(newPosts));
-              } else {
-                if (observerTarget.current) {
-                  observer.unobserve(observerTarget.current);
-                  setEndOfPosts(true);
-                }
-              }
-            }
-            !loading && fetchMorePosts();
-          }
-        },
-        { threshold: 0.5 }
-      );
-
-      if (observerTarget.current) {
-        observer.observe(observerTarget.current);
-      }
-
-      return () => {
-        if (observerTarget.current) {
-          observer.unobserve(observerTarget.current);
+      intObserver.current = new IntersectionObserver((posts) => {
+        if (posts[0].isIntersecting && hasNextPage) {
+          console.log("We are near the last post!");
+          setOffset((prev) => prev + 5);
         }
-      };
+      });
+
+      if (post) intObserver.current.observe(post);
+    },
+    [isLoading, hasNextPage]
+  );
+
+  if (isError) toast.error(error.message);
+
+  const content = results.map((post, i) => {
+    if (results.length === i + 1) {
+      return <PostCard ref={lastPostRef} key={post.post_id} post={post} />;
     }
-  }, [loading]);
+    return <PostCard key={post.post_id} post={post} />;
+  });
 
   return (
     <div>
       <section>
         <MakePost />
       </section>
-      {loading ? (
-        <div className="flex items-center justify-center my-40">
-          <div className="loading loading-spinner loading-lg text-secondary"></div>
-        </div>
-      ) : (
-        <section>
-          {posts.length > 0 ? (
-            posts.map((post) => <PostCard key={post.post_id} post={post} />)
-          ) : (
-            <h2 className="card-title flex justify-center items-center mt-16">
-              No posts yet, where have you been?
-            </h2>
-          )}
-        </section>
-      )}
-
+      {content}
       <div className="flex items-center justify-center my-40">
-        {endOfPosts ? (
-          <div>No more posts</div>
-        ) : (
-          !loading && (
-            <div
-              ref={observerTarget}
-              className="loading loading-spinner loading-lg text-secondary"
-            ></div>
-          )
+        {!hasNextPage && <div>No more posts</div>}
+        {isLoading && (
+          <div className="loading loading-spinner loading-lg text-secondary"></div>
         )}
       </div>
     </div>

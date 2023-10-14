@@ -193,6 +193,13 @@ export const deletePost = asyncHandler(
       throw new Error("Not authorized, please log in");
     }
     const { postId } = req.body;
+    const checkUser = await db.query.posts.findFirst({
+      where: eq(posts.post_id, postId),
+    });
+    if (checkUser?.user_id !== req.user.user_id) {
+      res.status(403);
+      throw new Error("Not authorized user");
+    }
     try {
       await db.delete(comments).where(eq(comments.post_id, postId));
       await db.delete(posts).where(eq(posts.post_id, postId));

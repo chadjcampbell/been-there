@@ -14,17 +14,28 @@ const usePosts = (offset = 0) => {
     setIsError(false);
     setError({});
 
-    findAllPosts(offset)
-      .then((data: PostsResponseType[]) => {
-        setResults((prev) => [...prev, ...data]);
-        setHasNextPage(Boolean(data.length));
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    const fetchData = async () => {
+      try {
+        const data = await findAllPosts(offset);
+        if (!signal.aborted) {
+          setResults((prev) => [...prev, ...data]);
+          setHasNextPage(Boolean(data.length));
+          setIsLoading(false);
+        }
+      } catch (e: any) {
         setIsLoading(false);
-      })
-      .catch((e) => {
-        setIsLoading(false);
+        if (signal.aborted) return;
         setIsError(true);
         setError({ message: e.message });
-      });
+      }
+    };
+
+    fetchData();
+
+    return () => controller.abort();
   }, [offset]);
 
   return { isLoading, isError, error, results, hasNextPage };

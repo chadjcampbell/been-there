@@ -11,7 +11,7 @@ const postsSlice = createSlice({
   initialState,
   reducers: {
     SET_POSTS(state, action) {
-      state.posts = [...state.posts, ...action.payload];
+      state.posts = action.payload;
     },
     SET_POST_ID_DELETE(state, action) {
       state.postIdDelete = action.payload;

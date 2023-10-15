@@ -13,12 +13,19 @@ import {
 } from "../controllers/userController";
 import { protect } from "../middleware/authMiddleware";
 import rateLimiter from "../middleware/rateLimiter";
+import passport from "passport";
 
 router.post("/register", registerUser);
 router.post("/login", rateLimiter, loginUser);
 router.get("/logout", logoutUser);
 router.get("/getUser", protect, getUser);
 router.get("/loggedIn", loginStatus);
+router.get(
+  "/google",
+  passport.authenticate("google", {
+    scope: "profile",
+  })
+);
 router.patch("/updateUser", protect, updateUser);
 router.patch("/changePassword", protect, changePassword);
 router.post("/forgotPassword", forgotPassword);

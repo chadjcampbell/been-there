@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 import { users } from "../schema";
 
 export type UserFromDB = {
-  user_id: number;
+  user_id?: number;
   name?: string;
   email?: string;
   passhash?: string;
@@ -18,9 +18,10 @@ export interface RequestUserAttached extends Request {
   id?: number;
   user?: UserFromDB;
 }
+1;
 
 export const protect = asyncHandler(
-  async (req: RequestUserAttached, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
       const token = req.cookies.token;
       if (!token) {

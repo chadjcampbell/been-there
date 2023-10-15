@@ -200,7 +200,7 @@ export const getUser = asyncHandler(async (req: RequestUserAttached, res) => {
     throw new Error("User not found");
   }
   const user = await db.query.users.findFirst({
-    where: eq(users.user_id, req.user.user_id),
+    where: eq(users.user_id, Number(req.user.user_id)),
   });
   if (user) {
     const { user_id, name, email, photo_url, bio, registration_date } = user;
@@ -242,7 +242,7 @@ export const updateUser = asyncHandler(
       throw new Error("User not found");
     } else {
       const user = await db.query.users.findFirst({
-        where: eq(users.user_id, req.user.user_id),
+        where: eq(users.user_id, Number(req.user.user_id)),
       });
       if (user) {
         const { name, email, photo_url, bio } = user;
@@ -253,7 +253,7 @@ export const updateUser = asyncHandler(
         const updatedUserArray = await db
           .update(users)
           .set(user)
-          .where(eq(users.user_id, req.user.user_id))
+          .where(eq(users.user_id, Number(req.user.user_id)))
           .returning();
         const updatedUser = updatedUserArray[0];
         res.status(200).json({
@@ -287,7 +287,7 @@ export const changePassword = [
       throw new Error("User not found");
     }
     const user = await db.query.users.findFirst({
-      where: eq(users.user_id, req.user.user_id),
+      where: eq(users.user_id, Number(req.user.user_id)),
     });
     if (!user) {
       res.status(400);
@@ -301,7 +301,7 @@ export const changePassword = [
       await db
         .update(users)
         .set({ passhash: hashedPassword })
-        .where(eq(users.user_id, req.user.user_id));
+        .where(eq(users.user_id, Number(req.user.user_id)));
       res.status(200).send("Password changed successfuly");
     } else {
       res.status(400);

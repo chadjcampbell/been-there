@@ -8,6 +8,8 @@ import {
   SET_NAME,
   SET_USER,
 } from "../redux/features/auth/authSlice";
+import { BsFacebook } from "react-icons/bs";
+import { FcGoogle } from "react-icons/fc";
 
 export interface IFormLoginInputs {
   email: string;
@@ -66,6 +68,14 @@ const Login = () => {
 
   const handleGuestLogin = () => {
     setGuestBool(true);
+  };
+
+  const handleFacebookLogin = () => {
+    return;
+  };
+
+  const handleGoogleLogin = () => {
+    return;
   };
 
   const onSubmitHandler: SubmitHandler<IFormLoginInputs> = async (values) => {
@@ -206,6 +216,27 @@ const Login = () => {
             className="w-full btn btn-warning"
           >
             Demo Account Login
+          </button>
+        </div>
+        <div className="divider">Or login with</div>
+        <div className="my-6 w-full flex gap-4 justify-center items-center">
+          <button
+            disabled={isLoading || guestBool}
+            onClick={handleFacebookLogin}
+            type="button"
+            className="flex-1 btn btn-outline"
+          >
+            <BsFacebook size="1.5rem" color="#39569c" />
+            Facebook
+          </button>
+          <button
+            disabled={isLoading || guestBool}
+            onClick={handleGoogleLogin}
+            type="button"
+            className="flex-1 btn btn-outline"
+          >
+            <FcGoogle size="1.5rem" />
+            Google
           </button>
         </div>
       </div>

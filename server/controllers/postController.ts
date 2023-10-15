@@ -16,8 +16,8 @@ export const findAllPosts = asyncHandler(
 
     const friendArray = await db.query.friends.findMany({
       where: or(
-        eq(friends.user_id_1, req.user.user_id),
-        eq(friends.user_id_2, req.user.user_id)
+        eq(friends.user_id_1, Number(req.user.user_id)),
+        eq(friends.user_id_2, Number(req.user.user_id))
       ),
     });
 
@@ -123,7 +123,7 @@ export const makePost = [
       const result = await db
         .insert(posts)
         .values({
-          user_id: req.user.user_id,
+          user_id: Number(req.user.user_id),
           content: content,
           post_photo_url: postPhotoUrl ? postPhotoUrl : "",
           user_location: { city, state, country, latitude, longitude },
@@ -164,7 +164,7 @@ export const likePost = asyncHandler(async (req: RequestUserAttached, res) => {
   const { postId } = req.body;
   const userLikeExists = await db.query.likes.findFirst({
     where: and(
-      eq(likes.user_id, req.user.user_id),
+      eq(likes.user_id, Number(req.user.user_id)),
       eq(likes.target_id, postId),
       eq(likes.target_type, "post")
     ),
@@ -175,7 +175,7 @@ export const likePost = asyncHandler(async (req: RequestUserAttached, res) => {
   }
   try {
     await db.insert(likes).values({
-      user_id: req.user.user_id,
+      user_id: Number(req.user.user_id),
       target_id: postId,
       target_type: "post",
     });
@@ -241,7 +241,7 @@ export const makeComment = [
         .insert(comments)
         .values({
           post_id: postId,
-          user_id: req.user.user_id,
+          user_id: Number(req.user.user_id),
           content: content,
           comment_photo_url: commentPhotoUrl ? commentPhotoUrl : "",
         })
@@ -284,7 +284,7 @@ export const likeComment = asyncHandler(
     const { commentId } = req.body;
     const userLikeExists = await db.query.likes.findFirst({
       where: and(
-        eq(likes.user_id, req.user.user_id),
+        eq(likes.user_id, Number(req.user.user_id)),
         eq(likes.target_id, commentId),
         eq(likes.target_type, "comment")
       ),
@@ -295,7 +295,7 @@ export const likeComment = asyncHandler(
     }
     try {
       await db.insert(likes).values({
-        user_id: req.user.user_id,
+        user_id: Number(req.user.user_id),
         target_id: commentId,
         target_type: "comment",
       });

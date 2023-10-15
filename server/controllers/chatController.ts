@@ -76,7 +76,7 @@ export const sendMessage = [
       const result = await db
         .insert(chat_messages)
         .values({
-          sender_id: req.user.user_id,
+          sender_id: Number(req.user.user_id),
           receiver_id: friendId,
           message_text: message,
           message_photo_url: messagePhotoUrl ? messagePhotoUrl : "",

@@ -12,7 +12,7 @@ export const getAllNotifications = asyncHandler(
     }
     const data = await db.query.notifications.findMany({
       where: and(
-        eq(notifications.user_id, req.user.user_id),
+        eq(notifications.user_id, Number(req.user.user_id)),
         eq(notifications.is_read, false)
       ),
       orderBy: (notifications, { desc }) => [desc(notifications.created_at)],
@@ -54,7 +54,7 @@ export const subscribe = asyncHandler(async (req: RequestUserAttached, res) => {
   try {
     const newSubscription = await db
       .insert(subscriptions)
-      .values({ user_id: req.user.user_id, endpoint, p256dh, auth });
+      .values({ user_id: Number(req.user.user_id), endpoint, p256dh, auth });
     //.....
     res.status(201).send();
   } catch {

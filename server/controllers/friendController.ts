@@ -31,10 +31,10 @@ export const findAllFriends = asyncHandler(
       )
       .where(
         and(
-          ne(users.user_id, req.user.user_id),
+          ne(users.user_id, Number(req.user.user_id)),
           or(
-            eq(friends.user_id_1, req.user.user_id),
-            eq(friends.user_id_2, req.user.user_id)
+            eq(friends.user_id_1, Number(req.user.user_id)),
+            eq(friends.user_id_2, Number(req.user.user_id))
           )
         )
       );
@@ -95,11 +95,11 @@ export const sendFriendRequest = [
       .where(
         or(
           and(
-            eq(friend_requests.sender_id, req.user.user_id),
+            eq(friend_requests.sender_id, Number(req.user.user_id)),
             eq(friend_requests.receiver_id, friendId)
           ),
           and(
-            eq(friend_requests.receiver_id, req.user.user_id),
+            eq(friend_requests.receiver_id, Number(req.user.user_id)),
             eq(friend_requests.sender_id, friendId)
           )
         )
@@ -109,7 +109,7 @@ export const sendFriendRequest = [
       throw new Error("Friend request already sent");
     }
     await db.insert(friend_requests).values({
-      sender_id: req.user.user_id,
+      sender_id: Number(req.user.user_id),
       receiver_id: friend.user_id,
       status: "pending",
     });
@@ -155,7 +155,7 @@ export const pendingFriends = asyncHandler(
       .innerJoin(friend_requests, eq(users.user_id, friend_requests.sender_id))
       .where(
         and(
-          eq(friend_requests.receiver_id, req.user.user_id),
+          eq(friend_requests.receiver_id, Number(req.user.user_id)),
           eq(friend_requests.status, "pending")
         )
       );
@@ -190,11 +190,11 @@ export const acceptFriendRequest = [
         .where(
           and(
             eq(friend_requests.sender_id, friendId),
-            eq(friend_requests.receiver_id, req.user.user_id)
+            eq(friend_requests.receiver_id, Number(req.user.user_id))
           )
         );
       await db.insert(friends).values({
-        user_id_1: req.user.user_id,
+        user_id_1: Number(req.user.user_id),
         user_id_2: friendId,
       });
     } catch {
@@ -255,7 +255,7 @@ export const rejectFriendRequest = [
         .where(
           and(
             eq(friend_requests.sender_id, friendId),
-            eq(friend_requests.receiver_id, req.user.user_id)
+            eq(friend_requests.receiver_id, Number(req.user.user_id))
           )
         );
     } catch {
@@ -283,11 +283,11 @@ export const deleteFriend = asyncHandler(
         .where(
           or(
             and(
-              eq(friends.user_id_1, req.user.user_id),
+              eq(friends.user_id_1, Number(req.user.user_id)),
               eq(friends.user_id_2, Number(friendId))
             ),
             and(
-              eq(friends.user_id_2, req.user.user_id),
+              eq(friends.user_id_2, Number(req.user.user_id)),
               eq(friends.user_id_1, Number(friendId))
             )
           )

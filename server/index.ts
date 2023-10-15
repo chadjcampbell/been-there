@@ -17,6 +17,7 @@ import {
   setOnlineStatus,
 } from "./controllers/socketController";
 import { redisClient } from "./redis";
+require("./passport/googlePassport.ts");
 
 const port = process.env.PORT || 3000;
 const server = require("http").createServer(app);

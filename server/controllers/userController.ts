@@ -269,6 +269,7 @@ export const updateUser = asyncHandler(
   }
 );
 
+// functions below here aren't hooked up yet
 export const changePassword = [
   body("password")
     .trim()

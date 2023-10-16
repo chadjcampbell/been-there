@@ -16,7 +16,7 @@ import {
 } from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
 
-const generateToken = (id: string) => {
+export const generateToken = (id: string) => {
   return jwt.sign({ id }, String(process.env.JWT_SECRET), { expiresIn: "1d" });
 };
 
@@ -183,6 +183,7 @@ export const loginUser = [
 ];
 
 export const logoutUser = asyncHandler(async (req, res) => {
+  req.user = {};
   res.cookie("token", "", {
     path: "/",
     httpOnly: true,

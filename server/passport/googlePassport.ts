@@ -1,5 +1,8 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import db from "../db";
+import { eq } from "drizzle-orm";
+import { users } from "../schema";
 require("dotenv").config();
 
 const options = {
@@ -13,10 +16,17 @@ passport.use(
     options,
     async (_accessToken, _refreshToken, profile, done) => {
       const account = profile._json;
-      console.log(account);
       try {
-        //TODO login/register Google user
-        done(null, profile._json);
+        const existingUser = await db.query.users.findFirst({
+          where: eq(users.email, String(account.email)),
+        });
+        // if user exists, send user
+        if (existingUser) {
+          done(null, existingUser);
+          // if user doesn't exist, register user and send
+        } else {
+          done(null, account);
+        }
       } catch (err: any) {
         done(err);
       }
@@ -24,7 +34,7 @@ passport.use(
   )
 );
 
-// profile._json response
+// "account" variable
 /* {
   sub: '1234567890',
   name: 'Chad Campbell',

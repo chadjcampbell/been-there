@@ -10,8 +10,9 @@ import {
   changePassword,
   forgotPassword,
   resetPassword,
+  generateToken,
 } from "../controllers/userController";
-import { protect } from "../middleware/authMiddleware";
+import { UserFromDB, protect } from "../middleware/authMiddleware";
 import rateLimiter from "../middleware/rateLimiter";
 import passport from "passport";
 require("dotenv").config();
@@ -40,8 +41,27 @@ router.get(
     failureRedirect: `${String(process.env.FRONTEND_URL)}/login`,
     session: false,
   }),
-  function (_req, res) {
-    // Successful authentication, redirect home.
-    return res.redirect(String(process.env.FRONTEND_URL));
+  function (req, res) {
+    const user = req.user as UserFromDB;
+    // generate token
+    const token = generateToken(String(user.user_id));
+    // send http cookie
+    res.cookie("token", token, {
+      path: "/",
+      httpOnly: true,
+      expires: new Date(Date.now() + 1000 * 86400), // 1 day
+      sameSite: "none",
+      secure: true,
+    });
+    const { user_id, name, email, photo_url, bio, registration_date } = user;
+    res.status(200).json({
+      userId: user_id,
+      name,
+      email,
+      photoUrl: photo_url,
+      bio,
+      registrationDate: registration_date,
+    });
+    res.redirect(String(process.env.FRONTEND_URL));
   }
 );

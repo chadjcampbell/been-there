@@ -11,13 +11,14 @@ const options = {
 passport.use(
   new GoogleStrategy(
     options,
-    async (_accessToken, _refreshToken, profile, cb) => {
+    async (_accessToken, _refreshToken, profile, done) => {
       const account = profile._json;
       console.log(account);
       try {
         //TODO login/register Google user
+        done(null, profile._json);
       } catch (err: any) {
-        cb(err);
+        done(err);
       }
     }
   )

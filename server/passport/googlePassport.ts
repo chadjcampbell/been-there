@@ -23,3 +23,16 @@ passport.use(
     }
   )
 );
+
+// profile._json response
+/* {
+  sub: '1234567890',
+  name: 'Chad Campbell',
+  given_name: 'Chad',
+  family_name: 'Campbell',
+  picture: 'https://lh3.googleusercontent.com/a/ACg8ocLRYbPhXsQbhI-8pBM-Q8GWud141yEK5UHncwVH-PElPw=s96-c',
+  email: 'chadjcampbell@gmail.com',
+  email_verified: true,
+  locale: 'en'
+}
+ */

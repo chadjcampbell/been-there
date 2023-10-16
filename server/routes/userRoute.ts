@@ -30,13 +30,15 @@ router.put("/resetPassword/:resetToken", resetPassword);
 router.get(
   "/google",
   passport.authenticate("google", {
-    scope: "profile",
+    scope: ["profile", "email"],
+    session: false,
   })
 );
 router.get(
   "/google/callback",
   passport.authenticate("google", {
     failureRedirect: `${String(process.env.FRONTEND_URL)}/login`,
+    session: false,
   }),
   function (_req, res) {
     // Successful authentication, redirect home.

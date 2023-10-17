@@ -18,6 +18,7 @@ import {
 } from "./controllers/socketController";
 import { redisClient } from "./redis";
 require("./passport/googlePassport");
+require("./passport/facebookPassport");
 
 const port = process.env.PORT || 3000;
 const server = require("http").createServer(app);

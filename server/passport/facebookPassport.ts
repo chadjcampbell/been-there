@@ -1,30 +1,24 @@
 import passport from "passport";
 import { Strategy as FacebookStrategy } from "passport-facebook";
-import db from "../db";
-import { eq } from "drizzle-orm";
-import {
-  chat_messages,
-  friend_requests,
-  friends,
-  notifications,
-  users,
-} from "../schema";
 require("dotenv").config();
 
 const options = {
   clientID: process.env.FACEBOOK_CLIENT_ID || "",
   clientSecret: process.env.FACEBOOK_CLIENT_SECRET || "",
   callbackURL: `${String(process.env.BACKEND_URL)}/auth/facebook/callback`,
+  profileFields: ["id", "name", "email", "picture"],
 };
 
 passport.use(
   new FacebookStrategy(
     options,
-    async (_accessToken, _refreshToken, profile, done) => {
+    async (_accessToken, _refreshToken, profile, _done) => {
       const account = profile._json;
+      const profileUrl = account.picture.data.url;
       console.log(account);
+      console.log(profileUrl);
       return;
-      try {
+      /*       try {
         const existingFacebook = await db.query.users.findFirst({
           where: eq(users.email, String(account.email)),
         });
@@ -83,7 +77,25 @@ passport.use(
         });
       } catch (err: any) {
         done(err);
-      }
+      } */
     }
   )
 );
+
+// facebook "account" variable
+/* {
+  id: '0123456789',
+  last_name: 'Campbell',
+  first_name: 'Chad',
+  email: 'chadjcampbell@gmail.com',
+  picture: {
+    data: {
+      height: 51,
+      is_silhouette: false,
+      url: 'https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=10112562912888919&height=50&width=50&ext=1700166528&hash=AeSBfaMJT3CYfK4ol6Y',
+      width: 50
+    }
+  }
+}
+
+   */

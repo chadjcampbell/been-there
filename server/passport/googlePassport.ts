@@ -23,19 +23,11 @@ passport.use(
     async (_accessToken, _refreshToken, profile, done) => {
       const account = profile._json;
       try {
-        const existingGoogleId = await db.query.users.findFirst({
-          where: eq(users.google_id, String(account.sub)),
-        });
-        // if user exists, send user
-        if (existingGoogleId) {
-          done(null, existingGoogleId);
-          return;
-        }
-        const existingGoogleEmail = await db.query.users.findFirst({
+        const existingGmail = await db.query.users.findFirst({
           where: eq(users.email, String(account.email)),
         });
-        if (existingGoogleEmail) {
-          done(null, existingGoogleEmail);
+        if (existingGmail) {
+          done(null, existingGmail);
           return;
         }
 

@@ -53,14 +53,6 @@ router.get(
       sameSite: "none",
       secure: true,
     });
-    const { user_id, name, email, photo_url, bio, registration_date } = user;
-    res.status(200).json({
-      userId: user_id,
-      name,
-      email,
-      photoUrl: photo_url,
-      bio,
-      registrationDate: registration_date,
-    });
+    res.redirect(String(process.env.FRONTEND_URL));
   }
 );

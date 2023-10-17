@@ -151,6 +151,9 @@ export const loginUser = [
         throw new Error("User not found, please sign up");
       } else {
         // user exists, compare passwords
+        if (!user.passhash) {
+          throw new Error("Password required");
+        }
         const passwordIsCorrect = await bcrypt.compare(password, user.passhash);
         if (passwordIsCorrect) {
           // generate token
@@ -297,6 +300,9 @@ export const changePassword = [
     }
     const { oldPassword, password } = req.body;
     // check old password
+    if (!user.passhash) {
+      throw new Error("Password required");
+    }
     const passwordIsCorrect = await bcrypt.compare(oldPassword, user.passhash);
     if (user && passwordIsCorrect) {
       const hashedPassword = await bcrypt.hash(password, 10);

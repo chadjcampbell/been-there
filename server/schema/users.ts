@@ -12,6 +12,7 @@ export const users = pgTable("users", {
   name: varchar("name", { length: 60 }).notNull(),
   email: varchar("email", { length: 40 }).notNull().unique(),
   passhash: varchar("passhash"),
+  google_id: varchar("google_id").unique(),
   photo_url: varchar("photo_url")
     .notNull()
     .default(

@@ -62,6 +62,5 @@ router.get(
       bio,
       registrationDate: registration_date,
     });
-    res.redirect(String(process.env.FRONTEND_URL));
   }
 );

@@ -3,6 +3,7 @@ CREATE TABLE users(
   name VARCHAR(60) NOT NULL,
   email VARCHAR(40) NOT NULL UNIQUE,
   passhash VARCHAR,
+  google_id VARCHAR UNIQUE,
   photo_url VARCHAR NOT NULL DEFAULT 'https://img.freepik.com/free-icon/user_318-159711.jpg?t=st=0~exp=0~hmac=7ec3ecd49f9d99da3d2907db79b3d1abfcae7d393cdd51ab28bbab45dcc51596',
   bio VARCHAR NOT NULL DEFAULT 'Add your bio here to tell people who you are and where you''ve been...',
   registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP

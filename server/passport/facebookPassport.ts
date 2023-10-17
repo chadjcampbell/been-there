@@ -1,5 +1,5 @@
 import passport from "passport";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { Strategy as FacebookStrategy } from "passport-facebook";
 import db from "../db";
 import { eq } from "drizzle-orm";
 import {
@@ -12,22 +12,24 @@ import {
 require("dotenv").config();
 
 const options = {
-  clientID: process.env.GOOGLE_CLIENT_ID || "",
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-  callbackURL: `${String(process.env.BACKEND_URL)}/auth/google/callback`,
+  clientID: process.env.FACEBOOK_CLIENT_ID || "",
+  clientSecret: process.env.FACEBOOK_CLIENT_SECRET || "",
+  callbackURL: `${String(process.env.BACKEND_URL)}/auth/facebook/callback`,
 };
 
 passport.use(
-  new GoogleStrategy(
+  new FacebookStrategy(
     options,
     async (_accessToken, _refreshToken, profile, done) => {
       const account = profile._json;
+      console.log(account);
+      return;
       try {
-        const existingGmail = await db.query.users.findFirst({
+        const existingFacebook = await db.query.users.findFirst({
           where: eq(users.email, String(account.email)),
         });
-        if (existingGmail) {
-          done(null, existingGmail);
+        if (existingFacebook) {
+          done(null, existingFacebook);
           return;
         }
 

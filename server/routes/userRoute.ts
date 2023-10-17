@@ -56,3 +56,33 @@ router.get(
     res.redirect(String(process.env.FRONTEND_URL));
   }
 );
+
+// routes below for Facebook auth
+router.get(
+  "/facebook",
+  passport.authenticate("facebook", {
+    scope: ["profile", "email"],
+    session: false,
+  })
+);
+router.get(
+  "/facebook/callback",
+  passport.authenticate("facebook", {
+    failureRedirect: `${String(process.env.FRONTEND_URL)}/login`,
+    session: false,
+  }),
+  function (req, res) {
+    const user = req.user as UserFromDB;
+    // generate token
+    const token = generateToken(String(user.user_id));
+    // send http cookie
+    res.cookie("token", token, {
+      path: "/",
+      httpOnly: true,
+      expires: new Date(Date.now() + 1000 * 86400), // 1 day
+      sameSite: "none",
+      secure: true,
+    });
+    res.redirect(String(process.env.FRONTEND_URL));
+  }
+);

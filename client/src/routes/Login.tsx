@@ -76,8 +76,7 @@ const Login = () => {
 
   const handleGoogleLogin = () => {
     const url = `${import.meta.env.VITE_BACKEND_URL}/auth/google`;
-    const google = window.open(url, "_self");
-    console.log(google);
+    window.open(url, "_self");
   };
 
   const onSubmitHandler: SubmitHandler<IFormLoginInputs> = async (values) => {

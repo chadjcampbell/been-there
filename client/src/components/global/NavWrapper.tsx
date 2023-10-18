@@ -30,7 +30,7 @@ import NotificationButton from "./NotificationButton";
 import { SET_NOTIFICATIONS } from "../../redux/features/notifications/notificationSlice";
 import { getNotifications } from "../../redux/features/notifications/notificationService";
 import { regSw, subscribe } from "../../utils/swHelper";
-import { FiSettings } from "react-icons/fi";
+import { FiMenu, FiSettings } from "react-icons/fi";
 
 const NavWrapper = () => {
   const [isLoggingOut, setisLoggingOut] = useState(false);
@@ -248,11 +248,14 @@ const NavWrapper = () => {
                 </li>
               </ul>
             </div>
-            <div className="navbar-end">
+            <div className="navbar-end mr-4">
               <NotificationButton />
               <div className="dropdown dropdown-end dropdown-hover">
                 <label tabIndex={0}>
-                  <div className="avatar online">
+                  <div className="avatar indicator">
+                    <span className="indicator-item badge badge-secondary mr-3 mt-2">
+                      <FiMenu />
+                    </span>
                     <div className="w-12 rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2 m-2">
                       <img src={user.photoUrl} />
                     </div>

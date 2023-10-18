@@ -17,6 +17,8 @@ import { ErrorBoundary } from "react-error-boundary";
 import FullScreenImage from "./components/global/FullScreenImage";
 import FriendProfile from "./components/profile/FriendProfile";
 import Settings from "./routes/Settings";
+import Privacy from "./routes/Privacy";
+import Terms from "./routes/Terms";
 
 axios.defaults.withCredentials = true;
 
@@ -59,6 +61,14 @@ function App() {
         {
           path: "settings",
           element: <Settings />,
+        },
+        {
+          path: "terms",
+          element: <Terms />,
+        },
+        {
+          path: "privacy",
+          element: <Privacy />,
         },
         {
           path: "profile/:friendId",

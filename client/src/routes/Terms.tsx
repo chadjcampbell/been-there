@@ -13,7 +13,7 @@ const Terms = () => {
         Privacy Policy.
       </p>
       <section className="my-4" id="acceptance">
-        <h2>1. Acceptance of Terms</h2>
+        <h2 className="text-primary text-lg">1. Acceptance of Terms</h2>
         <p>
           By using the "Been There" app, you acknowledge and agree to these
           Terms of Service. If you do not agree with any part of these terms,
@@ -21,7 +21,7 @@ const Terms = () => {
         </p>
       </section>
       <section className="my-4" id="eligibility">
-        <h2>2. User Eligibility</h2>
+        <h2 className="text-primary text-lg">2. User Eligibility</h2>
         <p>
           You must be at least 13 years old to use "Been There." If you are
           under the age of 13, you may only use the service under the
@@ -31,7 +31,7 @@ const Terms = () => {
         </p>
       </section>
       <section className="my-4" id="accounts">
-        <h2>3. User Accounts</h2>
+        <h2 className="text-primary text-lg">3. User Accounts</h2>
         <p>
           3.1. You are responsible for maintaining the confidentiality of your
           account credentials and are liable for all activity associated with
@@ -47,7 +47,7 @@ const Terms = () => {
         </p>
       </section>
       <section className="my-4" id="content">
-        <h2>4. Content on "Been There"</h2>
+        <h2 className="text-primary text-lg">4. Content on "Been There"</h2>
         <p>
           4.1. You retain all rights to your content, including images and
           location tags, that you post on "Been There."
@@ -68,7 +68,7 @@ const Terms = () => {
         </p>
       </section>
       <section className="my-4" id="privacy">
-        <h2>5. Privacy</h2>
+        <h2 className="text-primary text-lg">5. Privacy</h2>
         <p>
           Your privacy is important to us. Please refer to our{" "}
           <a href="#privacy-policy">Privacy Policy</a> for information on how we
@@ -76,7 +76,7 @@ const Terms = () => {
         </p>
       </section>
       <section className="my-4" id="prohibited-activities">
-        <h2>6. Prohibited Activities</h2>
+        <h2 className="text-primary text-lg">6. Prohibited Activities</h2>
         <p>
           6.1. You must not engage in any illegal, harmful, or unauthorized
           activities while using "Been There."
@@ -92,7 +92,7 @@ const Terms = () => {
         </p>
       </section>
       <section className="my-4" id="third-party-links">
-        <h2>7. Third-Party Links</h2>
+        <h2 className="text-primary text-lg">7. Third-Party Links</h2>
         <p>
           "Been There" may contain links to third-party websites or services
           that are not owned or controlled by us. We are not responsible for the
@@ -101,7 +101,7 @@ const Terms = () => {
         </p>
       </section>
       <section className="my-4" id="termination">
-        <h2>8. Termination</h2>
+        <h2 className="text-primary text-lg">8. Termination</h2>
         <p>
           We reserve the right to terminate or suspend your account at our
           discretion if you violate these terms. You may also terminate your
@@ -109,7 +109,9 @@ const Terms = () => {
         </p>
       </section>
       <section className="my-4" id="changes">
-        <h2>9. Changes to the Terms of Service</h2>
+        <h2 className="text-primary text-lg">
+          9. Changes to the Terms of Service
+        </h2>
         <p>
           We may update these terms from time to time. Any changes will be
           posted on this page, and we will notify you via email or other means
@@ -118,7 +120,7 @@ const Terms = () => {
         </p>
       </section>
       <section id="contact">
-        <h2>10. Contact Information</h2>
+        <h2 className="text-primary text-lg">10. Contact Information</h2>
         <p>
           If you have any questions or concerns about these Terms of Service,
           please contact us at chadjcampbell@gmail.com.

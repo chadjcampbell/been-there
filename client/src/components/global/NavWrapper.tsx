@@ -5,6 +5,7 @@ import { BsGlobeAmericas } from "react-icons/bs";
 import { FaUserFriends } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { BsChatDots } from "react-icons/bs";
+import { BiLogOut } from "react-icons/bi";
 import useSocketSetup from "../../hooks/useSocketSetup";
 
 import useAuthRedirect from "../../hooks/useAuthRedirect";
@@ -14,6 +15,7 @@ import {
   SET_LOGIN,
   SET_USER,
   selectIsLoggedIn,
+  selectUser,
 } from "../../redux/features/auth/authSlice";
 import Loading from "./Loading";
 import {
@@ -28,6 +30,7 @@ import NotificationButton from "./NotificationButton";
 import { SET_NOTIFICATIONS } from "../../redux/features/notifications/notificationSlice";
 import { getNotifications } from "../../redux/features/notifications/notificationService";
 import { regSw, subscribe } from "../../utils/swHelper";
+import { FiSettings } from "react-icons/fi";
 
 const NavWrapper = () => {
   const [isLoggingOut, setisLoggingOut] = useState(false);
@@ -36,6 +39,7 @@ const NavWrapper = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [navbarVisible, setNavbarVisible] = useState(true);
+  const user = useSelector(selectUser);
 
   // Add a scroll event listener to hide/show the "back to top" button
   useEffect(() => {
@@ -114,7 +118,7 @@ const NavWrapper = () => {
   };
 
   // close the nav menu after a small animation
-  const handleNavClick = () => {
+  const handleMenuBlur = () => {
     const elem = document.activeElement as HTMLElement;
     if (elem) {
       setTimeout(() => {
@@ -155,7 +159,7 @@ const NavWrapper = () => {
                   className="menu menu-lg dropdown-content mt-3 z-50 p-2 shadow bg-base-100 rounded-box w-52"
                 >
                   <li
-                    onClick={handleNavClick}
+                    onClick={handleMenuBlur}
                     className="px-1 text-lg text-secondary"
                   >
                     <Link to="/">
@@ -164,7 +168,7 @@ const NavWrapper = () => {
                     </Link>
                   </li>
                   <li
-                    onClick={handleNavClick}
+                    onClick={handleMenuBlur}
                     className="px-1 text-lg text-secondary"
                   >
                     <Link to="/map">
@@ -173,7 +177,7 @@ const NavWrapper = () => {
                     </Link>
                   </li>
                   <li
-                    onClick={handleNavClick}
+                    onClick={handleMenuBlur}
                     className="px-1 text-lg text-secondary"
                   >
                     <Link to="/friends">
@@ -182,7 +186,7 @@ const NavWrapper = () => {
                     </Link>
                   </li>
                   <li
-                    onClick={handleNavClick}
+                    onClick={handleMenuBlur}
                     className="px-1 text-lg text-secondary"
                   >
                     <Link to="/chats">
@@ -191,7 +195,7 @@ const NavWrapper = () => {
                     </Link>
                   </li>
                   <li
-                    onClick={handleNavClick}
+                    onClick={handleMenuBlur}
                     className="px-1 text-lg text-secondary"
                   >
                     <Link to="/profile">
@@ -246,16 +250,36 @@ const NavWrapper = () => {
             </div>
             <div className="navbar-end">
               <NotificationButton />
-              <button
-                onClick={onLogoutHandler}
-                className="btn text-white bg-primary"
-              >
-                {isLoggingOut ? (
-                  <span className="loading loading-spinner text-white loading-lg"></span>
-                ) : (
-                  "Logout"
-                )}
-              </button>
+              <div className="dropdown dropdown-end dropdown-hover">
+                <label tabIndex={0}>
+                  <div className="avatar online">
+                    <div className="w-12 rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2 m-2">
+                      <img src={user.photoUrl} />
+                    </div>
+                  </div>
+                </label>
+                <ul
+                  tabIndex={0}
+                  className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+                >
+                  <li>
+                    <Link to="/settings">
+                      <FiSettings />
+                      Settings
+                    </Link>
+                  </li>
+                  <li>
+                    <button onClick={onLogoutHandler}>
+                      <BiLogOut />
+                      {isLoggingOut ? (
+                        <span className="loading loading-spinner text-white loading-lg"></span>
+                      ) : (
+                        "Logout"
+                      )}
+                    </button>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </nav>
@@ -269,3 +293,11 @@ const NavWrapper = () => {
 };
 
 export default NavWrapper;
+/* 
+<button onClick={onLogoutHandler} className="btn text-white bg-primary">
+  {isLoggingOut ? (
+    <span className="loading loading-spinner text-white loading-lg"></span>
+  ) : (
+    "Logout"
+  )}
+</button>; */

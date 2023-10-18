@@ -257,7 +257,7 @@ const NavWrapper = () => {
                       <FiMenu />
                     </span>
                     <div className="w-12 rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2 m-2">
-                      <img src={user.photoUrl} />
+                      <img src={user.photoUrl} alt="profile pic user menu" />
                     </div>
                   </div>
                 </label>

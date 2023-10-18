@@ -71,7 +71,8 @@ const Login = () => {
   };
 
   const handleFacebookLogin = () => {
-    return;
+    const url = `${import.meta.env.VITE_BACKEND_URL}/auth/facebook`;
+    window.open(url, "_self");
   };
 
   const handleGoogleLogin = () => {

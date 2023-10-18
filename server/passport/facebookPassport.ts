@@ -1,5 +1,14 @@
+import { eq } from "drizzle-orm";
 import passport from "passport";
 import { Strategy as FacebookStrategy } from "passport-facebook";
+import db from "../db";
+import {
+  users,
+  friends,
+  friend_requests,
+  notifications,
+  chat_messages,
+} from "../schema";
 require("dotenv").config();
 
 const options = {
@@ -12,13 +21,11 @@ const options = {
 passport.use(
   new FacebookStrategy(
     options,
-    async (_accessToken, _refreshToken, profile, _done) => {
+    async (_accessToken, _refreshToken, profile, done) => {
       const account = profile._json;
       const profileUrl = account.picture.data.url;
-      console.log(account);
-      console.log(profileUrl);
-      return;
-      /*       try {
+
+      try {
         const existingFacebook = await db.query.users.findFirst({
           where: eq(users.email, String(account.email)),
         });
@@ -28,15 +35,15 @@ passport.use(
         }
 
         // no user found, make a new one
-        if (!account.name || !account.email) {
-          throw new Error("Google account info missing");
+        if (!account.first_name || !account.last_name || !account.email) {
+          throw new Error("Facebook account info missing");
         }
         const userArray = await db
           .insert(users)
           .values({
-            name: account.name,
+            name: account.first_name + " " + account.last_name,
             email: account.email,
-            photo_url: account.picture,
+            photo_url: profileUrl,
           })
           .returning();
         const user = userArray[0];
@@ -77,7 +84,7 @@ passport.use(
         });
       } catch (err: any) {
         done(err);
-      } */
+      }
     }
   )
 );

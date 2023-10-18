@@ -259,16 +259,17 @@ const NavWrapper = () => {
                   </div>
                 </label>
                 <ul
+                  onClick={handleMenuBlur}
                   tabIndex={0}
                   className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
                 >
-                  <li>
+                  <li className="px-1 text-lg text-secondary-focus">
                     <Link to="/settings">
                       <FiSettings />
                       Settings
                     </Link>
                   </li>
-                  <li>
+                  <li className="px-1 text-lg text-secondary-focus">
                     <button onClick={onLogoutHandler}>
                       <BiLogOut />
                       {isLoggingOut ? (

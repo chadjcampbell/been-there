@@ -16,6 +16,7 @@ import { SET_LOGIN } from "./redux/features/auth/authSlice";
 import { ErrorBoundary } from "react-error-boundary";
 import FullScreenImage from "./components/global/FullScreenImage";
 import FriendProfile from "./components/profile/FriendProfile";
+import Settings from "./routes/Settings";
 
 axios.defaults.withCredentials = true;
 
@@ -54,6 +55,10 @@ function App() {
         {
           path: "profile",
           element: <Profile />,
+        },
+        {
+          path: "settings",
+          element: <Settings />,
         },
         {
           path: "profile/:friendId",

@@ -273,6 +273,35 @@ export const updateUser = asyncHandler(
   }
 );
 
+export const deleteUser = asyncHandler(
+  async (req: RequestUserAttached, res) => {
+    if (!req.user) {
+      res.status(404);
+      throw new Error("User not found");
+    } else {
+      const user = await db.query.users.findFirst({
+        where: eq(users.user_id, Number(req.user.user_id)),
+      });
+      if (user) {
+        try {
+          //remove subs
+          //remove notifications
+          //remove chats
+          //remove likes
+          //remove comments
+          //remove posts
+          //remove friends
+          //remove friend requests
+          //remove user login data
+          res.status(200).end();
+        } catch {
+          throw new Error("User deletion failed");
+        }
+      }
+    }
+  }
+);
+
 // functions below here aren't hooked up yet
 export const changePassword = [
   body("password")

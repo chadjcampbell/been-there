@@ -11,6 +11,7 @@ import {
   forgotPassword,
   resetPassword,
   generateToken,
+  deleteUser,
 } from "../controllers/userController";
 import { UserFromDB, protect } from "../middleware/authMiddleware";
 import rateLimiter from "../middleware/rateLimiter";
@@ -23,6 +24,7 @@ router.get("/logout", logoutUser);
 router.get("/getUser", protect, getUser);
 router.get("/loggedIn", loginStatus);
 router.patch("/updateUser", protect, updateUser);
+router.delete("/:id", protect, deleteUser);
 router.patch("/changePassword", protect, changePassword);
 router.post("/forgotPassword", forgotPassword);
 router.put("/resetPassword/:resetToken", resetPassword);

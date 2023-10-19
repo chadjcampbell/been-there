@@ -5,12 +5,16 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { sendEmail } from "../utils/sendEmail";
 import db from "../db";
-import { and, eq, gt } from "drizzle-orm";
+import { and, eq, gt, like, or } from "drizzle-orm";
 import {
   chat_messages,
+  comments,
   friend_requests,
   friends,
+  likes,
   notifications,
+  posts,
+  subscriptions,
   tokens,
   users,
 } from "../schema";
@@ -277,27 +281,65 @@ export const deleteUser = asyncHandler(
   async (req: RequestUserAttached, res) => {
     if (!req.user) {
       res.status(404);
-      throw new Error("User not found");
-    } else {
-      const user = await db.query.users.findFirst({
-        where: eq(users.user_id, Number(req.user.user_id)),
-      });
-      if (user) {
-        try {
-          //remove subs
-          //remove notifications
-          //remove chats
-          //remove likes
-          //remove comments
-          //remove posts
-          //remove friends
-          //remove friend requests
-          //remove user login data
-          res.status(200).end();
-        } catch {
-          throw new Error("User deletion failed");
-        }
-      }
+      throw new Error("User deletion failed, please contact admin");
+    }
+    const user = await db.query.users.findFirst({
+      where: eq(users.user_id, Number(req.user.user_id)),
+    });
+    if (!user) {
+      res.status(404);
+      throw new Error("User deletion failed, please contact admin");
+    }
+    try {
+      //remove subs
+      await db
+        .delete(subscriptions)
+        .where(eq(subscriptions.user_id, user.user_id));
+      //remove notifications
+      await db
+        .delete(notifications)
+        .where(eq(notifications.user_id, user.user_id));
+      //remove chats
+      await db
+        .delete(chat_messages)
+        .where(
+          or(
+            eq(chat_messages.sender_id, user.user_id),
+            eq(chat_messages.receiver_id, user.user_id)
+          )
+        );
+      //remove likes
+      await db.delete(likes).where(eq(likes.user_id, user.user_id));
+      //remove comments
+      await db.delete(comments).where(eq(comments.user_id, user.user_id));
+      //remove posts
+      await db.delete(posts).where(eq(posts.user_id, user.user_id));
+      //remove tokens
+      await db.delete(tokens).where(eq(tokens.user_id, user.user_id));
+      //remove friends
+      await db
+        .delete(friends)
+        .where(
+          or(
+            eq(friends.user_id_1, user.user_id),
+            eq(friends.user_id_2, user.user_id)
+          )
+        );
+      //remove friend requests
+      await db
+        .delete(friend_requests)
+        .where(
+          or(
+            eq(friend_requests.sender_id, user.user_id),
+            eq(friend_requests.receiver_id, user.user_id)
+          )
+        );
+      //remove user login data
+      await db.delete(users).where(eq(users.user_id, user.user_id));
+    } catch {
+      throw new Error("User deletion failed, please contact admin");
+    } finally {
+      res.status(200).end();
     }
   }
 );

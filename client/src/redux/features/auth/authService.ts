@@ -76,6 +76,22 @@ export const logoutUser = async () => {
   }
 };
 
+export const deleteUser = async () => {
+  try {
+    const response = await axios.delete(BACKEND_URL + "/auth/");
+    if (response.status >= 200 && response.status < 300) {
+      toast.success("User data deleted");
+    }
+    return response.data;
+  } catch (error: any) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};
+
 export const forgotPassword = async (userData: UserDataType) => {
   try {
     const response = await axios.post(

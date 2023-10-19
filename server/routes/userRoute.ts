@@ -24,7 +24,7 @@ router.get("/logout", logoutUser);
 router.get("/getUser", protect, getUser);
 router.get("/loggedIn", loginStatus);
 router.patch("/updateUser", protect, updateUser);
-router.delete("/:id", protect, deleteUser);
+router.delete("/", protect, deleteUser);
 router.patch("/changePassword", protect, changePassword);
 router.post("/forgotPassword", forgotPassword);
 router.put("/resetPassword/:resetToken", resetPassword);

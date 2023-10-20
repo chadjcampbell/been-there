@@ -1,5 +1,5 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../redux/features/auth/authService";
@@ -180,12 +180,12 @@ const Login = () => {
               </p>
             )}
           </div>
-          <a
-            href="#"
+          <Link
+            to={"/forgotPassword"}
             className="text-s text-gray-600 hover:underline hover:text-blue-600"
           >
             Forget Password?
-          </a>
+          </Link>
           <div>
             <button
               disabled={isLoading || guestBool}

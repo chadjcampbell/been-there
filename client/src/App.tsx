@@ -19,6 +19,7 @@ import FriendProfile from "./components/profile/FriendProfile";
 import Settings from "./routes/Settings";
 import Privacy from "./routes/Privacy";
 import Terms from "./routes/Terms";
+import ForgotPassword from "./routes/ForgotPassword";
 
 axios.defaults.withCredentials = true;
 
@@ -89,6 +90,11 @@ function App() {
       path: "/register",
       errorElement: <Error />,
       element: <Register />,
+    },
+    {
+      path: "/forgotPassword",
+      errorElement: <Error />,
+      element: <ForgotPassword />,
     },
   ]);
 

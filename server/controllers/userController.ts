@@ -348,8 +348,8 @@ export const deleteUser = asyncHandler(
 export const changePassword = [
   body("password")
     .trim()
-    .isLength({ min: 6, max: 24 })
-    .withMessage("Password must be between 6 and 24 characters."),
+    .isLength({ min: 6, max: 30 })
+    .withMessage("Password must be between 6 and 30 characters."),
   asyncHandler(async (req: RequestUserAttached, res) => {
     // extract the validation errors from a request
     const errors = validationResult(req);

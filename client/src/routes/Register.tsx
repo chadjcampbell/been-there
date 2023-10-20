@@ -9,6 +9,7 @@ import {
   SET_USER,
 } from "../redux/features/auth/authSlice";
 import { useDispatch } from "react-redux";
+import { BiShow } from "react-icons/bi";
 
 export interface IFormRegisterInputs {
   name: string;
@@ -18,6 +19,7 @@ export interface IFormRegisterInputs {
 }
 
 const Register = () => {
+  const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -124,26 +126,37 @@ const Register = () => {
             <label htmlFor="password" className="label">
               <span className="text-base label-text">Password</span>
             </label>
-            <input
-              autoComplete="new-password"
-              disabled={isLoading}
-              id="password"
-              type="password"
-              {...register("password", {
-                required: true,
-                min: {
-                  value: 6,
-                  message: "Password must be at least 6 characters",
-                },
-                max: {
-                  value: 30,
-                  message: "Password must be less than 30 characters",
-                },
-              })}
-              placeholder="Enter Password"
-              className="w-full input input-bordered input-primary"
-              aria-invalid={errors.password ? "true" : "false"}
-            />
+            <div className="relative">
+              <input
+                autoComplete="new-password"
+                disabled={isLoading}
+                id="password"
+                type={show ? "text" : "password"}
+                {...register("password", {
+                  required: true,
+                  min: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                  max: {
+                    value: 30,
+                    message: "Password must be less than 30 characters",
+                  },
+                })}
+                placeholder="Enter Password"
+                className="w-full input input-bordered input-primary"
+                aria-invalid={errors.password ? "true" : "false"}
+              />
+              <button
+                onClick={() => {
+                  setShow(!show);
+                }}
+                type="button"
+                className="absolute right-1 top-2 btn btn-sm btn-ghost"
+              >
+                <BiShow size={"2rem"} />
+              </button>
+            </div>
             {errors.password?.message && (
               <p className="m-2 p-1 w-fit rounded bg-red-700 text-xs text-white">
                 {" "}
@@ -155,31 +168,42 @@ const Register = () => {
             <label htmlFor="password2" className="label">
               <span className="text-base label-text">Confirm Password</span>
             </label>
-            <input
-              autoComplete="new-password"
-              disabled={isLoading}
-              id="password2"
-              type="password"
-              {...register("password2", {
-                required: true,
-                min: {
-                  value: 6,
-                  message: "Password must be at least 6 characters",
-                },
-                max: {
-                  value: 30,
-                  message: "Password must be less than 30 characters",
-                },
-                validate: (val: string) => {
-                  if (watch("password") != val) {
-                    return "Your passwords do no match";
-                  }
-                },
-              })}
-              placeholder="Confirm Password"
-              className="w-full input input-bordered input-primary"
-              aria-invalid={errors.password2 ? "true" : "false"}
-            />
+            <div className="relative">
+              <input
+                autoComplete="new-password"
+                disabled={isLoading}
+                id="password2"
+                type={show ? "text" : "password"}
+                {...register("password2", {
+                  required: true,
+                  min: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                  max: {
+                    value: 30,
+                    message: "Password must be less than 30 characters",
+                  },
+                  validate: (val: string) => {
+                    if (watch("password") != val) {
+                      return "Your passwords do no match";
+                    }
+                  },
+                })}
+                placeholder="Confirm Password"
+                className="w-full input input-bordered input-primary"
+                aria-invalid={errors.password2 ? "true" : "false"}
+              />
+              <button
+                onClick={() => {
+                  setShow(!show);
+                }}
+                type="button"
+                className="absolute right-1 top-2 btn btn-sm btn-ghost"
+              >
+                <BiShow size={"2rem"} />
+              </button>
+            </div>
             {errors.password2?.message && (
               <p className="m-2 p-1 w-fit rounded bg-red-700 text-xs text-white">
                 {" "}

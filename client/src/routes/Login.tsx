@@ -10,6 +10,7 @@ import {
 } from "../redux/features/auth/authSlice";
 import { BsFacebook } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
+import { BiShow } from "react-icons/bi";
 
 export interface IFormLoginInputs {
   email: string;
@@ -25,6 +26,7 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<IFormLoginInputs>();
+  const [show, setShow] = useState(false);
 
   // this state is only for guest login functionality
   const [email, setEmail] = useState("");
@@ -160,17 +162,28 @@ const Login = () => {
                 onChange={() => ""}
               />
             ) : (
-              <input
-                autoComplete="current-password"
-                id="password"
-                type="password"
-                {...register("password", {
-                  required: true,
-                })}
-                placeholder="Enter Password"
-                className="w-full input input-bordered input-primary"
-                aria-invalid={errors.password ? "true" : "false"}
-              />
+              <div className="relative">
+                <input
+                  autoComplete="current-password"
+                  id="password"
+                  type={show ? "text" : "password"}
+                  {...register("password", {
+                    required: true,
+                  })}
+                  placeholder="Enter Password"
+                  className="w-full input input-bordered input-primary"
+                  aria-invalid={errors.password ? "true" : "false"}
+                ></input>{" "}
+                <button
+                  onClick={() => {
+                    setShow(!show);
+                  }}
+                  type="button"
+                  className="absolute right-1 top-2 btn btn-sm btn-ghost"
+                >
+                  <BiShow size={"2rem"} />
+                </button>
+              </div>
             )}
 
             {errors.password?.message && (

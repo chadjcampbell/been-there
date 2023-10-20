@@ -399,7 +399,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
     throw new Error("User does not exist");
   }
   // delete old token if exists
-  await db.delete(tokens).where(eq(users.user_id, user.user_id));
+  await db.delete(tokens).where(eq(tokens.user_id, user.user_id));
 
   // create reset token
   let resetToken = crypto.randomBytes(32).toString("hex") + user.user_id;

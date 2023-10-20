@@ -31,8 +31,8 @@ CREATE TABLE friend_requests (
 CREATE TABLE tokens(
   user_id INT NOT NULL PRIMARY KEY,
   token VARCHAR NOT NULL,
-  created_at INT NOT NULL,
-  expires_at INT NOT NULL
+  created_at BIGINT NOT NULL,
+  expires_at BIGINT NOT NULL
 ) 
 
 CREATE TABLE posts (

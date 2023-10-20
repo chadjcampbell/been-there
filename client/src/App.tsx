@@ -20,6 +20,7 @@ import Settings from "./routes/Settings";
 import Privacy from "./routes/Privacy";
 import Terms from "./routes/Terms";
 import ForgotPassword from "./routes/ForgotPassword";
+import ResetPassword from "./routes/ResetPassword";
 
 axios.defaults.withCredentials = true;
 
@@ -95,6 +96,11 @@ function App() {
       path: "/forgotPassword",
       errorElement: <Error />,
       element: <ForgotPassword />,
+    },
+    {
+      path: "/resetPassword/:resetToken",
+      errorElement: <Error />,
+      element: <ResetPassword />,
     },
   ]);
 

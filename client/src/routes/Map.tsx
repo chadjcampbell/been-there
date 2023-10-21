@@ -1,6 +1,8 @@
+import "leaflet/dist/leaflet.css";
+import "leaflet.markercluster/dist/MarkerCluster.css";
+import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import Leaflet from "leaflet";
-import MarkerClusterGroup from "react-leaflet-cluster";
 import { useDispatch, useSelector } from "react-redux";
 import { SET_POSTS, selectPosts } from "../redux/features/posts/postSlice";
 import { PostsResponseType } from "./Home";
@@ -8,6 +10,7 @@ import MapPostCard from "../components/map/MapPostCard";
 import { stringToColor } from "../utils/stringToColor";
 import { useEffect } from "react";
 import { findAllPosts } from "../redux/features/posts/postService";
+import MarkerClusterGroup from "../components/map/MarkerClusterGroup";
 
 const Map = () => {
   const posts: PostsResponseType[] = useSelector(selectPosts);
@@ -51,7 +54,7 @@ const Map = () => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <MarkerClusterGroup chunkedLoading>
+      <MarkerClusterGroup>
         {posts.map((post) => {
           if (
             typeof post.user_location.latitude === "number" &&

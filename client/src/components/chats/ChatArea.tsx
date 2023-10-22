@@ -198,6 +198,7 @@ const ChatArea = () => {
               name="submit"
               type="submit"
               className="badge btn btn-secondary btn-sm"
+              disabled={isLoading ? true : false}
             >
               {isLoading ? (
                 <span className="loading loading-spinner text-white loading-lg"></span>

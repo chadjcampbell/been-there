@@ -6,6 +6,8 @@ import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
 import { store } from "../src/redux/store";
 
+import { MemoryRouter } from "react-router-dom";
+
 describe("something truthy and falsy", () => {
   it("true to be true", () => {
     expect(true).toBe(true);
@@ -21,7 +23,9 @@ describe("App", () => {
     render(
       <Provider store={store}>
         <Toaster reverseOrder={false} />
-        <App />
+        <MemoryRouter>
+          <App />
+        </MemoryRouter>
       </Provider>
     );
     screen.debug();

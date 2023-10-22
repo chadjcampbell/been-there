@@ -33,8 +33,8 @@ export const sendPushNotification = async (notification: Notifications) => {
           }),
           options
         );
-      } catch {
-        console.log(sub.id);
+      } catch (err) {
+        console.log(err, sub.id);
       }
     });
   }

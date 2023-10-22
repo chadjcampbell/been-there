@@ -92,5 +92,5 @@ CREATE TABLE subscriptions (
   user_id INT REFERENCES users(user_id),
   endpoint TEXT NOT NULL,
   p256dh TEXT NOT NULL,
-  auth TEXT NOT NULL,
+  auth TEXT NOT NULL
 );

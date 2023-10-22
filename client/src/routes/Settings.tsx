@@ -5,8 +5,9 @@ import {
   SET_LOGIN,
   SET_NAME,
   SET_USER,
+  selectUser,
 } from "../redux/features/auth/authSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import ConfirmDelete from "../components/settings/ConfirmDelete";
 import PasswordChange from "../components/settings/PasswordChange";
@@ -17,6 +18,7 @@ const Settings = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const user = useSelector(selectUser);
   const initialUserStateuser = {
     userId: "",
     name: "",
@@ -27,6 +29,10 @@ const Settings = () => {
   };
 
   const handleDelete = async () => {
+    if (user.userId == 19) {
+      toast.error("Demo user can't do that");
+      return;
+    }
     setLoading(true);
     try {
       navigate("/login");

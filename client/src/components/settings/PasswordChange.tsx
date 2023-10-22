@@ -2,6 +2,8 @@ import { useState, FormEvent } from "react";
 import toast from "react-hot-toast";
 import { BiShow } from "react-icons/bi";
 import { changePassword } from "../../redux/features/auth/authService";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/features/auth/authSlice";
 
 const PasswordChange = ({ setShowPasswordChange }: any) => {
   const [show, setShow] = useState(false);
@@ -9,9 +11,15 @@ const PasswordChange = ({ setShowPasswordChange }: any) => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const user = useSelector(selectUser);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    if (user.userId == 19) {
+      toast.error("Demo user can't do that");
+      return;
+    }
 
     if (!currentPassword || !newPassword || !confirmNewPassword) {
       toast.error("All fields required");

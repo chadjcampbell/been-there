@@ -134,10 +134,9 @@ Leaflet Map: The app utilizes the Leaflet mapping library to create an interacti
     <img src="client/public/bt2.png" alt="Screenshot" width="400" height="200">
     <img src="client/public/bt3.png" alt="Screenshot" width="400" height="200">
     <img src="client/public/bt4.png" alt="Screenshot" width="400" height="200">
+    <a href='https://dbdiagram.io/d/Been-There-6535b241ffbf5169f037b3dc'><img src="client/public/btdb.png" alt="Screenshot" width="400" height="200"></a>
 </div>
-<div align="center">
-    <iframe width="560" height="315" src='https://dbdiagram.io/embed/6535b241ffbf5169f037b3dc'> </iframe>
-</div>
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ROADMAP -->

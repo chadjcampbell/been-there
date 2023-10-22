@@ -24,7 +24,6 @@ describe("App", () => {
         <App />
       </Provider>
     );
-    // check if App components renders headline
     screen.debug();
   });
 });

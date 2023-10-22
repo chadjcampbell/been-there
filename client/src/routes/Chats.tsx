@@ -20,7 +20,6 @@ const Chats = () => {
   const [loading, setLoading] = useState(!friendList.length);
   const dispatch = useDispatch();
   const drawerRef = useRef<HTMLInputElement | null>(null);
-  console.log(friendList);
   useEffect(() => {
     const fetchData = async () => {
       try {

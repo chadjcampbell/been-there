@@ -6,3 +6,12 @@ import "@testing-library/jest-dom/vitest";
 afterEach(() => {
   cleanup();
 });
+(window as any).matchMedia = (query: string) => {
+  return {
+    matches: false, // Set the desired value for the query
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+  };
+};

@@ -194,7 +194,11 @@ const ChatArea = () => {
             >
               <MdAddAPhoto size="1.5rem" title="Add Picture to post" />
             </button>
-            <button type="submit" className="badge btn btn-secondary btn-sm">
+            <button
+              name="submit"
+              type="submit"
+              className="badge btn btn-secondary btn-sm"
+            >
               {isLoading ? (
                 <span className="loading loading-spinner text-white loading-lg"></span>
               ) : (

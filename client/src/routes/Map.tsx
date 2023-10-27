@@ -55,31 +55,32 @@ const Map = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <MarkerClusterGroup>
-        {posts.map((post) => {
-          if (
-            typeof post.user_location.latitude === "number" &&
-            typeof post.user_location.longitude === "number"
-          ) {
-            const customIcon = createCustomIcon(
-              post.user.photo_url,
-              stringToColor(post.user.email)
-            );
-            return (
-              <Marker
-                key={post.post_id}
-                icon={customIcon}
-                position={[
-                  post.user_location.latitude,
-                  post.user_location.longitude,
-                ]}
-              >
-                <Popup>
-                  <MapPostCard post={post} />
-                </Popup>
-              </Marker>
-            );
-          }
-        })}
+        {posts.length &&
+          posts.map((post) => {
+            if (
+              typeof post.user_location.latitude === "number" &&
+              typeof post.user_location.longitude === "number"
+            ) {
+              const customIcon = createCustomIcon(
+                post.user.photo_url,
+                stringToColor(post.user.email)
+              );
+              return (
+                <Marker
+                  key={post.post_id}
+                  icon={customIcon}
+                  position={[
+                    post.user_location.latitude,
+                    post.user_location.longitude,
+                  ]}
+                >
+                  <Popup>
+                    <MapPostCard post={post} />
+                  </Popup>
+                </Marker>
+              );
+            }
+          })}
       </MarkerClusterGroup>
     </MapContainer>
   );

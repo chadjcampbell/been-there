@@ -21,7 +21,9 @@ const usePosts = (offset = 0) => {
       try {
         const data = await findAllPosts(offset);
         if (!signal.aborted) {
-          setResults((prev) => [...prev, ...data]);
+          if (data.length) {
+            setResults((prev) => [...prev, ...data]);
+          }
           setHasNextPage(Boolean(data.length));
           setIsLoading(false);
         }

@@ -11,6 +11,7 @@ import {
 import { BsFacebook } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
 import { BiShow } from "react-icons/bi";
+import toast from "react-hot-toast";
 
 export interface IFormLoginInputs {
   email: string;
@@ -73,8 +74,10 @@ const Login = () => {
   };
 
   const handleFacebookLogin = () => {
-    const url = `${import.meta.env.VITE_BACKEND_URL}/auth/facebook`;
-    window.open(url, "_self");
+    // Facebook login currently disabled, need business account
+    /*     const url = `${import.meta.env.VITE_BACKEND_URL}/auth/facebook`;
+    window.open(url, "_self"); */
+    toast.error("Facebook login currently disabled");
   };
 
   const handleGoogleLogin = () => {

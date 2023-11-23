@@ -5,6 +5,7 @@ type ChatMessageProps = {
 };
 
 const MyChatMessage = ({ chat }: ChatMessageProps) => {
+  console.log(new Date(chat.timestamp).toLocaleString());
   return (
     <div className="chat chat-end">
       <div className="chat-image avatar">
@@ -25,6 +26,9 @@ const MyChatMessage = ({ chat }: ChatMessageProps) => {
           </figure>
         )}
         {chat.message_text}
+      </div>
+      <div className="chat-footer opacity-50">
+        Sent {new Date(chat.timestamp).toLocaleString()}
       </div>
     </div>
   );

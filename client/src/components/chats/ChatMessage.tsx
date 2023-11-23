@@ -1,11 +1,11 @@
 import { ChatMessageType } from "../../redux/features/chats/chatSlice";
+import moment from "moment";
 
 type ChatMessageProps = {
   chat: ChatMessageType;
 };
 
 const MyChatMessage = ({ chat }: ChatMessageProps) => {
-  console.log(new Date(chat.timestamp).toLocaleString());
   return (
     <div className="chat chat-end">
       <div className="chat-image avatar">
@@ -28,7 +28,7 @@ const MyChatMessage = ({ chat }: ChatMessageProps) => {
         {chat.message_text}
       </div>
       <div className="chat-footer opacity-50">
-        Sent {new Date(chat.timestamp).toLocaleString()}
+        {moment(chat.timestamp).calendar()}
       </div>
     </div>
   );
@@ -55,6 +55,9 @@ const FriendChatMessage = ({ chat }: ChatMessageProps) => {
           </figure>
         )}
         {chat.message_text}
+      </div>
+      <div className="chat-footer opacity-50">
+        {moment(chat.timestamp).calendar()}
       </div>
     </div>
   );

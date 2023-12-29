@@ -33,9 +33,9 @@ export const PostCard = forwardRef(
         post.user_location.country
       ) {
         const flag = getFlagEmoji(post.user_location.country);
-        return `${flag} ${post.user_location.city}, ${post.user_location.state}, ${post.user_location.country}`;
+        return `Location: ${flag} ${post.user_location.city}, ${post.user_location.state}, ${post.user_location.country}`;
       } else {
-        return "💀 Kno, Where";
+        return "Location: 💀 Kno, Where";
       }
     };
 
@@ -67,7 +67,7 @@ export const PostCard = forwardRef(
             stiffness: 260,
             damping: 20,
           }}
-          className="card max-w-[90vw] bg-base-100 shadow-xl mt-4 mx-4 z-10"
+          className="card  max-w-[600px] bg-base-100 shadow-xl mt-4 mx-4 z-10"
         >
           {ref && <div ref={ref}></div>}
           {post.post_photo_url && (
@@ -82,7 +82,9 @@ export const PostCard = forwardRef(
                   />
                 </ImageWrapper>
               </div>
-              <figcaption>{userLocInfo()}</figcaption>
+              <figcaption>
+                <strong>{userLocInfo()}</strong>
+              </figcaption>
             </figure>
           )}
           <div className="card-body">
@@ -100,7 +102,11 @@ export const PostCard = forwardRef(
               <h2 className="card-title">{post.user.name}</h2>
             </Link>
             <p>{post.content}</p>
-            {!post.post_photo_url && <p>{userLocInfo()}</p>}
+            {!post.post_photo_url && (
+              <p>
+                <strong>{userLocInfo()}</strong>
+              </p>
+            )}
             <div className="card-actions justify-between mt-4">
               <button onClick={likeThisPost} className="badge btn">
                 {userLiked ? (

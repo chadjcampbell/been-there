@@ -119,7 +119,25 @@ export const MakePost = () => {
               setPostImage(null);
             }
           },
-          () => setNoLocation(true),
+          async () => {
+            // on first attempt, geolocation will end up here if location services were not approved
+            if (noLocation == false) {
+              setNoLocation(true);
+            } else {
+              const formData: PostFormData = {
+                content: post.content,
+                postPhotoUrl: imageURL,
+              };
+              const newPost = await makeNewPost(formData);
+              if (newPost) {
+                const newPostArray = [newPost, ...currentPosts];
+                dispatch(SET_POSTS(newPostArray));
+                setPost(initialPostValues);
+                setPostImage(null);
+                setNoLocation(false);
+              }
+            }
+          },
           geoOptions
         );
       }

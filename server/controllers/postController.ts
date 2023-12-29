@@ -96,29 +96,41 @@ export const makePost = [
     }
     try {
       const { content, postPhotoUrl, latitude, longitude } = req.body;
-
-      // get location info from google location services
-      const response = await axios.get(
-        "https://maps.googleapis.com/maps/api/geocode/json",
-        {
-          params: {
-            latlng: `${latitude},${longitude}`,
-            key: process.env.GOOGLE_API,
-          },
-        }
-      );
-      const data = response.data;
-      // Extract relevant location information
-      const locationInfo = data.results[0].address_components;
-      const city = locationInfo.find((component: GeocodingComponent) =>
-        component.types.includes("locality")
-      ).long_name;
-      const state = locationInfo.find((component: GeocodingComponent) =>
-        component.types.includes("administrative_area_level_1")
-      ).long_name;
-      const country = locationInfo.find((component: GeocodingComponent) =>
-        component.types.includes("country")
-      ).short_name;
+      let userLocation = {
+        city: null,
+        state: null,
+        country: null,
+        latitude: null,
+        longitude: null,
+      };
+      // get location info from google location services if location data sent
+      if (latitude != undefined && longitude != undefined) {
+        const response = await axios.get(
+          "https://maps.googleapis.com/maps/api/geocode/json",
+          {
+            params: {
+              latlng: `${latitude},${longitude}`,
+              key: process.env.GOOGLE_API,
+            },
+          }
+        );
+        const data = response.data;
+        // Extract relevant location information
+        const locationInfo = data.results[0].address_components;
+        userLocation["city"] = locationInfo.find(
+          (component: GeocodingComponent) =>
+            component.types.includes("locality")
+        ).long_name;
+        userLocation["state"] = locationInfo.find(
+          (component: GeocodingComponent) =>
+            component.types.includes("administrative_area_level_1")
+        ).long_name;
+        userLocation["country"] = locationInfo.find(
+          (component: GeocodingComponent) => component.types.includes("country")
+        ).short_name;
+        userLocation["latitude"] = latitude;
+        userLocation["longitude"] = longitude;
+      }
 
       const result = await db
         .insert(posts)
@@ -126,7 +138,7 @@ export const makePost = [
           user_id: Number(req.user.user_id),
           content: content,
           post_photo_url: postPhotoUrl ? postPhotoUrl : "",
-          user_location: { city, state, country, latitude, longitude },
+          user_location: userLocation,
         })
         .returning({ postId: posts.post_id });
 

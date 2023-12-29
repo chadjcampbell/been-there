@@ -3,6 +3,7 @@ import { selectUser } from "../../redux/features/auth/authSlice";
 import { MdAddAPhoto } from "react-icons/md";
 import { GoSmiley } from "react-icons/go";
 import { BsSendFill } from "react-icons/bs";
+import { MdCancel } from "react-icons/md";
 import {
   PostFormData,
   makeNewPost,
@@ -18,6 +19,7 @@ export const MakePost = () => {
   const user = useSelector(selectUser);
   const currentPosts = useSelector(selectPosts);
   const hiddenFileInput = useRef<HTMLInputElement | null>(null);
+  const [noLocation, setNoLocation] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const initialPostValues = { content: "", postPhotoUrl: "" };
   const [post, setPost] = useState(initialPostValues);
@@ -117,10 +119,7 @@ export const MakePost = () => {
               setPostImage(null);
             }
           },
-          () =>
-            toast.error(
-              "Enable location services on your browser and device to make posts"
-            ),
+          () => setNoLocation(true),
           geoOptions
         );
       }
@@ -178,7 +177,13 @@ export const MakePost = () => {
               </div>
             </details>
           </div>
-
+          {noLocation ? (
+            <p className="flex items-center justify-center font-bold text-red-700 w-80">
+              Location services are not enabled, so your post will not render to
+              the map. <br />
+              Would you still like to post?
+            </p>
+          ) : null}
           <div className="card-actions justify-between mt-4">
             <input
               type="file"
@@ -193,19 +198,29 @@ export const MakePost = () => {
             >
               <MdAddAPhoto size="1.5rem" title="Add Picture to post" />
             </button>
-            <button
-              type="submit"
-              className="badge btn bg-secondary-focus text-white"
-            >
-              {isLoading ? (
-                <span className="loading loading-spinner text-white loading-lg"></span>
-              ) : (
-                <>
-                  <BsSendFill />
-                  Post
-                </>
-              )}
-            </button>
+            <div className="flex">
+              {noLocation ? (
+                <button
+                  onClick={() => setNoLocation(false)}
+                  className="badge btn bg-error text-white mr-2"
+                >
+                  <MdCancel /> Cancel
+                </button>
+              ) : null}
+              <button
+                type="submit"
+                className="badge btn bg-secondary-focus text-white"
+              >
+                {isLoading ? (
+                  <span className="loading loading-spinner text-white loading-lg"></span>
+                ) : (
+                  <>
+                    <BsSendFill />
+                    {noLocation ? "Confirm" : "Post"}
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </form>
       </div>

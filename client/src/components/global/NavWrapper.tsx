@@ -264,7 +264,7 @@ const NavWrapper = () => {
                 <ul
                   onClick={handleMenuBlur}
                   tabIndex={0}
-                  className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+                  className="dropdown-content z-[100] menu p-2 shadow bg-base-100 rounded-box w-52"
                 >
                   <li className="px-1 text-lg text-secondary-focus">
                     <Link to="/settings">
@@ -297,11 +297,3 @@ const NavWrapper = () => {
 };
 
 export default NavWrapper;
-/* 
-<button onClick={onLogoutHandler} className="btn text-white bg-primary">
-  {isLoggingOut ? (
-    <span className="loading loading-spinner text-white loading-lg"></span>
-  ) : (
-    "Logout"
-  )}
-</button>; */

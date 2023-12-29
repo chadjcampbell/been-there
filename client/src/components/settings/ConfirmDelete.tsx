@@ -6,10 +6,15 @@ const ConfirmDelete = ({ handleDelete, setConfirmDelete }: any) => {
           Are you sure you want to delete your account?
         </h3>
         <div className="">
-          <button className="btn btn-error" onClick={handleDelete}>
+          <button
+            type="button"
+            className="btn btn-error"
+            onClick={handleDelete}
+          >
             DELETE
           </button>
           <button
+            type="button"
             className="btn btn-primary ml-4"
             onClick={() => setConfirmDelete(false)}
           >

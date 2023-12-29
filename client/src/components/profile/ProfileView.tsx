@@ -10,7 +10,7 @@ type ProfileViewProps = {
 
 export const ProfileView = ({ user, setUpdateMode }: ProfileViewProps) => {
   const updateBio = () => {
-    if (user.userId == 2) {
+    if (user.userId == 19) {
       toast.error("Demo User can't do that");
     } else {
       setUpdateMode(true);
@@ -35,7 +35,7 @@ export const ProfileView = ({ user, setUpdateMode }: ProfileViewProps) => {
         </p>
         <p className="py-6 whitespace-pre-line">{user.bio}</p>
         <div className="flex flex-col justify-center items-start">
-          {user.userId == 2 && (
+          {user.userId == 19 && (
             <a
               className="btn btn-secondary my-4"
               href="https://www.chadjcampbell.com"

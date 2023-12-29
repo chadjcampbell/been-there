@@ -118,7 +118,9 @@ export const MakePost = () => {
             }
           },
           () =>
-            toast.error("Enable location services on your browser and device"),
+            toast.error(
+              "Enable location services on your browser and device to make posts"
+            ),
           geoOptions
         );
       }

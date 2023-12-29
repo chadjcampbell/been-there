@@ -20,6 +20,8 @@ import {
 } from "../schema";
 import { RequestUserAttached } from "../middleware/authMiddleware";
 
+// user id 19 is the demo account
+
 export const generateToken = (id: string) => {
   return jwt.sign({ id }, String(process.env.JWT_SECRET), { expiresIn: "1d" });
 };
@@ -96,7 +98,7 @@ export const registerUser = [
             status: "accepted",
           });
           await db.insert(friend_requests).values({
-            sender_id: 2,
+            sender_id: 19,
             receiver_id: user.user_id,
             status: "pending",
           });
@@ -248,31 +250,34 @@ export const updateUser = asyncHandler(
     if (!req.user) {
       res.status(404);
       throw new Error("User not found");
-    } else {
-      const user = await db.query.users.findFirst({
-        where: eq(users.user_id, Number(req.user.user_id)),
+    }
+    if (req.user.user_id == 19) {
+      res.status(404);
+      throw new Error("Demo user can't do that");
+    }
+    const user = await db.query.users.findFirst({
+      where: eq(users.user_id, Number(req.user.user_id)),
+    });
+    if (user) {
+      const { name, email, photo_url, bio } = user;
+      user.email = email;
+      user.name = req.body.name || name;
+      user.photo_url = req.body.photo || photo_url;
+      user.bio = req.body.bio || bio;
+      const updatedUserArray = await db
+        .update(users)
+        .set(user)
+        .where(eq(users.user_id, Number(req.user.user_id)))
+        .returning();
+      const updatedUser = updatedUserArray[0];
+      res.status(200).json({
+        userId: updatedUser.user_id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        photoUrl: updatedUser.photo_url,
+        bio: updatedUser.bio,
+        registrationDate: updatedUser.registration_date,
       });
-      if (user) {
-        const { name, email, photo_url, bio } = user;
-        user.email = email;
-        user.name = req.body.name || name;
-        user.photo_url = req.body.photo || photo_url;
-        user.bio = req.body.bio || bio;
-        const updatedUserArray = await db
-          .update(users)
-          .set(user)
-          .where(eq(users.user_id, Number(req.user.user_id)))
-          .returning();
-        const updatedUser = updatedUserArray[0];
-        res.status(200).json({
-          userId: updatedUser.user_id,
-          name: updatedUser.name,
-          email: updatedUser.email,
-          photoUrl: updatedUser.photo_url,
-          bio: updatedUser.bio,
-          registrationDate: updatedUser.registration_date,
-        });
-      }
     }
   }
 );
@@ -282,6 +287,10 @@ export const deleteUser = asyncHandler(
     if (!req.user) {
       res.status(404);
       throw new Error("User deletion failed, please contact admin");
+    }
+    if (req.user.user_id == 19) {
+      res.status(404);
+      throw new Error("Demo user can't do that");
     }
     const user = await db.query.users.findFirst({
       where: eq(users.user_id, Number(req.user.user_id)),
@@ -362,6 +371,10 @@ export const changePassword = [
       res.status(400);
       throw new Error("User not found");
     }
+    if (req.user.user_id == 19) {
+      res.status(404);
+      throw new Error("Demo user can't do that");
+    }
     const user = await db.query.users.findFirst({
       where: eq(users.user_id, Number(req.user.user_id)),
     });
@@ -397,6 +410,10 @@ export const forgotPassword = asyncHandler(async (req, res) => {
   if (!user) {
     res.status(404);
     throw new Error("User does not exist");
+  }
+  if (user.user_id == 19) {
+    res.status(404);
+    throw new Error("Demo user can't do that");
   }
   // delete old token if exists
   await db.delete(tokens).where(eq(tokens.user_id, user.user_id));

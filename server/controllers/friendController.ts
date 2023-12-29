@@ -273,7 +273,7 @@ export const deleteFriend = asyncHandler(
       throw new Error("Not authorized, please log in");
     }
     const { id: friendId } = req.params;
-    if (Number(friendId) == 1 && req.user.user_id == 2) {
+    if (Number(friendId) == 1 && req.user.user_id == 19) {
       res.status(400);
       throw new Error("Chad and Demo User are BFFs");
     }

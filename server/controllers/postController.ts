@@ -110,20 +110,19 @@ export const makePost = [
         const response = await axios.get(
           `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${GEOAPIFY_KEY}`
         );
-        const data = response.data;
-        // Extract relevant location information
-        const locationInfo = data.results[0].address_components;
-        userLocation["city"] = locationInfo.find(
-          (component: GeocodingComponent) =>
-            component.types.includes("locality")
-        ).long_name;
-        userLocation["state"] = locationInfo.find(
-          (component: GeocodingComponent) =>
-            component.types.includes("administrative_area_level_1")
-        ).long_name;
-        userLocation["country"] = locationInfo.find(
-          (component: GeocodingComponent) => component.types.includes("country")
-        ).short_name;
+        const data = await response.data.features[0].properties;
+        console.log(data);
+        if (data.city) {
+          userLocation["city"] = data.city;
+        }
+        if (data.state) {
+          userLocation["state"] = data.state;
+        }
+        if (data.country_code) {
+          const country = data.country_code;
+          console.log(country);
+          userLocation["country"] = data.country_code.toString().toUpperCase();
+        }
         userLocation["latitude"] = latitude;
         userLocation["longitude"] = longitude;
       }

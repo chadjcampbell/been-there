@@ -66,7 +66,7 @@ const Home = () => {
 
   if (isError) toast.error(error.message);
 
-  const content = results.map((post, i) => {
+  const content = results.map((post: PostsResponseType, i: number) => {
     if (results.length === i + 1) {
       return <PostCard ref={lastPostRef} key={post.post_id} post={post} />;
     }

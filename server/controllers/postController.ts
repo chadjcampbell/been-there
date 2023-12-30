@@ -6,6 +6,8 @@ import { RequestUserAttached } from "../middleware/authMiddleware";
 import axios from "axios";
 import { eq, and, or, inArray } from "drizzle-orm";
 
+const GEOAPIFY_KEY = process.env.GEOAPIFY;
+
 export const findAllPosts = asyncHandler(
   async (req: RequestUserAttached, res) => {
     if (!req.user) {
@@ -106,13 +108,7 @@ export const makePost = [
       // get location info from google location services if location data sent
       if (latitude != undefined && longitude != undefined) {
         const response = await axios.get(
-          "https://maps.googleapis.com/maps/api/geocode/json",
-          {
-            params: {
-              latlng: `${latitude},${longitude}`,
-              key: process.env.GOOGLE_API,
-            },
-          }
+          `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${GEOAPIFY_KEY}`
         );
         const data = response.data;
         // Extract relevant location information

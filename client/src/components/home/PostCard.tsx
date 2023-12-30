@@ -27,15 +27,19 @@ export const PostCard = forwardRef(
     const [numLikes, setNumLikes] = useState(post.likes.length);
 
     const userLocInfo = () => {
-      if (
-        post.user_location.city &&
-        post.user_location.state &&
-        post.user_location.country
-      ) {
-        const flag = getFlagEmoji(post.user_location.country);
-        return `Location: ${flag} ${post.user_location.city}, ${post.user_location.state}, ${post.user_location.country}`;
+      if (post.user_location.country) {
+        let string = "Location: ";
+        string += getFlagEmoji(post.user_location.country);
+        if (post.user_location.city) {
+          string += ` ${post.user_location.city}`;
+        }
+        if (post.user_location.state) {
+          string += ` ${post.user_location.state}`;
+        }
+        string += ` ${post.user_location.country}`;
+        return string;
       } else {
-        return "Location: 💀 Kno, Where";
+        return "Location: ❓ Unknown";
       }
     };
 

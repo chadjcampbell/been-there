@@ -111,7 +111,6 @@ export const makePost = [
           `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${GEOAPIFY_KEY}`
         );
         const data = await response.data.features[0].properties;
-        console.log(data);
         if (data.city) {
           userLocation["city"] = data.city;
         }
@@ -119,8 +118,6 @@ export const makePost = [
           userLocation["state"] = data.state;
         }
         if (data.country_code) {
-          const country = data.country_code;
-          console.log(country);
           userLocation["country"] = data.country_code.toString().toUpperCase();
         }
         userLocation["latitude"] = latitude;

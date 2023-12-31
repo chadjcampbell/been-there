@@ -69,6 +69,9 @@ export const MakePost = () => {
 
   const submitPost = async (event: FormEvent) => {
     event.preventDefault();
+    if (isLoading) {
+      return;
+    }
     setIsLoading(true);
     try {
       // handle image upload to cloudinary
@@ -117,12 +120,14 @@ export const MakePost = () => {
               dispatch(SET_POSTS(newPostArray));
               setPost(initialPostValues);
               setPostImage(null);
+              setIsLoading(false);
             }
           },
           async () => {
             // on first attempt, geolocation will end up here if location services were not approved
             if (noLocation == false) {
               setNoLocation(true);
+              setIsLoading(false);
             } else {
               const formData: PostFormData = {
                 content: post.content,
@@ -135,6 +140,7 @@ export const MakePost = () => {
                 setPost(initialPostValues);
                 setPostImage(null);
                 setNoLocation(false);
+                setIsLoading(false);
               }
             }
           },
@@ -144,7 +150,6 @@ export const MakePost = () => {
     } catch (error: any) {
       console.log(error);
       toast.error(error.message);
-    } finally {
       setIsLoading(false);
     }
   };

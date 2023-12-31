@@ -70,11 +70,6 @@ export const findAllPosts = asyncHandler(
   }
 );
 
-interface GeocodingComponent {
-  types: string[];
-  long_name: string;
-}
-
 export const makePost = [
   // validate and sanitize fields
   body("content")
@@ -105,7 +100,7 @@ export const makePost = [
         latitude: null,
         longitude: null,
       };
-      // get location info from google location services if location data sent
+      // get location info from Geoapify location services if location data sent
       if (latitude != undefined && longitude != undefined) {
         const response = await axios.get(
           `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${GEOAPIFY_KEY}`
